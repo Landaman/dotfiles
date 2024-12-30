@@ -55,28 +55,29 @@
           homebrew.brews = [
           ];
         };
-      # Doing this out of line like this allows for inference via nixd
-      homeManagerConfiguration =
-        { ... }:
-        {
-          # Without this, home-manager looses its mind
-          users.users.ianwright.home = "/Users/ianwright";
-
-          home-manager.useGlobalPkgs = true;
-          home-manager.useUserPackages = true;
-          home-manager.users.ianwright = import ./home.nix;
-        };
     in
+    # Doing this out of line like this allows for inference via nixd
     {
       darwinConfigurations."Ians-MacBook-Pro-12928" = nix-darwin.lib.darwinSystem {
         modules = [
           configuration
           home-manager.darwinModules.home-manager
-          homeManagerConfiguration
+          {
+            # Without this, home-manager looses its mind
+            users.users.ianwright.home = "/Users/ianwright";
+
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.users.ianwright = import ./home.nix;
+          }
         ];
       };
 
       # Configurations for typehinting. These aren't really used for anything, just for nixd inference
       editorDarwinConfiguration = self.darwinConfigurations."Ians-MacBook-Pro-12928";
+      editorHomeManagerConfiguration = home-manager.lib.homeManagerConfiguration {
+        pkgs = self.editorDarwinConfiguration.pkgs; # Inherit pkgs from Darwin
+        modules = [ ./home.nix ];
+      };
     };
 }
