@@ -5,6 +5,8 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     nix-darwin.url = "github:LnL7/nix-darwin";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
+    home-manager.url = "github:nix-community/home-manager";
+    home-manager.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs =
@@ -12,6 +14,7 @@
       self,
       nix-darwin,
       nixpkgs,
+      home-manager,
     }:
     let
       configuration =
@@ -27,9 +30,9 @@
           # Necessary for using flakes on this system.
           nix.settings.experimental-features = "nix-command flakes";
 
-          # This sets the nixPath environment variable to be our shell input packages, which makes Nixd work way better
+          # This allows nixd to find the Flake easier
           nix.nixPath = [
-            "nixpkgs=${nixpkgs}"
+            "nixpkgs=${nixpkgs}" # Nixd looks for this even if not explicitly requested
             "flakepath=${self.outPath}"
           ];
 
@@ -52,10 +55,28 @@
           homebrew.brews = [
           ];
         };
+      # Doing this out of line like this allows for inference via nixd
+      homeManagerConfiguration =
+        { ... }:
+        {
+          # Without this, home-manager looses its mind
+          users.users.ianwright.home = "/Users/ianwright";
+
+          home-manager.useGlobalPkgs = true;
+          home-manager.useUserPackages = true;
+          home-manager.users.ianwright = import ./home.nix;
+        };
     in
     {
       darwinConfigurations."Ians-MacBook-Pro-12928" = nix-darwin.lib.darwinSystem {
-        modules = [ configuration ];
+        modules = [
+          configuration
+          home-manager.darwinModules.home-manager
+          homeManagerConfiguration
+        ];
       };
+
+      # Configurations for typehinting. These aren't really used for anything, just for nixd inference
+      editorDarwinConfiguration = self.darwinConfigurations."Ians-MacBook-Pro-12928";
     };
 }
