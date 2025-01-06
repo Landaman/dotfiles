@@ -20,11 +20,31 @@
       configuration =
         { pkgs, ... }:
         {
+          nixpkgs.overlays = [
+            (final: prev: {
+              # This must be an overlay
+              bitwarden-cli = prev.bitwarden-cli.overrideAttrs (oldAttrs: {
+                # Needs both, won't work without one or the other
+                nativeBuildInputs = (oldAttrs.nativeBuildInputs or [ ]) ++ [ prev.llvmPackages_18.stdenv.cc ];
+                stdenv = prev.llvmPackages_18.stdenv;
+              });
+            })
+          ];
+
           # Packages available to all users
           environment.systemPackages = [
             pkgs.vim
-            pkgs.nixd
-            pkgs.nixfmt-rfc-style
+            pkgs.python313
+            pkgs.nodejs_20
+            pkgs.bun
+            pkgs.lua
+            pkgs.openjdk
+            pkgs.maven
+            pkgs.coursier
+            pkgs.sbt
+            pkgs.qemu
+            pkgs.curl
+            pkgs.wget
           ];
 
           # Necessary for using flakes on this system.
@@ -50,11 +70,21 @@
 
           # Setup homebrew and install necessary dependencies
           homebrew.enable = true;
+          homebrew.brews = [
+            "sst"
+            "webp"
+            "inetutils"
+          ];
           homebrew.casks = [
           ];
-          homebrew.brews = [
-          ];
+          homebrew.masApps = {
+            bitwarden = 1352778147;
+          };
+
+          # Uninstall all Casks/Brews not specified here on activation
+          homebrew.onActivation.cleanup = "zap"; # Zap removes associated files for casks (just in brew directory, not ~/.config etc.)
         };
+
     in
     # Doing this out of line like this allows for inference via nixd
     {
@@ -65,6 +95,9 @@
           {
             # Without this, home-manager looses its mind
             users.users.ianwright.home = "/Users/ianwright";
+
+            # I trust myself :)
+            nix.settings.trusted-users = [ "ianwright" ];
 
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
@@ -77,7 +110,7 @@
       editorDarwinConfiguration = self.darwinConfigurations."Ians-MacBook-Pro-12928";
       editorHomeManagerConfiguration = home-manager.lib.homeManagerConfiguration {
         pkgs = self.editorDarwinConfiguration.pkgs; # Inherit pkgs from Darwin
-        modules = [ ./home.nix ];
+        modules = [ ./home.nix ]; # Load the OS
       };
     };
 }
