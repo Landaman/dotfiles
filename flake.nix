@@ -31,6 +31,9 @@
             })
           ];
 
+          # Allow unfree packages, e.g., raycast
+          nixpkgs.config.allowUnfree = true;
+
           # Packages available to all users
           environment.systemPackages = [
             pkgs.vim
@@ -45,6 +48,7 @@
             pkgs.qemu
             pkgs.curl
             pkgs.wget
+            pkgs.gnupg
           ];
 
           # Necessary for using flakes on this system.
@@ -76,9 +80,33 @@
             "inetutils"
           ];
           homebrew.casks = [
+            "google-drive"
+            "zoom"
+            "mongodb-compass"
+            "openvpn-connect"
+            "logi-options+"
+            "drawio"
+            "proxyman"
+            "balenaetcher"
+            "figma"
+            "firefox"
+            "docker"
+            "betterdisplay"
           ];
           homebrew.masApps = {
             bitwarden = 1352778147;
+            "Raycast Companion" = 6738274497;
+            "The Unarchiver" = 425424353;
+            "Hidden Bar" = 1452453066;
+            colorslurp = 1287239339;
+            goodnotes = 1444383602;
+            messenger = 1480068668;
+            adgaurd = 1440147259;
+            whatsapp = 310633997;
+            keynote = 409183694;
+            pages = 409201541;
+            numbers = 409203825;
+            xcode = 497799835;
           };
 
           # Uninstall all Casks/Brews not specified here on activation

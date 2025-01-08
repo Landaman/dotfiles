@@ -25,5 +25,15 @@
     pkgs.fd # NeoVim dependency
     pkgs.tree-sitter # NeoVim dependenvy
     pkgs.wezterm
+    pkgs.raycast
+    pkgs.raycast
+    pkgs.cyberduck
+    pkgs.nosql-workbench
+    pkgs.postman
+    pkgs.wireshark
+    pkgs.utm
+    pkgs.spotify
+    pkgs.discord
+    pkgs.vscode
   ];
 }
