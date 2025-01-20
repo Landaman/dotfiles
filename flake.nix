@@ -111,12 +111,52 @@
 
           # Uninstall all Casks/Brews not specified here on activation
           homebrew.onActivation.cleanup = "zap"; # Zap removes associated files for casks (just in brew directory, not ~/.config etc.)
+
+          # Defaults
+          system.defaults.dock.mru-spaces = false; # Do not rearrange spaces by MRU, this is super annoying
+          system.defaults.dock.show-recents = false; # Disable recents in Dock
+          system.defaults.CustomUserPreferences = {
+            # Disable KB shortcuts for ColorSlurp
+            "com.IdeaPunch.ColorSlurp" = {
+              "KeyboardShortcuts_copyLastCopiedColorGlobalShortcut" = 0;
+              "KeyboardShortcuts_showColorSlurpGlobalShortcut" = 0;
+              "KeyboardShortcuts_showMagnifierGlobalShortcut" = 0;
+            };
+            "com.apple.dock" = {
+              "contents-immutable" = 1; # Disable changing dock contents interactively
+              "size-immutable" = 1; # Disable dock resizing
+              "position-immutable" = 1; # Disable dock position changes
+            };
+          };
+
+          # Dock contents
+          system.defaults.dock.persistent-apps = [
+            "/System/Applications/Launchpad.app"
+            "/Applications/Bitwarden.app"
+            "/Applications/Safari.app"
+            "/System/Applications/Mail.app"
+            "/System/Applications/FaceTime.app"
+            "/System/Applications/Messages.app"
+            "${pkgs.discord}/Applications/discord.app"
+            "/Applications/Messenger.app"
+            "/Applications/WhatsApp.localized/WhatsApp.app"
+            "/System/Applications/Calendar.app"
+            "/Applications/Goodnotes.app"
+            "/System/Applications/Notes.app"
+            "/System/Applications/Reminders.app"
+            "/System/Applications/Books.app"
+            "/System/Applications/Music.app"
+            "/System/Applications/Podcasts.app"
+            "/System/Applications/Home.app"
+            "/System/Applications/iPhone Mirroring.app"
+            "/System/Applications/System Settings.app"
+          ];
         };
 
     in
     # Doing this out of line like this allows for inference via nixd
     {
-      darwinConfigurations."Ians-MacBook-Pro-12928" = nix-darwin.lib.darwinSystem {
+      darwinConfigurations."Ians-MacBook-Pro-13094" = nix-darwin.lib.darwinSystem {
         modules = [
           configuration
           home-manager.darwinModules.home-manager
@@ -135,7 +175,7 @@
       };
 
       # Configurations for typehinting. These aren't really used for anything, just for nixd inference
-      editorDarwinConfiguration = self.darwinConfigurations."Ians-MacBook-Pro-12928";
+      editorDarwinConfiguration = self.darwinConfigurations."Ians-MacBook-Pro-13094";
       editorHomeManagerConfiguration = home-manager.lib.homeManagerConfiguration {
         pkgs = self.editorDarwinConfiguration.pkgs; # Inherit pkgs from Darwin
         modules = [ ./home.nix ]; # Load the OS

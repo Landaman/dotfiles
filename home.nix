@@ -13,6 +13,8 @@
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
 
+  programs.zsh.completionInit = false; # Since we use zim, we don't want it
+
   # Packages available to only this user
   home.packages = [
     pkgs.bitwarden-cli
