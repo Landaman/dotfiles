@@ -94,6 +94,7 @@
             "betterdisplay"
           ];
           homebrew.masApps = {
+            daisydisk = 411643860;
             bitwarden = 1352778147;
             "Raycast Companion" = 6738274497;
             "The Unarchiver" = 425424353;
