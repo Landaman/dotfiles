@@ -17,6 +17,8 @@
       home-manager,
     }:
     let
+      hostname = "Ians-MacBook-Pro";
+      username = "ianwright";
       configuration =
         { pkgs, ... }:
         {
@@ -28,27 +30,124 @@
                 nativeBuildInputs = (oldAttrs.nativeBuildInputs or [ ]) ++ [ prev.llvmPackages_18.stdenv.cc ];
                 stdenv = prev.llvmPackages_18.stdenv;
               });
+
+              # Ghostty is broken for just MacOS, so rebuild it for just MacOS
+              ghostty =
+                if prev.stdenv.isDarwin then
+                  pkgs.stdenvNoCC.mkDerivation rec {
+                    inherit (prev.ghostty)
+                      pname
+                      version
+                      ;
+
+                    meta = prev.ghostty.meta // {
+                      broken = false;
+                      outputsToInstall = outputs;
+                    };
+
+                    src = prev.fetchurl {
+                      url = "https://release.files.ghostty.org/${version}/Ghostty.dmg";
+                      name = "Ghostty.dmg";
+                      hash = "sha256-QA9oy9EXLSFbzcRybKM8CxmBnUYhML82w48C+0gnRmM=";
+                    };
+
+                    nativeBuildInputs = [
+                      prev._7zz
+                      prev.makeBinaryWrapper
+                    ];
+
+                    sourceRoot = ".";
+                    installPhase = ''
+                      		runHook preInstall
+
+                      		mkdir -p $out/Applications
+                      		mv Ghostty.app $out/Applications/
+                      		makeWrapper $out/Applications/Ghostty.app/Contents/MacOS/ghostty $out/bin/ghostty
+
+                      		runHook postInstall
+                      	'';
+
+                    outputs = [
+                      "out"
+                      "man"
+                      "shell_integration"
+                      "terminfo"
+                      "vim"
+                    ];
+
+                    postFixup =
+                      let
+                        resources = "$out/Applications/Ghostty.app/Contents/Resources";
+                      in
+                      ''
+                        			mkdir -p $man/share
+                        			ln -s ${resources}/man $man/share/man
+
+                        			mkdir -p $terminfo/share
+                        			ln -s ${resources}/terminfo $terminfo/share/terminfo
+
+                        			mkdir -p $shell_integration
+                        			for folder in "${resources}/ghostty/shell-integration"/*; do
+                        				ln -s $folder $shell_integration/$(basename "$folder")
+                        			done
+
+                        			mkdir -p $vim
+                        			for folder in "${resources}/vim/vimfiles"/*; do
+                        				ln -s $folder $vim/$(basename "$folder")
+                        			done
+
+                                  mkdir -p $out/share/bash-completion
+                                  cp -R ${resources}/bash-completion/* $out/share/bash-completion
+                                  
+                                  mkdir -p $out/share/zsh
+                                  cp -R ${resources}/zsh/* $out/share/zsh
+
+                                  mkdir -p $out/share/fish
+                                  cp -R ${resources}/fish/* $out/share/fish
+                        		'';
+                  }
+                else
+                  prev.ghostty;
+
+              tmuxPlugins = prev.tmuxPlugins // {
+                catppuccin = prev.tmuxPlugins.catppuccin.overrideAttrs (oldAttrs: {
+                  version = "2024-12-07";
+                  src = prev.fetchFromGitHub {
+                    owner = "catppuccin";
+                    repo = "tmux";
+                    rev = "320e184a31d0825cb4f4af550492cbdff2fc3ffc";
+                    hash = "sha256-gMBpINeHS+5TCsbJBHhXKEF+fG58FmJrIJoQWYdQqc0=";
+                  };
+                });
+
+              };
+              zoxide-fzf-tmux-session = (import ./zoxide-fzf-tmux-session.nix { pkgs = final; });
             })
           ];
 
           # Allow unfree packages, e.g., raycast
           nixpkgs.config.allowUnfree = true;
 
+          networking.computerName = hostname;
+          networking.hostName = hostname;
+
           # Packages available to all users
-          environment.systemPackages = [
-            pkgs.vim
-            pkgs.python313
-            pkgs.nodejs_20
-            pkgs.bun
-            pkgs.lua
-            pkgs.openjdk
-            pkgs.maven
-            pkgs.coursier
-            pkgs.sbt
-            pkgs.qemu
-            pkgs.curl
-            pkgs.wget
-            pkgs.gnupg
+          environment.systemPackages = with pkgs; [
+            vim
+            python313
+            nodejs_20
+            bun
+            lua
+            openjdk
+            maven
+            coursier
+            sbt
+            qemu
+            curl
+            wget
+            gnupg
+            zulu17
+            awscli2
           ];
 
           # Necessary for using flakes on this system.
@@ -71,6 +170,11 @@
           nixpkgs.hostPlatform = "aarch64-darwin";
 
           security.pam.enableSudoTouchIdAuth = true;
+
+          # Disable compinit for ZSH, since we will use it locally
+          programs.zsh.promptInit = "";
+          programs.zsh.enableCompletion = false;
+          programs.zsh.enableBashCompletion = false;
 
           # Setup homebrew and install necessary dependencies
           homebrew.enable = true;
@@ -157,26 +261,26 @@
     in
     # Doing this out of line like this allows for inference via nixd
     {
-      darwinConfigurations."Ians-MacBook-Pro-13094" = nix-darwin.lib.darwinSystem {
+      darwinConfigurations.${hostname} = nix-darwin.lib.darwinSystem {
         modules = [
           configuration
           home-manager.darwinModules.home-manager
           {
             # Without this, home-manager looses its mind
-            users.users.ianwright.home = "/Users/ianwright";
+            users.users.${username}.home = "/Users/${username}";
 
             # I trust myself :)
-            nix.settings.trusted-users = [ "ianwright" ];
+            nix.settings.trusted-users = [ username ];
 
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
-            home-manager.users.ianwright = import ./home.nix;
+            home-manager.users.${username} = import ./home.nix;
           }
         ];
       };
 
       # Configurations for typehinting. These aren't really used for anything, just for nixd inference
-      editorDarwinConfiguration = self.darwinConfigurations."Ians-MacBook-Pro-13094";
+      editorDarwinConfiguration = self.darwinConfigurations.${hostname};
       editorHomeManagerConfiguration = home-manager.lib.homeManagerConfiguration {
         pkgs = self.editorDarwinConfiguration.pkgs; # Inherit pkgs from Darwin
         modules = [ ./home.nix ]; # Load the OS
