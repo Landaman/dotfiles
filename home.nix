@@ -27,6 +27,30 @@ let
     rev = "a9bdf479f8982c4b83b5c5005c8231c6b3352e2a";
     hash = "sha256-WeqvsKXTO3Iham+2dI1QsNZWA8Yv9BHn1BgdlvR8zaw=";
   };
+
+  fdNeverIgnore = pkgs.writeText ".fzfnoignore" ''
+    **/*
+    !.env*
+    !.vscode/
+    !.vscode/**/*
+  '';
+
+  fdIgnore = pkgs.writeText ".fzfignore" ''
+    .DS_Store
+    metals.sbt
+    node_modules/
+    .git/
+    .venv/
+    __pycache__/
+    .metals/
+    .bloop/
+    .ammonite/
+    .turbo/
+    .firebase/
+    .next/
+    .svelte-kit/
+    .husky/_
+  '';
 in
 {
   # Tell Home Manager who it is managing in this config
@@ -56,6 +80,16 @@ in
       ZSH_THEME_TERM_TITLE_IDLE="%~"
 
       export MANPAGER="sh -c 'sed -u -e \"s/\\x1B\[[0-9;]*m//g; s/.\\x08//g\" | bat -p -lman'"
+
+      _fzf_compgen_path() {
+        fd --type f --follow --color=never --hidden --no-ignore --ignore-file=${fdNeverIgnore} "$1";
+        fd --type f --follow --color=never --hidden --ignore-file=${fdIgnore} "$1"; 
+      }
+
+      _fzf_compgen_dir() {
+        fd --type d --follow --color=never --hidden --no-ignore --ignore-file=${fdNeverIgnore} "$1";
+        fd --type d --follow --color=never --hidden --ignore-file=${fdIgnore} "$1";
+      }
 
       source ${pkgs.zsh-powerlevel10k}/share/zsh-powerlevel10k/powerlevel10k.zsh-theme
       [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
@@ -138,17 +172,38 @@ in
   };
 
   programs.fzf = rec {
-    fileWidgetCommand = "${defaultCommand}";
     enable = true;
-    defaultCommand = "fd --type f --type l --strip-cwd-prefix --color=never --hidden --exclude=.git";
+    defaultCommand = ''
+      { 
+        fd --type f --follow --strip-cwd-prefix --color=never --hidden --no-ignore --ignore-file=${fdNeverIgnore};
+        fd --type f --follow --strip-cwd-prefix --color=never --hidden --ignore-file=${fdIgnore}; 
+      }
+    '';
+    fileWidgetCommand = "${defaultCommand}";
+    changeDirWidgetCommand = ''
+      {
+        fd --type d --follow --color=never --hidden --no-ignore --ignore-file=${fdNeverIgnore};
+        fd --type d --follow --color=never --hidden --ignore-file=${fdIgnore};
+      }
+    '';
     defaultOptions = [
       "--tmux"
-      "--color=bg+:#313244,bg:#1e1e2e,spinner:#f5e0dc,hl:#f38ba8"
-      "--color=fg:#cdd6f4,header:#f38ba8,info:#cba6f7,pointer:#f5e0dc"
-      "--color=marker:#b4befe,fg+:#cdd6f4,prompt:#cba6f7,hl+:#f38ba8"
-      "--color=selected-bg:#45475a"
       "--multi"
     ];
+    colors = {
+      spinner = "#f5e0dc";
+      bg = "#1e1e2e";
+      "bg+" = "#313244";
+      hl = "#f38ba8";
+      fg = "#cdd6f4";
+      header = "#f38ba8";
+      info = "#cba6f7";
+      pointer = "#f5e0dc";
+      marker = "#b4befe";
+      prompt = "#cba6f7";
+      "hl+" = "#f38ba8";
+      selected-bg = "#45475a";
+    };
     tmux = {
       enableShellIntegration = true;
       shellIntegrationOptions = [ "-p" ]; # Render as a Tmux popup with shell integration
@@ -237,6 +292,8 @@ in
     ];
   };
 
+  programs.fd.enable = true;
+
   # Packages available to only this user
   home.packages = with pkgs; [
     wireshark
@@ -245,7 +302,6 @@ in
     nixfmt-rfc-style
     sqlite
     ripgrep # NeoVim dependency
-    fd # NeoVim dependency
     tree-sitter # NeoVim dependency
     raycast
     cyberduck
