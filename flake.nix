@@ -139,6 +139,7 @@
             vim
             python313
             nodejs_20
+            corepack_20
             bun
             lua
             openjdk
