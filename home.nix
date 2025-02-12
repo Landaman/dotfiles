@@ -304,6 +304,15 @@ in
       }
     '';
 
+  programs.git = {
+    enable = true;
+    userName = "Ian Wright";
+    userEmail = "49083526+Landaman@users.noreply.github.com";
+    extraConfig = {
+      merge.tool = "nvimdiff";
+    };
+  };
+
   # Packages available to only this user
   home.packages = with pkgs; [
     wireshark
