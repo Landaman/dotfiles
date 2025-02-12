@@ -294,6 +294,16 @@ in
 
   programs.fd.enable = true;
 
+  programs.google-chrome = {
+    enable = true;
+  };
+  home.file."Library/Application Support/Google/Chrome/External Extensions/blipmdconlkpinefehnmjammfjpmpbjk.json".text =
+    ''
+      {
+        "external_update_url": "https://clients2.google.com/service/update2/crx"
+      }
+    '';
+
   # Packages available to only this user
   home.packages = with pkgs; [
     wireshark
