@@ -300,6 +300,7 @@ in
     userEmail = "49083526+Landaman@users.noreply.github.com";
     extraConfig = {
       merge.tool = "nvimdiff";
+      diff.tool = "nvimdiff";
     };
   };
 
