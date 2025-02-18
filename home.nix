@@ -234,22 +234,12 @@ in
       bind Z run-shell tmux-session
 
       set -g status-left-length 100
-      set -g status-left "#{E:@catppuccin_status_session}"
-
-      set -g status-right-length 100
-      set -g status-right "#{E:@catppuccin_status_user}"
-      set -ag status-right "#{E:@catppuccin_status_directory}"
     '';
     plugins = with pkgs.tmuxPlugins; [
       {
         plugin = catppuccin;
         extraConfig = ''
-          set -g @catppuccin_flavor 'mocha'
-          set -gq @catppuccin_window_text " #W"
-          set -gq @catppuccin_window_current_text " #W"
-          set -gq @catppuccin_status_left_separator "█"
-          set -gq @catppuccin_status_middle_separator ""
-          set -gq @catppuccin_status_right_separator "█"
+          set -g @catppuccin_window_status_style "none"
         '';
       }
       {
