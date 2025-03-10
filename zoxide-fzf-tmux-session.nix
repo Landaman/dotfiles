@@ -14,8 +14,14 @@ writeShellApplication {
   text = ''
     #!/usr/bin/env bash
 
+    if [[ $# -gt 1 ]]; then
+        echo "Too many arguments"
+        exit 1
+    fi
+
     if [[ $# -eq 1 ]]; then
-        selected=$1
+        cd "$1"
+        selected=$(pwd)
     else
         selected=$(zoxide query --list | fzf || true)
     fi
