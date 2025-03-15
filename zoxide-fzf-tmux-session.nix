@@ -20,7 +20,13 @@ writeShellApplication {
     fi
 
     if [[ $# -eq 1 ]]; then
-        cd "$1"
+        zDirectory=$(zoxide query "$1")
+
+        if [[ -z $zDirectory ]]; then
+            exit 0
+        fi
+
+        cd "$zDirectory"
         selected=$(pwd)
     else
         selected=$(zoxide query --list | fzf || true)
