@@ -27,30 +27,6 @@ let
     rev = "a9bdf479f8982c4b83b5c5005c8231c6b3352e2a";
     hash = "sha256-WeqvsKXTO3Iham+2dI1QsNZWA8Yv9BHn1BgdlvR8zaw=";
   };
-
-  fdNeverIgnore = pkgs.writeText ".fzfnoignore" ''
-    **/*
-    !.env*
-    !.vscode/
-    !.vscode/**/*
-  '';
-
-  fdIgnore = pkgs.writeText ".fzfignore" ''
-    .DS_Store
-    metals.sbt
-    node_modules/
-    .git/
-    .venv/
-    __pycache__/
-    .metals/
-    .bloop/
-    .ammonite/
-    .turbo/
-    .firebase/
-    .next/
-    .svelte-kit/
-    .husky/_
-  '';
 in
 {
   # Tell Home Manager who it is managing in this config
@@ -82,13 +58,11 @@ in
       export MANPAGER="sh -c 'sed -u -e \"s/\\x1B\[[0-9;]*m//g; s/.\\x08//g\" | bat -p -lman'"
 
       _fzf_compgen_path() {
-        fd --type f --follow --color=never --hidden --no-ignore --ignore-file=${fdNeverIgnore} "$1";
-        fd --type f --follow --color=never --hidden --ignore-file=${fdIgnore} "$1"; 
+        fdi --type f --follow --color=never --hidden "$1"
       }
 
       _fzf_compgen_dir() {
-        fd --type d --follow --color=never --hidden --no-ignore --ignore-file=${fdNeverIgnore} "$1";
-        fd --type d --follow --color=never --hidden --ignore-file=${fdIgnore} "$1";
+        fdi --type d --follow --color=never --hidden "$1";
       }
 
       source ${pkgs.zsh-powerlevel10k}/share/zsh-powerlevel10k/powerlevel10k.zsh-theme
@@ -174,17 +148,11 @@ in
   programs.fzf = rec {
     enable = true;
     defaultCommand = ''
-      { 
-        fd --type f --follow --strip-cwd-prefix --color=never --hidden --no-ignore --ignore-file=${fdNeverIgnore};
-        fd --type f --follow --strip-cwd-prefix --color=never --hidden --ignore-file=${fdIgnore}; 
-      }
+      fdi --type f --follow --strip-cwd-prefix --color=never --hidden
     '';
     fileWidgetCommand = "${defaultCommand}";
     changeDirWidgetCommand = ''
-      {
-        fd --type d --follow --color=never --hidden --no-ignore --ignore-file=${fdNeverIgnore};
-        fd --type d --follow --color=never --hidden --ignore-file=${fdIgnore};
-      }
+      fdi --type d --follow --color=never --hidden
     '';
     defaultOptions = [
       "--tmux"
@@ -322,5 +290,6 @@ in
     discord
     vscode
     zoxide-fzf-tmux-session
+    find-directory-ignore
   ];
 }

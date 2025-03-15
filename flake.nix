@@ -126,6 +126,8 @@
 
               };
               zoxide-fzf-tmux-session = (import ./zoxide-fzf-tmux-session.nix { pkgs = final; });
+
+              find-directory-ignore = (import ./find-directory-ignore.nix { pkgs = final; });
             })
           ];
 
