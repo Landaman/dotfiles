@@ -18,6 +18,7 @@
     }:
     let
       hostname = "Ians-MacBook-Pro";
+      appleName = "Ian's MacBook Pro";
       username = "ianwright";
       configuration =
         { pkgs, ... }:
@@ -131,7 +132,7 @@
           # Allow unfree packages, e.g., raycast
           nixpkgs.config.allowUnfree = true;
 
-          networking.computerName = hostname;
+          networking.computerName = appleName;
           networking.hostName = hostname;
 
           # Packages available to all users
