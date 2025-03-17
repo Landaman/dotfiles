@@ -1,33 +1,10 @@
 {
   pkgs,
+  neverIgnore,
+  ignore,
+  alwaysIgnore,
 }:
 with pkgs;
-let
-  neverIgnore = pkgs.writeText ".fzfnoignore" ''
-    **/*
-    !.env*
-    !.vscode/
-    !.vscode/**/*
-  '';
-
-  ignore = pkgs.writeText ".fzfignore" ''
-    .DS_Store
-    metals.sbt
-    node_modules/
-    .git/
-    .venv/
-    __pycache__/
-    .metals/
-    .bloop/
-    .ammonite/
-    .turbo/
-    .firebase/
-    .next/
-    .svelte-kit/
-    .husky/_
-  '';
-
-in
 writeShellApplication {
   name = "fdi";
 
@@ -55,12 +32,12 @@ writeShellApplication {
     fd "''${filtered_args[@]}" -u --ignore-file=${neverIgnore}
 
 
-    no_ignore_regex='\B(?:--no-ignore|-u|--unrestricted)\b'
+    no_ignore_regex='\B(?:--no-ignore|-u+|--unrestricted)\b'
 
     if [[ $* =~ $no_ignore_regex ]]; then
-      fd "$@"
+      fd "$@" --ignore-file=${alwaysIgnore}
     else
-      fd "$@" --ignore-file=${ignore}
+      fd "$@" --ignore-file=${ignore} --ignore-file=${alwaysIgnore}
     fi
   '';
 }

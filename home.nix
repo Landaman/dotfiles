@@ -291,5 +291,6 @@ in
     vscode
     zoxide-fzf-tmux-session
     find-directory-ignore
+    ripgrep-ignore
   ];
 }
