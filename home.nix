@@ -290,10 +290,10 @@ in
   programs.bat = {
     enable = true;
     config = {
-      theme = "catppuccin";
+      theme = "Catppuccin Mocha";
     };
     themes = {
-      catppuccin = {
+      "Catppuccin Mocha" = {
         src = "${
           pkgs.fetchFromGitHub {
             owner = "catppuccin";
@@ -328,9 +328,27 @@ in
     enable = true;
     userName = "Ian Wright";
     userEmail = "49083526+Landaman@users.noreply.github.com";
+    includes = [
+      {
+        path = "${
+          pkgs.fetchFromGitHub {
+            owner = "catppuccin";
+            repo = "delta";
+            rev = "e9e21cffd98787f1b59e6f6e42db599f9b8ab399";
+            hash = "sha256-04po0A7bVMsmYdJcKL6oL39RlMLij1lRKvWl5AUXJ7Q=";
+          }
+        }/catppuccin.gitconfig";
+      }
+    ];
     extraConfig = {
       merge.tool = "nvimdiff";
       diff.tool = "nvimdiff";
+      core.pager = "delta";
+      interactive.diffFilter = "delta --color-only";
+      delta.navigate = true;
+      delta.features = "catppuccin-mocha";
+      merge.conflictstyle = "zdiff3";
+
     };
   };
 
@@ -340,6 +358,7 @@ in
     wireshark
     bitwarden-cli
     nixd
+    delta
     nixfmt-rfc-style
     sqlite
     ripgrep # NeoVim dependency
