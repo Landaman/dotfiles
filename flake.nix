@@ -49,7 +49,7 @@
                     src = prev.fetchurl {
                       url = "https://release.files.ghostty.org/${version}/Ghostty.dmg";
                       name = "Ghostty.dmg";
-                      hash = "sha256-QA9oy9EXLSFbzcRybKM8CxmBnUYhML82w48C+0gnRmM=";
+                      hash = "sha256-1K0BOWg0ykR/pdCE6/b7XUSVcoD6ryLqRz6WBnUcSOE=";
                     };
 
                     nativeBuildInputs = [
@@ -218,7 +218,7 @@
           # The platform the configuration will be used on.
           nixpkgs.hostPlatform = "aarch64-darwin";
 
-          security.pam.enableSudoTouchIdAuth = true;
+          security.pam.services.sudo_local.touchIdAuth = true;
 
           # Disable compinit for ZSH, since we will use it locally
           programs.zsh.promptInit = "";
