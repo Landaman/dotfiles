@@ -341,6 +341,7 @@ in
       }
     ];
     extraConfig = {
+      init.defaultBranch = "main";
       merge.tool = "nvimdiff";
       diff.tool = "nvimdiff";
       core.pager = "delta";
