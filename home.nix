@@ -55,6 +55,17 @@ in
         alt-slash = 'layout tiles horizontal vertical'
         alt-comma = 'layout accordion horizontal vertical'
 
+        alt-enter = ''''exec-and-forget osascript -e '
+        tell application "Ghostty" to activate
+        tell application "System Events" to keystroke "n" using {command down}
+        '
+        ''''
+
+        alt-shift-enter = ''''exec-and-forget osascript -e '
+        tell application "Safari" to make new document
+        '
+        ''''
+
         alt-h = 'focus left'
         alt-j = 'focus down'
         alt-k = 'focus up'
