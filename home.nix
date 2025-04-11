@@ -27,6 +27,21 @@ let
     rev = "a9bdf479f8982c4b83b5c5005c8231c6b3352e2a";
     hash = "sha256-WeqvsKXTO3Iham+2dI1QsNZWA8Yv9BHn1BgdlvR8zaw=";
   };
+
+  floatingApps = [
+    "com.apple.MobileSMS"
+    "com.hnc.Discord"
+    "com.facebook.archon"
+    "com.apple.mail"
+    "com.apple.Music"
+    "com.apple.iBooksX"
+    "com.apple.podcasts"
+    "com.tinyspeck.slackmacgap"
+    "com.bitwarden.desktop"
+    "com.apple.iCal"
+    "net.whatsapp.WhatsApp"
+    "com.apple.weather"
+  ];
 in
 {
   # Tell Home Manager who it is managing in this config
@@ -50,6 +65,16 @@ in
     accordion-padding = 30
 
     on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
+
+    ${builtins.concatStringsSep "\n" (
+      builtins.map (appId: ''
+        [[on-window-detected]]
+         if.app-id="${appId}"
+         run= [
+           "layout floating",
+         ] 
+      '') floatingApps
+    )}
 
     [mode.main.binding]
         alt-slash = 'layout tiles horizontal vertical'
@@ -106,6 +131,9 @@ in
         alt-shift-tab = 'move-workspace-to-monitor --wrap-around next'
 
         alt-shift-semicolon = 'mode service'
+
+        alt-p = 'workspace prev --wrap-around'
+        alt-n = 'workspace next --wrap-around'
 
     [mode.service.binding]
         esc = ['reload-config', 'mode main']
