@@ -142,6 +142,7 @@
                 .bloop/
                 .ammonite/
                 .turbo/
+                .yarn/
                 .firebase/
                 .next/
                 .svelte-kit/
