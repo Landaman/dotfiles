@@ -81,13 +81,23 @@ in
         alt-comma = 'layout accordion horizontal vertical'
 
         alt-enter = ''''exec-and-forget osascript -e '
-        tell application "Ghostty" to activate
-        tell application "System Events" to keystroke "n" using {command down}
+        if application "Ghostty" is running then
+            tell application "System Events"
+                tell application "Ghostty" to activate
+                keystroke "n" using {command down}
+            end tell
+        else
+            tell application "Ghostty" to activate
+        end if
         '
         ''''
 
         alt-shift-enter = ''''exec-and-forget osascript -e '
-        tell application "Safari" to make new document
+        if application "Safari" is running then
+            tell application "Safari" to make new document
+        else
+            tell application "Safari" to activate
+        end if
         '
         ''''
 
