@@ -41,6 +41,7 @@ let
     "com.apple.iCal"
     "net.whatsapp.WhatsApp"
     "com.apple.weather"
+    "com.spotify.client"
   ];
 in
 {
