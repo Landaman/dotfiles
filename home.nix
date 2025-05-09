@@ -42,6 +42,7 @@ let
     "net.whatsapp.WhatsApp"
     "com.apple.weather"
     "com.spotify.client"
+    "com.flightyapp.flighty"
   ];
 in
 {
