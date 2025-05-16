@@ -36,7 +36,6 @@ let
     "com.apple.Music"
     "com.apple.iBooksX"
     "com.apple.podcasts"
-    "com.tinyspeck.slackmacgap"
     "com.bitwarden.desktop"
     "com.apple.iCal"
     "net.whatsapp.WhatsApp"
