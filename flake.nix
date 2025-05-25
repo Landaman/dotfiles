@@ -123,54 +123,9 @@
                     hash = "sha256-gMBpINeHS+5TCsbJBHhXKEF+fG58FmJrIJoQWYdQqc0=";
                   };
                 });
-
               };
 
-              neverIgnore = prev.writeText ".userneverignore" ''
-                **/*
-                !.env*
-                !.vscode/
-                !.vscode/**/*
-              '';
-
-              ignore = prev.writeText ".userignore" ''
-                metals.sbt
-                node_modules/
-                .venv/
-                __pycache__/
-                .metals/
-                .bloop/
-                .ammonite/
-                .turbo/
-                .yarn/
-                .firebase/
-                .next/
-                .svelte-kit/
-                .husky/_
-              '';
-
-              alwaysIgnore = prev.writeText ".useralwaysignore" ''
-                .git/
-                .DS_Store
-              '';
-
               zoxide-fzf-tmux-session = (import ./zoxide-fzf-tmux-session.nix { pkgs = final; });
-              find-directory-ignore = (
-                import ./find-directory-ignore.nix {
-                  pkgs = final;
-                  neverIgnore = final.neverIgnore;
-                  alwaysIgnore = final.alwaysIgnore;
-                  ignore = final.ignore;
-                }
-              );
-              ripgrep-ignore = (
-                import ./ripgrep-ignore.nix {
-                  pkgs = final;
-                  neverIgnore = final.neverIgnore;
-                  alwaysIgnore = final.alwaysIgnore;
-                  ignore = final.ignore;
-                }
-              );
             })
           ];
 

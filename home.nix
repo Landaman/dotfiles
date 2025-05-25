@@ -43,6 +43,12 @@ let
     "com.spotify.client"
     "com.flightyapp.flighty"
   ];
+
+  # Globs that should never be shown, passed to FD and RG default arguments
+  neverShowGlobs = [
+    ".git/"
+    ".DS_Store"
+  ];
 in
 {
   # Tell Home Manager who it is managing in this config
@@ -54,6 +60,28 @@ in
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
+
+  # This file will be respected by fd and ripgrep whenever you're in a subdirectory of home (most things)
+  # AND it overrides .gitignore, even with ! patterns (careful with subdirectories - if they are not traversed, you can't unignore files in them!)
+  home.file.".ignore".text = ''
+    metals.sbt
+    node_modules/
+    .venv/
+    __pycache__/
+    .metals/
+    .bloop/
+    .ammonite/
+    .turbo/
+    .yarn/
+    .firebase/
+    .next/
+    .svelte-kit/
+    .husky/_
+
+    !.env*
+    !.vscode/
+    !.vscode/**/*
+  '';
 
   home.file.".p10k.zsh".source = ./.p10k.zsh;
 
@@ -178,11 +206,11 @@ in
       export MANPAGER="sh -c 'sed -u -e \"s/\\x1B\[[0-9;]*m//g; s/.\\x08//g\" | bat -p -lman'"
 
       _fzf_compgen_path() {
-        fdi --type f --follow --color=never --hidden "$1"
+        fd --type f --follow --color=never --hidden "$1"
       }
 
       _fzf_compgen_dir() {
-        fdi --type d --follow --color=never --hidden "$1";
+        fd --type d --follow --color=never --hidden "$1";
       }
 
       source ${pkgs.zsh-powerlevel10k}/share/zsh-powerlevel10k/powerlevel10k.zsh-theme
@@ -268,11 +296,11 @@ in
   programs.fzf = rec {
     enable = true;
     defaultCommand = ''
-      fdi --type f --follow --strip-cwd-prefix --color=never --hidden
+      fd --type f --follow --strip-cwd-prefix --color=never --hidden
     '';
     fileWidgetCommand = "${defaultCommand}";
     changeDirWidgetCommand = ''
-      fdi --type d --follow --color=never --hidden
+      fd --type d --follow --color=never --hidden
     '';
     defaultOptions = [
       "--tmux"
@@ -370,7 +398,17 @@ in
     ];
   };
 
-  programs.fd.enable = true;
+  programs.fd = {
+    enable = true;
+    # This effectively always hides .git and DS_Store via a shell alias. Using \fd should prevent that, if desired
+    extraOptions = builtins.map (globPattern: "--exclude=${globPattern}") neverShowGlobs;
+  };
+
+  programs.ripgrep = {
+    enable = true;
+    # This effectively always hides .git and DS_Store via the ripgrep config sytnax
+    arguments = builtins.map (globPattern: "--glob=!${globPattern}") neverShowGlobs;
+  };
 
   programs.google-chrome = {
     enable = true;
@@ -420,7 +458,6 @@ in
     delta
     nixfmt-rfc-style
     sqlite
-    ripgrep # NeoVim dependency
     tree-sitter # NeoVim dependency
     raycast
     cyberduck
@@ -431,7 +468,5 @@ in
     discord
     vscode
     zoxide-fzf-tmux-session
-    find-directory-ignore
-    ripgrep-ignore
   ];
 }
