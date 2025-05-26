@@ -198,27 +198,29 @@ in
   # ZSH config
   programs.zsh = {
     enable = true;
-    initExtraFirst = ''
-      if [[ -r "''${XDG_CACHE_HOME:-''$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh" ]]; then
-        source "''${XDG_CACHE_HOME:-''$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh"
-      fi
-    '';
-    initExtra = ''
-      ZSH_THEME_TERM_TITLE_IDLE="%~"
+    initContent = lib.mkMerge [
+      (lib.mkBefore ''
+        if [[ -r "''${XDG_CACHE_HOME:-''$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh" ]]; then
+          source "''${XDG_CACHE_HOME:-''$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh"
+        fi
+      '')
+      ''
+        ZSH_THEME_TERM_TITLE_IDLE="%~"
 
-      export MANPAGER="sh -c 'sed -u -e \"s/\\x1B\[[0-9;]*m//g; s/.\\x08//g\" | bat -p -lman'"
+        export MANPAGER="sh -c 'sed -u -e \"s/\\x1B\[[0-9;]*m//g; s/.\\x08//g\" | bat -p -lman'"
 
-      _fzf_compgen_path() {
-        fd --type f --follow --color=never --hidden "$1"
-      }
+        _fzf_compgen_path() {
+          fd --type f --follow --color=never --hidden "$1"
+        }
 
-      _fzf_compgen_dir() {
-        fd --type d --follow --color=never --hidden "$1";
-      }
+        _fzf_compgen_dir() {
+          fd --type d --follow --color=never --hidden "$1";
+        }
 
-      source ${pkgs.zsh-powerlevel10k}/share/zsh-powerlevel10k/powerlevel10k.zsh-theme
-      [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-    '';
+        source ${pkgs.zsh-powerlevel10k}/share/zsh-powerlevel10k/powerlevel10k.zsh-theme
+        [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+      ''
+    ];
     plugins = with pkgs; [
       (packageWithZCompile rec {
         name = "omz-lib";
@@ -415,6 +417,7 @@ in
   # Packages available to only this user
   home.packages = with pkgs; [
     aerospace
+    bruno
     wireshark
     bitwarden-cli
     nixd
@@ -424,7 +427,6 @@ in
     raycast
     cyberduck
     nosql-workbench
-    postman
     utm
     spotify
     discord
