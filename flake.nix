@@ -179,6 +179,7 @@
           programs.zsh.enableBashCompletion = false;
 
           # Setup homebrew and install necessary dependencies
+          system.primaryUser = username;
           homebrew.enable = true;
           homebrew.brews = [
             "sst"
