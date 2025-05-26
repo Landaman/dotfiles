@@ -82,11 +82,14 @@ in
     .firebase/
     .next/
     .svelte-kit/
-    .husky/_
+
+    # The ** is necessary since otherwise this is ignored further down the tree
+    # **/.husky/_/ this is currently BROKEN due to an issue in ripgrep itself (see https://github.com/BurntSushi/ripgrep/pull/2933 for updates)
+    # Temporary fix for the above to exclude the .husky/_ dir. For some reason this has to be recursive
+    **/_/ 
 
     !.env*
     !.vscode/
-    !.vscode/**/*
   '';
 
   home.file.".p10k.zsh".source = ./.p10k.zsh;
