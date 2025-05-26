@@ -7,6 +7,7 @@
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
+    catppuccin.url = "github:catppuccin/nix";
   };
 
   outputs =
@@ -15,6 +16,7 @@
       nix-darwin,
       nixpkgs,
       home-manager,
+      catppuccin,
     }:
     let
       hostname = "Ians-MacBook-Pro";
@@ -113,16 +115,11 @@
                 else
                   prev.ghostty;
 
-              tmuxPlugins = prev.tmuxPlugins // {
-                catppuccin = prev.tmuxPlugins.catppuccin.overrideAttrs (oldAttrs: {
-                  version = "2024-12-07";
-                  src = prev.fetchFromGitHub {
-                    owner = "catppuccin";
-                    repo = "tmux";
-                    rev = "320e184a31d0825cb4f4af550492cbdff2fc3ffc";
-                    hash = "sha256-gMBpINeHS+5TCsbJBHhXKEF+fG58FmJrIJoQWYdQqc0=";
-                  };
-                });
+              catppuccin-zsh-fsh = final.fetchFromGitHub {
+                owner = "catppuccin";
+                repo = "zsh-fsh";
+                rev = "a9bdf479f8982c4b83b5c5005c8231c6b3352e2a";
+                hash = "sha256-WeqvsKXTO3Iham+2dI1QsNZWA8Yv9BHn1BgdlvR8zaw=";
               };
 
               zoxide-fzf-tmux-session = (import ./zoxide-fzf-tmux-session.nix { pkgs = final; });
@@ -279,7 +276,12 @@
 
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
-            home-manager.users.${username} = import ./home.nix;
+            home-manager.users.${username} = {
+              imports = [
+                ./home.nix
+                catppuccin.homeModules.catppuccin
+              ];
+            };
           }
         ];
       };
@@ -288,7 +290,11 @@
       editorDarwinConfiguration = self.darwinConfigurations.${hostname};
       editorHomeManagerConfiguration = home-manager.lib.homeManagerConfiguration {
         pkgs = self.editorDarwinConfiguration.pkgs; # Inherit pkgs from Darwin
-        modules = [ ./home.nix ]; # Load the OS
+        modules = [
+          ./home.nix
+          catppuccin.homeModules.catppuccin
+
+        ]; # Load the OS
       };
     };
 }

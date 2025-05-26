@@ -1,6 +1,7 @@
 {
   pkgs,
   config,
+  lib,
   ...
 }:
 let
@@ -20,13 +21,6 @@ let
       cp -r * $outdir
     '';
   });
-
-  catppuccinFsh = pkgs.fetchFromGitHub {
-    owner = "catppuccin";
-    repo = "zsh-fsh";
-    rev = "a9bdf479f8982c4b83b5c5005c8231c6b3352e2a";
-    hash = "sha256-WeqvsKXTO3Iham+2dI1QsNZWA8Yv9BHn1BgdlvR8zaw=";
-  };
 
   floatingApps = [
     "com.apple.MobileSMS"
@@ -51,6 +45,18 @@ let
   ];
 in
 {
+  catppuccin = {
+    flavor = "mocha";
+    ghostty.enable = true;
+    bat.enable = true;
+    delta.enable = true;
+    tmux = {
+      enable = true;
+      extraConfig = "set -g @catppuccin_window_status_style \"none\"";
+    };
+    fzf.enable = true;
+  };
+
   # Tell Home Manager who it is managing in this config
   home.username = "ianwright";
   home.homeDirectory = "/Users/ianwright";
@@ -84,9 +90,6 @@ in
   '';
 
   home.file.".p10k.zsh".source = ./.p10k.zsh;
-
-  # Link themes for catpuccin fsh
-  home.file."${config.xdg.configHome}/fsh".source = "${catppuccinFsh}/themes";
 
   home.file.".aerospace.toml".text = ''
     start-at-login = true
@@ -248,14 +251,15 @@ in
         package = zsh-fast-syntax-highlighting.overrideAttrs (oldAttrs: {
           nativeBuildInputs = oldAttrs.nativeBuildInputs or [ ] ++ [ zsh ];
 
-          # This little bit of extra work automatically sets up catppuccin with FSH
+          # This little bit of extra work automatically sets up catppuccin with FSH and
+          # ensures the startup is zcompiled
           installPhase =
             oldAttrs.installPhase
             + ''
               env plugindir="$plugindir" zsh -c '
                 export FAST_WORK_DIR="$plugindir"
                 source "$plugindir/fast-syntax-highlighting.plugin.zsh"
-                fast-theme ${catppuccinFsh}/themes/catppuccin-mocha
+                fast-theme ${catppuccin-zsh-fsh}/themes/catppuccin-${config.catppuccin.flavor}
               '
             '';
         });
@@ -279,13 +283,8 @@ in
     ];
   };
 
-  programs.ghostty = {
-    enable = true;
-    settings = {
-      theme = "catppuccin-mocha";
-      quit-after-last-window-closed = true;
-    };
-  };
+  programs.ghostty.enable = true;
+
   programs.zoxide.enable = true;
 
   programs.neovim = {
@@ -306,19 +305,16 @@ in
       "--tmux"
       "--multi"
     ];
+    # TODO: If catppuccin/nix ever gets fixed, migrate to completely that instead of this nonsense
     colors = {
-      spinner = "#f5e0dc";
-      bg = "#1e1e2e";
-      "bg+" = "#313244";
-      hl = "#f38ba8";
-      fg = "#cdd6f4";
-      header = "#f38ba8";
-      info = "#cba6f7";
-      pointer = "#f5e0dc";
-      marker = "#b4befe";
-      prompt = "#cba6f7";
-      "hl+" = "#f38ba8";
-      selected-bg = "#45475a";
+      hl = lib.mkForce "#f38ba8";
+      header = lib.mkForce "#f38ba8";
+      pointer = lib.mkForce "#f5e0dc";
+      marker = lib.mkForce "#b4befe";
+      "hl+" = lib.mkForce "#f38ba8";
+      selected-bg = lib.mkForce "#45475a";
+      border = lib.mkForce "#313244";
+      label = lib.mkForce "#CDD6F4";
     };
     tmux = {
       enableShellIntegration = true;
@@ -353,12 +349,6 @@ in
     '';
     plugins = with pkgs.tmuxPlugins; [
       {
-        plugin = catppuccin;
-        extraConfig = ''
-          set -g @catppuccin_window_status_style "none"
-        '';
-      }
-      {
         plugin = pain-control;
       }
       {
@@ -375,22 +365,6 @@ in
 
   programs.bat = {
     enable = true;
-    config = {
-      theme = "Catppuccin Mocha";
-    };
-    themes = {
-      "Catppuccin Mocha" = {
-        src = "${
-          pkgs.fetchFromGitHub {
-            owner = "catppuccin";
-            repo = "bat";
-            rev = "699f60fc8ec434574ca7451b444b880430319941";
-            sha256 = "sha256-6fWoCH90IGumAMc4buLRWL0N61op+AuMNN9CAR9/OdI=";
-          }
-        }/themes";
-        file = "Catppuccin Mocha.tmTheme";
-      };
-    };
     extraPackages = with pkgs.bat-extras; [
       batdiff
       batman
@@ -424,26 +398,15 @@ in
     enable = true;
     userName = "Ian Wright";
     userEmail = "49083526+Landaman@users.noreply.github.com";
-    includes = [
-      {
-        path = "${
-          pkgs.fetchFromGitHub {
-            owner = "catppuccin";
-            repo = "delta";
-            rev = "e9e21cffd98787f1b59e6f6e42db599f9b8ab399";
-            hash = "sha256-04po0A7bVMsmYdJcKL6oL39RlMLij1lRKvWl5AUXJ7Q=";
-          }
-        }/catppuccin.gitconfig";
-      }
-    ];
+    delta = {
+      enable = true;
+      options = {
+        navigate = true;
+      };
+    };
     extraConfig = {
       init.defaultBranch = "main";
       merge.tool = "nvimdiff";
-      diff.tool = "nvimdiff";
-      core.pager = "delta";
-      interactive.diffFilter = "delta --color-only";
-      delta.navigate = true;
-      delta.features = "catppuccin-mocha";
       merge.conflictstyle = "zdiff3";
 
     };
@@ -455,7 +418,6 @@ in
     wireshark
     bitwarden-cli
     nixd
-    delta
     nixfmt-rfc-style
     sqlite
     tree-sitter # NeoVim dependency
