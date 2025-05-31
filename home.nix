@@ -436,5 +436,6 @@ in
     discord
     vscode
     zoxide-fzf-tmux-session
+    fastmod
   ];
 }
