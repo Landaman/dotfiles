@@ -36,6 +36,7 @@ let
     "com.apple.weather"
     "com.spotify.client"
     "com.flightyapp.flighty"
+    "com.apple.Home"
   ];
 
   # Globs that should never be shown, passed to FD and RG default arguments
