@@ -420,6 +420,7 @@ in
 
   # Packages available to only this user
   home.packages = with pkgs; [
+    terraform
     aerospace
     bruno
     wireshark
