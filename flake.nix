@@ -160,8 +160,6 @@
             qemu
             curl
             wget
-            gnupg
-            zulu17
           ];
 
           # Necessary for using flakes on this system.
