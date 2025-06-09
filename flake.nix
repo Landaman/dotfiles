@@ -128,6 +128,19 @@
                   '';
               });
 
+              terraform = prev.terraform.overrideAttrs (oldAttrs: {
+                nativeBuildInputs = (oldAttrs.nativeBuildInputs or [ ]) ++ [ prev.installShellFiles ];
+                postInstall =
+                  oldAttrs.postInstall
+                  + ''
+                    installShellCompletion --name _terraform --zsh <(cat <<EOF
+                      #compdef terraform
+
+                      autoload -U +X bashcompinit && bashcompinit
+                      complete -C $out/bin/terraform terraform
+                    EOF)
+                  '';
+              });
               catppuccin-zsh-fsh = final.fetchFromGitHub {
                 owner = "catppuccin";
                 repo = "zsh-fsh";
