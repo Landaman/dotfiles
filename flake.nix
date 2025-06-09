@@ -115,6 +115,19 @@
                 else
                   prev.ghostty;
 
+              awscli2 = prev.awscli2.overrideAttrs (oldAttrs: {
+                nativeBuildInputs = (oldAttrs.nativeBuildInputs or [ ]) ++ [ prev.installShellFiles ];
+                postInstall =
+                  oldAttrs.postInstall
+                  + ''
+                    installShellCompletion --name _aws --zsh <(cat <<EOF
+                      #compdef aws
+
+                      source $out/bin/aws_zsh_completer.sh
+                    EOF)
+                  '';
+              });
+
               catppuccin-zsh-fsh = final.fetchFromGitHub {
                 owner = "catppuccin";
                 repo = "zsh-fsh";
@@ -149,7 +162,6 @@
             wget
             gnupg
             zulu17
-            awscli2
           ];
 
           # Necessary for using flakes on this system.

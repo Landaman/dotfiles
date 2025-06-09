@@ -277,14 +277,10 @@ in
         path = "zsh-autosuggestions";
         file = "zsh-autosuggestions.zsh";
       })
+      # No ZCompile bc this has nothing to source - it only adds completions to fpath
       {
         name = zsh-completions.pname;
         src = "${zsh-completions}/share/zsh/site-functions";
-      }
-      {
-        name = awscli2.pname;
-        file = "bin/aws_zsh_completer.sh";
-        src = "${awscli2}";
       }
     ];
   };
@@ -420,6 +416,7 @@ in
 
   # Packages available to only this user
   home.packages = with pkgs; [
+    awscli2
     terraform
     aerospace
     bruno
