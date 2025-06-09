@@ -141,6 +141,32 @@
                     EOF)
                   '';
               });
+
+              # Add completion for pnpm
+              corepack_20 = prev.corepack_20.overrideAttrs (oldAttrs: {
+                nativeBuildInputs = (oldAttrs.nativeBuildInputs or [ ]) ++ [
+                  prev.installShellFiles
+                  prev.cacert # This results in us downloading pnpm, so we need certs for that
+                ];
+
+                # They did it wrong, so fix their mistakes...
+                installPhase =
+                  ''
+                    runHook preInstall
+                  ''
+                  + oldAttrs.installPhase
+                  + ''
+                    runHook postInstall
+                  '';
+
+                postInstall =
+                  (oldAttrs.postInstall or "")
+                  # We need to do the COREPACK_HOME so that downloading pnpm succeeds. Otherwise, it will use the homeless store
+                  + ''
+                    export COREPACK_HOME=$out/tmp && installShellCompletion --name _pnpm --zsh <($out/bin/pnpm completion zsh);
+                  '';
+              });
+
               catppuccin-zsh-fsh = final.fetchFromGitHub {
                 owner = "catppuccin";
                 repo = "zsh-fsh";
