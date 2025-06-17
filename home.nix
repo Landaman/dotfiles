@@ -213,14 +213,6 @@ in
 
         export MANPAGER="sh -c 'sed -u -e \"s/\\x1B\[[0-9;]*m//g; s/.\\x08//g\" | bat -p -lman'"
 
-        _fzf_compgen_path() {
-          fd --type f --follow --color=never --hidden "$1"
-        }
-
-        _fzf_compgen_dir() {
-          fd --type d --follow --color=never --hidden "$1";
-        }
-
         source ${pkgs.zsh-powerlevel10k}/share/zsh-powerlevel10k/powerlevel10k.zsh-theme
         [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
       ''
@@ -297,11 +289,15 @@ in
   programs.fzf = rec {
     enable = true;
     defaultCommand = ''
-      fd --type f --follow --strip-cwd-prefix --color=never --hidden
+      fd --type f --follow --strip-cwd-prefix --color=never --hidden ${
+        lib.concatMapStringsSep " " (globPattern: "--exclude=${globPattern}") neverShowGlobs
+      }
     '';
     fileWidgetCommand = "${defaultCommand}";
     changeDirWidgetCommand = ''
-      fd --type d --follow --color=never --hidden
+      fd --type d --follow --color=never --hidden ${
+        lib.concatMapStringsSep " " (globPattern: "--exclude=${globPattern}") neverShowGlobs
+      }
     '';
     defaultOptions = [
       "--tmux"
