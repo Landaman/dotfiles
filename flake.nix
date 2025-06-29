@@ -248,6 +248,7 @@
             "firefox"
             "docker"
             "betterdisplay"
+            "mullvadvpn"
           ];
           homebrew.masApps = {
             daisydisk = 411643860;
