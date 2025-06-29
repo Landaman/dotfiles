@@ -431,5 +431,7 @@ in
     vscode
     zoxide-fzf-tmux-session
     fastmod
+    mullvad-vpn
+    mullvad
   ];
 }
