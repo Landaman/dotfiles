@@ -116,22 +116,15 @@ in
         alt-slash = 'layout tiles horizontal vertical'
         alt-comma = 'layout accordion horizontal vertical'
 
-        alt-enter = ''''exec-and-forget sh -c '
-          CURRENT_WORKSPACE=$(aerospace list-workspaces --focused)
-
-          osascript -e "
-            if application \"Ghostty\" is running then
-              tell application \"System Events\"
-                tell application \"Ghostty\" to activate
-                keystroke \"n\" using {command down}
-              end tell
-            else
-              tell application \"Ghostty\" to activate
-            end if
-          "
-
-          aerospace move-node-to-workspace $CURRENT_WORKSPACE
-          aerospace summon-workspace $CURRENT_WORKSPACE
+        alt-enter = ''''exec-and-forget osascript -e '
+        if application "Ghostty" is running then
+            tell application "System Events"
+                tell application "Ghostty" to activate
+                keystroke "n" using {command down}
+            end tell
+        else
+            tell application "Ghostty" to activate
+        end if
         '
         ''''
 
