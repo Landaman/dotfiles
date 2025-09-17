@@ -27,14 +27,14 @@
         {
           nixpkgs.overlays = [
             (final: prev: {
-              # This must be an overlay
               bitwarden-cli = prev.bitwarden-cli.overrideAttrs (oldAttrs: {
+                meta.broken = false;
                 # Needs both, won't work without one or the other
                 nativeBuildInputs = (oldAttrs.nativeBuildInputs or [ ]) ++ [ prev.llvmPackages_18.stdenv.cc ];
                 stdenv = prev.llvmPackages_18.stdenv;
               });
 
-              # Ghostty is broken for just MacOS, so rebuild it for just MacOS
+              # Ghostty is broken for just MacOS, so rebuild it for just MacOS using the released dmg
               ghostty =
                 if prev.stdenv.isDarwin then
                   pkgs.stdenvNoCC.mkDerivation rec {
@@ -44,20 +44,25 @@
                       ;
 
                     meta = prev.ghostty.meta // {
-                      broken = false;
+                      platforms = prev.ghostty.meta.platforms ++ [ "aarch64-darwin" ];
                       outputsToInstall = outputs;
                     };
 
                     src = prev.fetchurl {
                       url = "https://release.files.ghostty.org/${version}/Ghostty.dmg";
                       name = "Ghostty.dmg";
-                      hash = "sha256-ZOUUGI9UlZjxZtbctvjfKfMz6VTigXKikB6piKFPJkc=";
+                      hash = "sha256-QyHKQ00iRxWS6GwPfRAi9RDSlgX/50N0+MASmnPGAo4=";
                     };
 
                     nativeBuildInputs = [
-                      prev._7zz
+                      prev._7zz # Needed to extract from Ghostty dmg
                       prev.makeBinaryWrapper
                     ];
+
+                    # Suppress warnings about dangerous symbolic paths
+                    unpackPhase = ''
+                      7zz x -snld $src
+                    '';
 
                     sourceRoot = ".";
                     installPhase = ''
@@ -117,29 +122,25 @@
 
               awscli2 = prev.awscli2.overrideAttrs (oldAttrs: {
                 nativeBuildInputs = (oldAttrs.nativeBuildInputs or [ ]) ++ [ prev.installShellFiles ];
-                postInstall =
-                  oldAttrs.postInstall
-                  + ''
-                    installShellCompletion --name _aws --zsh <(cat <<EOF
-                      #compdef aws
+                postInstall = oldAttrs.postInstall + ''
+                  installShellCompletion --name _aws --zsh <(cat <<EOF
+                    #compdef aws
 
-                      source $out/bin/aws_zsh_completer.sh
-                    EOF)
-                  '';
+                    source $out/bin/aws_zsh_completer.sh
+                  EOF)
+                '';
               });
 
               terraform = prev.terraform.overrideAttrs (oldAttrs: {
                 nativeBuildInputs = (oldAttrs.nativeBuildInputs or [ ]) ++ [ prev.installShellFiles ];
-                postInstall =
-                  oldAttrs.postInstall
-                  + ''
-                    installShellCompletion --name _terraform --zsh <(cat <<EOF
-                      #compdef terraform
+                postInstall = oldAttrs.postInstall + ''
+                  installShellCompletion --name _terraform --zsh <(cat <<EOF
+                    #compdef terraform
 
-                      autoload -U +X bashcompinit && bashcompinit
-                      complete -C $out/bin/terraform terraform
-                    EOF)
-                  '';
+                    autoload -U +X bashcompinit && bashcompinit
+                    complete -C $out/bin/terraform terraform
+                  EOF)
+                '';
               });
 
               # Add completion for pnpm
@@ -150,14 +151,13 @@
                 ];
 
                 # They did it wrong, so fix their mistakes...
-                installPhase =
-                  ''
-                    runHook preInstall
-                  ''
-                  + oldAttrs.installPhase
-                  + ''
-                    runHook postInstall
-                  '';
+                installPhase = ''
+                  runHook preInstall
+                ''
+                + oldAttrs.installPhase
+                + ''
+                  runHook postInstall
+                '';
 
                 postInstall =
                   (oldAttrs.postInstall or "")
@@ -246,9 +246,9 @@
             "balenaetcher"
             "figma"
             "firefox"
-            "docker"
+            "docker-desktop"
             "betterdisplay"
-            "mullvadvpn"
+            "mullvad-vpn"
           ];
           homebrew.masApps = {
             daisydisk = 411643860;
@@ -289,9 +289,9 @@
 
           # Dock contents
           system.defaults.dock.persistent-apps = [
-            "/System/Applications/Launchpad.app"
+            "/System/Applications/Apps.app"
             "/Applications/Bitwarden.app"
-            "/Applications/Safari.app"
+            "/System/Cryptexes/App/System/Applications/Safari.app"
             "/System/Applications/Mail.app"
             "/System/Applications/FaceTime.app"
             "/System/Applications/Messages.app"
