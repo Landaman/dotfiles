@@ -201,6 +201,9 @@ in
           source "''${XDG_CACHE_HOME:-''$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh"
         fi
       '')
+      (lib.mkBefore ''
+        export FAST_WORK_DIR="$HOME/.zsh/plugins/zsh-fast-syntax-highlighting"
+      '')
       ''
         ZSH_THEME_TERM_TITLE_IDLE="%~"
 
@@ -223,36 +226,38 @@ in
             "key-bindings.zsh"
           ];
 
-          installPhase =
-            oldAttrs.installPhase
-            + ''
-              echo "${
-                pkgs.lib.concatStrings (
-                  map (file: ''
-                    source "${file}"
-                  '') libFiles
-                )
-              }" >> $out/share/${path}/${file}
-            '';
+          installPhase = oldAttrs.installPhase + ''
+            echo "${
+              pkgs.lib.concatStrings (
+                map (file: ''
+                  source "${file}"
+                '') libFiles
+              )
+            }" >> $out/share/${path}/${file}
+          '';
         });
         file = "omz.zsh";
         path = "oh-my-zsh/lib";
       })
       (packageWithZCompile {
         package = zsh-fast-syntax-highlighting.overrideAttrs (oldAttrs: {
-          nativeBuildInputs = oldAttrs.nativeBuildInputs or [ ] ++ [ zsh ];
+          nativeBuildInputs = oldAttrs.nativeBuildInputs or [ ] ++ [
+            zsh
+            gnused
+          ];
 
           # This little bit of extra work automatically sets up catppuccin with FSH and
           # ensures the startup is zcompiled
-          installPhase =
-            oldAttrs.installPhase
-            + ''
-              env plugindir="$plugindir" zsh -c '
-                export FAST_WORK_DIR="$plugindir"
-                source "$plugindir/fast-syntax-highlighting.plugin.zsh"
-                fast-theme ${catppuccin-zsh-fsh}/themes/catppuccin-${config.catppuccin.flavor}
-              '
-            '';
+          installPhase = oldAttrs.installPhase + ''
+            env plugindir="$plugindir" zsh -c "$(cat << 'EOF'
+              export FAST_WORK_DIR="$plugindir"
+              source "$plugindir/fast-syntax-highlighting.plugin.zsh"
+              fast-theme ${catppuccin-zsh-fsh}/themes/catppuccin-${config.catppuccin.flavor}
+            EOF
+            )"
+            sed -zE -i 's|[[:blank:]]*if[[:blank:]]*\[\[ ! -w \$FAST_WORK_DIR \]\]; then\r?\n[[:blank:]]*FAST_WORK_DIR="\$\{XDG_CACHE_HOME:-\$HOME/\.cache\}/fsh"\r?\n[[:blank:]]*command mkdir -p "\$FAST_WORK_DIR"\r?\n[[:blank:]]*fi\r?\n?||g' $plugindir/fast-syntax-highlighting.plugin.zsh
+          '';
+          # Sed above is outside of heredoc so nix gets the right sed (gnused). Also, use that grossness so that FSH is okay with an immutable $FAST_WORK_DIR
         });
         path = "zsh/site-functions";
         file = "fast-syntax-highlighting.plugin.zsh";
