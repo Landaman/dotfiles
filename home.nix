@@ -282,6 +282,9 @@ in
   programs.neovim = {
     enable = true;
     defaultEditor = true;
+    extraPackages = with pkgs; [
+      tree-sitter
+    ];
   };
 
   programs.fzf = rec {
@@ -419,7 +422,6 @@ in
     nixd
     nixfmt-rfc-style
     sqlite
-    tree-sitter # NeoVim dependency
     raycast
     cyberduck
     nosql-workbench

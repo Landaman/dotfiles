@@ -188,8 +188,8 @@
           environment.systemPackages = with pkgs; [
             vim
             python313
-            nodejs_20
-            corepack_20
+            nodejs_22
+            corepack_22
             bun
             lua
             openjdk
