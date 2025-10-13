@@ -411,6 +411,14 @@ in
     };
   };
 
+  programs.opencode = {
+    enable = true;
+    settings = {
+      theme = "system";
+      autoshare = false;
+    };
+  };
+
   # Packages available to only this user
   home.packages = with pkgs; [
     awscli2
