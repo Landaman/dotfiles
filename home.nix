@@ -342,6 +342,8 @@ in
 
       bind C-p previous-window
       bind C-n next-window
+      bind a last-window
+
       bind Z run-shell tmux-session
 
       set -g status-left-length 100
