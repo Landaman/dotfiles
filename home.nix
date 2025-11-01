@@ -171,8 +171,9 @@ in
         alt-shift-8 = 'move-node-to-workspace 8'
         alt-shift-9 = 'move-node-to-workspace 9'
 
-        alt-tab = 'workspace-back-and-forth'
+        alt-a = 'workspace-back-and-forth'
 
+        alt-tab = 'focus-monitor --wrap-around next'
         alt-shift-tab = 'move-workspace-to-monitor --wrap-around next'
 
         alt-shift-semicolon = 'mode service'
