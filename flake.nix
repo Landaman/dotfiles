@@ -27,13 +27,26 @@
         {
           nixpkgs.overlays = [
             (final: prev: {
-              bitwarden-cli = prev.bitwarden-cli.overrideAttrs (oldAttrs: {
-                meta.broken = false;
-                # Needs both, won't work without one or the other
-                nativeBuildInputs = (oldAttrs.nativeBuildInputs or [ ]) ++ [ prev.llvmPackages_18.stdenv.cc ];
-                stdenv = prev.llvmPackages_18.stdenv;
-              });
+              # https://github.com/NixOS/nixpkgs/issues/458008
+              wireshark = prev.wireshark.overrideAttrs (
+                prevAttrs:
+                let
+                  fixExtcapDir = builtins.replaceStrings [ "lib/wireshark/extcap" ] [ "libexec/wireshark/extcap" ];
+                in
+                {
+                  # Wireshark depends on Qt 6, which requires an SDK >= 12 on macOS
+                  # This is specified on Qt 6 itself, but not correctly propagated
+                  buildInputs =
+                    prevAttrs.buildInputs or [ ]
+                    ++ final.lib.optionals final.stdenv.hostPlatform.isDarwin [
+                      final.apple-sdk_15
+                      (final.darwinMinVersionHook "12.0")
+                    ];
 
+                  postInstall = fixExtcapDir prevAttrs.postInstall or "";
+                  postFixup = fixExtcapDir prevAttrs.postFixup or "";
+                }
+              );
               # Ghostty is broken for just MacOS, so rebuild it for just MacOS using the released dmg
               ghostty =
                 if prev.stdenv.isDarwin then
@@ -51,7 +64,7 @@
                     src = prev.fetchurl {
                       url = "https://release.files.ghostty.org/${version}/Ghostty.dmg";
                       name = "Ghostty.dmg";
-                      hash = "sha256-QyHKQ00iRxWS6GwPfRAi9RDSlgX/50N0+MASmnPGAo4=";
+                      hash = "sha256-817pHxFuKAJ6ufje9FCYx1dbRLQH/4g6Lc0phcSDIGs=";
                     };
 
                     nativeBuildInputs = [

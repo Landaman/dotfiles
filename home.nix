@@ -83,11 +83,7 @@ in
     .firebase/
     .next/
     .svelte-kit/
-
-    # The ** is necessary since otherwise this is ignored further down the tree
-    # **/.husky/_/ this is currently BROKEN due to an issue in ripgrep itself (see https://github.com/BurntSushi/ripgrep/pull/2933 for updates)
-    # Temporary fix for the above to exclude the .husky/_ dir. For some reason this has to be recursive
-    **/_/ 
+    **/.husky/_/ 
 
     !.env*
     !.vscode/
@@ -260,7 +256,7 @@ in
           '';
           # Sed above is outside of heredoc so nix gets the right sed (gnused). Also, use that grossness so that FSH is okay with an immutable $FAST_WORK_DIR
         });
-        path = "zsh/site-functions";
+        path = "zsh/plugins/fast-syntax-highlighting";
         file = "fast-syntax-highlighting.plugin.zsh";
       })
       (packageWithZCompile {
@@ -398,19 +394,22 @@ in
 
   programs.git = {
     enable = true;
-    userName = "Ian Wright";
-    userEmail = "49083526+Landaman@users.noreply.github.com";
-    delta = {
-      enable = true;
-      options = {
-        navigate = true;
-      };
-    };
-    extraConfig = {
+    settings = {
       init.defaultBranch = "main";
       merge.tool = "nvimdiff";
       merge.conflictstyle = "zdiff3";
+      user = {
+        email = "49083526+Landaman@users.noreply.github.com";
+        name = "Ian Wright";
+      };
+    };
+  };
 
+  programs.delta = {
+    enable = true;
+    enableGitIntegration = true;
+    options = {
+      navigate = true;
     };
   };
 
