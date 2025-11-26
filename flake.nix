@@ -249,10 +249,10 @@
             "inetutils"
           ];
           homebrew.casks = [
+            "tailscale-app"
             "google-drive"
             "zoom"
             "mongodb-compass"
-            "openvpn-connect"
             "logi-options+"
             "drawio"
             "proxyman"
