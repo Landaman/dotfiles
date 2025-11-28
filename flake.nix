@@ -27,26 +27,15 @@
         {
           nixpkgs.overlays = [
             (final: prev: {
-              # https://github.com/NixOS/nixpkgs/issues/458008
-              wireshark = prev.wireshark.overrideAttrs (
-                prevAttrs:
-                let
-                  fixExtcapDir = builtins.replaceStrings [ "lib/wireshark/extcap" ] [ "libexec/wireshark/extcap" ];
-                in
-                {
-                  # Wireshark depends on Qt 6, which requires an SDK >= 12 on macOS
-                  # This is specified on Qt 6 itself, but not correctly propagated
-                  buildInputs =
-                    prevAttrs.buildInputs or [ ]
-                    ++ final.lib.optionals final.stdenv.hostPlatform.isDarwin [
-                      final.apple-sdk_15
-                      (final.darwinMinVersionHook "12.0")
-                    ];
+              spotify = prev.spotify.overrideAttrs (oldAttrs: {
+                src = (
+                  prev.fetchurl {
+                    url = "https://web.archive.org/web/20251029235406/https://download.scdn.co/SpotifyARM64.dmg";
+                    hash = "sha256-0gwoptqLBJBM0qJQ+dGAZdCD6WXzDJEs0BfOxz7f2nQ=";
+                  }
+                );
+              });
 
-                  postInstall = fixExtcapDir prevAttrs.postInstall or "";
-                  postFixup = fixExtcapDir prevAttrs.postFixup or "";
-                }
-              );
               # Ghostty is broken for just MacOS, so rebuild it for just MacOS using the released dmg
               ghostty =
                 if prev.stdenv.isDarwin then
@@ -133,17 +122,6 @@
                 else
                   prev.ghostty;
 
-              awscli2 = prev.awscli2.overrideAttrs (oldAttrs: {
-                nativeBuildInputs = (oldAttrs.nativeBuildInputs or [ ]) ++ [ prev.installShellFiles ];
-                postInstall = oldAttrs.postInstall + ''
-                  installShellCompletion --name _aws --zsh <(cat <<EOF
-                    #compdef aws
-
-                    source $out/bin/aws_zsh_completer.sh
-                  EOF)
-                '';
-              });
-
               terraform = prev.terraform.overrideAttrs (oldAttrs: {
                 nativeBuildInputs = (oldAttrs.nativeBuildInputs or [ ]) ++ [ prev.installShellFiles ];
                 postInstall = oldAttrs.postInstall + ''
@@ -157,7 +135,7 @@
               });
 
               # Add completion for pnpm
-              corepack_20 = prev.corepack_20.overrideAttrs (oldAttrs: {
+              corepack_22 = prev.corepack_22.overrideAttrs (oldAttrs: {
                 nativeBuildInputs = (oldAttrs.nativeBuildInputs or [ ]) ++ [
                   prev.installShellFiles
                   prev.cacert # This results in us downloading pnpm, so we need certs for that
@@ -176,7 +154,7 @@
                   (oldAttrs.postInstall or "")
                   # We need to do the COREPACK_HOME so that downloading pnpm succeeds. Otherwise, it will use the homeless store
                   + ''
-                    export COREPACK_HOME=$out/tmp && installShellCompletion --name _pnpm --zsh <($out/bin/pnpm completion zsh);
+                    export COREPACK_HOME=$out/tmp && installShellCompletion --cmd pnpm --zsh <($out/bin/pnpm completion zsh) --bash <($out/bin/pnpm completion bash);
                   '';
               });
 
@@ -244,7 +222,6 @@
           system.primaryUser = username;
           homebrew.enable = true;
           homebrew.brews = [
-            "sst"
             "webp"
             "inetutils"
           ];
@@ -358,7 +335,7 @@
           ./home.nix
           catppuccin.homeModules.catppuccin
 
-        ]; # Load the OS
+        ];
       };
     };
 }

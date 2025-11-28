@@ -58,6 +58,15 @@ in
     fzf.enable = true;
   };
 
+  targets.darwin = {
+    copyApps = {
+      enable = true;
+    };
+    linkApps = {
+      enable = false;
+    };
+  };
+
   # Tell Home Manager who it is managing in this config
   home.username = "ianwright";
   home.homeDirectory = "/Users/ianwright";
@@ -329,7 +338,7 @@ in
       enable = true;
       keepAlive = true;
     };
-    userSettings = {
+    settings = {
       accordion-padding = 30;
       gaps = {
         outer.left = 0;
