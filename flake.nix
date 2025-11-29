@@ -57,8 +57,8 @@
                     };
 
                     nativeBuildInputs = [
-                      prev._7zz # Needed to extract from Ghostty dmg
-                      prev.makeBinaryWrapper
+                      final._7zz # Needed to extract from Ghostty dmg
+                      final.makeBinaryWrapper
                     ];
 
                     # Suppress warnings about dangerous symbolic paths
@@ -123,7 +123,7 @@
                   prev.ghostty;
 
               terraform = prev.terraform.overrideAttrs (oldAttrs: {
-                nativeBuildInputs = (oldAttrs.nativeBuildInputs or [ ]) ++ [ prev.installShellFiles ];
+                nativeBuildInputs = (oldAttrs.nativeBuildInputs or [ ]) ++ [ final.installShellFiles ];
                 postInstall = oldAttrs.postInstall + ''
                   installShellCompletion --name _terraform --zsh <(cat <<EOF
                     #compdef terraform
@@ -137,8 +137,8 @@
               # Add completion for pnpm
               corepack_22 = prev.corepack_22.overrideAttrs (oldAttrs: {
                 nativeBuildInputs = (oldAttrs.nativeBuildInputs or [ ]) ++ [
-                  prev.installShellFiles
-                  prev.cacert # This results in us downloading pnpm, so we need certs for that
+                  final.installShellFiles
+                  final.cacert # This results in us downloading pnpm, so we need certs for that
                 ];
 
                 # They did it wrong, so fix their mistakes...

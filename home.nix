@@ -180,6 +180,10 @@ in
         name = zsh-completions.pname;
         src = "${zsh-completions}/share/zsh/site-functions";
       }
+      {
+        name = tailscale.pname;
+        src = "${tailscale}/share/zsh/site-functions";
+      }
     ];
   };
 
