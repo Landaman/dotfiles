@@ -211,6 +211,10 @@
           # The platform the configuration will be used on.
           nixpkgs.hostPlatform = "aarch64-darwin";
 
+          nix.linux-builder = {
+            enable = true;
+          };
+
           security.pam.services.sudo_local.touchIdAuth = true;
 
           # Disable compinit for ZSH, since we will use it locally
