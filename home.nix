@@ -486,5 +486,6 @@ in
     vscode
     zoxide-fzf-tmux-session
     fastmod
+    git-crypt
   ];
 }
