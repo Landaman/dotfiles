@@ -48,7 +48,7 @@
     in
     {
       nixosConfigurations = {
-        nine-cross = mkPiHole rec {
+        nine-cross-pi-hole = mkPiHole rec {
           systemName = "nine-cross";
           imageName = systemName;
           tailscaleLocationTag = systemName;
