@@ -469,6 +469,7 @@ in
 
   # Packages available to only this user
   home.packages = with pkgs; [
+    gnupg
     awscli2
     terraform
     bruno
