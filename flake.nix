@@ -11,6 +11,7 @@
     catppuccin.url = "github:catppuccin/nix";
     herdr.url = "github:herdrdev/herdr";
     rex.url = "https://pkgs.superlogical.com/rex/nix/snapshot.tar.gz";
+    nixos-hardware.url = "github:nixos/nixos-hardware";
   };
 
   outputs =
@@ -23,11 +24,22 @@
       catppuccin,
       herdr,
       rex,
+      nixos-hardware,
     }:
     let
       hostname = "Ians-MacBook-Pro";
+      mkPiHole = specialArgs: nixpkgs.lib.nixosSystem {
+        system = "aarch64-linux";
+        specialArgs = specialArgs // { hardware = nixos-hardware; };
+        modules = [ ./pi/hardware-pi02.nix ./pi-hole-configuration.nix ];
+      };
     in
     {
+      nixosConfigurations.cross = mkPiHole {
+        imageName = "cross";
+        systemName = "cross";
+        network = {};
+      };
       darwinConfigurations.${hostname} = nix-darwin.lib.darwinSystem {
         specialArgs = {
           inherit
