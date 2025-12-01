@@ -51,7 +51,7 @@
         nine-cross = mkPiHole rec {
           systemName = "nine-cross";
           imageName = systemName;
-          tailscale-tag = systemName;
+          tailscaleLocationTag = systemName;
         };
       };
       darwinConfigurations.${hostname} = nix-darwin.lib.darwinSystem {
