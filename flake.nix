@@ -28,17 +28,31 @@
     }:
     let
       hostname = "Ians-MacBook-Pro";
-      mkPiHole = specialArgs: nixpkgs.lib.nixosSystem {
-        system = "aarch64-linux";
-        specialArgs = specialArgs // { hardware = nixos-hardware; };
-        modules = [ ./pi/hardware-pi02.nix ./pi-hole-configuration.nix ];
-      };
+      secrets = builtins.fromJSON (builtins.readFile ./secrets.json);
+
+      # Helper to make multiple pi systems with the same config
+      mkPiHole =
+        specialArgs:
+        nixpkgs.lib.nixosSystem {
+          system = "aarch64-linux";
+          specialArgs = specialArgs // {
+            inherit secrets;
+            hardware = nixos-hardware;
+          };
+          modules = [
+            ./pi/hardware-pi02.nix
+            ./pi-hole-configuration.nix
+          ];
+        };
+
     in
     {
-      nixosConfigurations.cross = mkPiHole {
-        imageName = "cross";
-        systemName = "cross";
-        network = {};
+      nixosConfigurations = {
+        nine-cross = mkPiHole rec {
+          systemName = "nine-cross";
+          imageName = systemName;
+          tailscale-tag = systemName;
+        };
       };
       darwinConfigurations.${hostname} = nix-darwin.lib.darwinSystem {
         specialArgs = {
