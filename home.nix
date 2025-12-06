@@ -488,5 +488,8 @@ in
     zoxide-fzf-tmux-session
     fastmod
     git-crypt
+    rustfmt
+    clippy
+    rust-analyzer
   ];
 }

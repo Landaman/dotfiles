@@ -187,6 +187,8 @@
             maven
             coursier
             sbt
+            cargo
+            rustc
             qemu
             curl
             wget
