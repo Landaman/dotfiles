@@ -49,9 +49,13 @@
     {
       nixosConfigurations = {
         nine-cross-pi-hole = mkPiHole rec {
-          systemNamePrefix = "nine-cross";
-          imageName = systemNamePrefix;
-          tailscaleLocationTag = systemNamePrefix;
+          systemName = "nine-cross-pi-hole";
+          imageName = systemName;
+        };
+
+        adria-pi-hole = mkPiHole rec {
+          systemName = "adria-pi-hole";
+          imageName = systemName;
         };
       };
       darwinConfigurations.${hostname} = nix-darwin.lib.darwinSystem {
