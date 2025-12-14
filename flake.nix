@@ -34,7 +34,6 @@
       mkPiHole =
         specialArgs:
         nixpkgs.lib.nixosSystem {
-          system = "aarch64-linux";
           specialArgs = specialArgs // {
             inherit secrets;
             hardware = nixos-hardware;
@@ -48,14 +47,12 @@
     in
     {
       nixosConfigurations = {
-        nine-cross-pi-hole = mkPiHole rec {
+        nine-cross-pi-hole = mkPiHole {
           systemName = "nine-cross-pi-hole";
-          imageName = systemName;
         };
 
-        adria-pi-hole = mkPiHole rec {
+        adria-pi-hole = mkPiHole {
           systemName = "adria-pi-hole";
-          imageName = systemName;
         };
       };
       darwinConfigurations.${hostname} = nix-darwin.lib.darwinSystem {
