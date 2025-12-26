@@ -40,7 +40,8 @@
           };
           modules = [
             ./hardware/pi/hardware-pi02.nix
-            ./pi-hole-configuration.nix
+            ./common.nix
+            ./components/pi-hole.nix
           ];
         };
 
