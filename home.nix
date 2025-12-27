@@ -56,6 +56,7 @@ in
       extraConfig = "set -g @catppuccin_window_status_style \"none\"";
     };
     fzf.enable = true;
+    lazygit.enable = true;
   };
 
   targets.darwin = {
@@ -331,7 +332,7 @@ in
   programs.opencode = {
     enable = true;
     settings = {
-      theme = "system";
+      theme = "catppuccin";
       autoshare = false;
     };
   };
@@ -467,6 +468,14 @@ in
     };
   };
 
+  programs.lazygit = {
+    enable = true;
+  };
+
+  programs.lazysql = {
+    enable = true;
+  };
+
   # Packages available to only this user
   home.packages = with pkgs; [
     gnupg
@@ -491,5 +500,6 @@ in
     rustfmt
     clippy
     rust-analyzer
+    wuzz
   ];
 }
