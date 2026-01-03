@@ -83,6 +83,10 @@
         adria-pi-hole = mkPiHole {
           systemName = "adria-pi-hole";
         };
+
+        adria-pi-hole-secondary = mkPiHole {
+          systemName = "adria-pi-hole-secondary";
+        };
       };
       darwinConfigurations.${hostname} = nix-darwin.lib.darwinSystem {
         specialArgs = {
