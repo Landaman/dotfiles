@@ -74,6 +74,8 @@
                 target = "http://localhost:8581";
                 depends = [ "homebridge.service" ];
               };
+              # Required so that Homebridge subrouters/service discovery works
+              networking.firewall.trustedInterfaces = [ "wlan0" ];
             }
           ];
         };
