@@ -485,7 +485,7 @@ in
     wireshark
     bitwarden-cli
     nixd
-    nixfmt-rfc-style
+    nixfmt
     sqlite
     raycast
     cyberduck

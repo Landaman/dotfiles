@@ -27,15 +27,6 @@
         {
           nixpkgs.overlays = [
             (final: prev: {
-              spotify = prev.spotify.overrideAttrs (oldAttrs: {
-                src = (
-                  prev.fetchurl {
-                    url = "https://web.archive.org/web/20251029235406/https://download.scdn.co/SpotifyARM64.dmg";
-                    hash = "sha256-0gwoptqLBJBM0qJQ+dGAZdCD6WXzDJEs0BfOxz7f2nQ=";
-                  }
-                );
-              });
-
               # Ghostty is broken for just MacOS, so rebuild it for just MacOS using the released dmg
               ghostty =
                 if prev.stdenv.isDarwin then
@@ -208,7 +199,7 @@
 
           # Used for backwards compatibility, please read the changelog before changing.
           # $ darwin-rebuild changelog
-          system.stateVersion = 5;
+          system.stateVersion = 6;
 
           # The platform the configuration will be used on.
           nixpkgs.hostPlatform = "aarch64-darwin";
