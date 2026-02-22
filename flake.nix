@@ -149,6 +149,41 @@
                   '';
               });
 
+              crystal = prev.crystal_1_18.overrideAttrs (_: {
+                env.FLAGS = "--single-module";
+              });
+
+              lmstudio =
+                if final.stdenv.isDarwin then
+                  # Fixup for LM Studio, which doesn't work because
+                  # it wants to be in /Applications. This fixes that
+                  prev.lmstudio.overrideAttrs (oldAttrs: {
+                    meta.broken = false;
+
+                    nativeBuildInputs = (oldAttrs.nativeBuildInputs or [ ]) ++ [ final.gnused ];
+
+                    postInstall = ''
+                      runHook postFixup
+                    ''
+                    + (oldAttrs.postInstall or "");
+
+                    postFixup = (oldAttrs.postFixup or "") + ''
+                      # Bypass the /Applications path check in the main index.js
+                      # LM Studio verifies the app is running from /Applications and shows an
+                      # error dialog + refuses to auto-update if not. Replace the '/Applications'
+                      # string literal with '/' so that any absolute path (e.g. /nix/store/...)
+                      # passes the startsWith check. This works across obfuscated versions because
+                      # the literal string '/Applications' is stable even when variable names change.
+                      local indexJs="$out/Applications/LM Studio.app/Contents/Resources/app/.webpack/main/index.js"
+                      substituteInPlace "$indexJs" --replace-quiet "'/Applications'" "'/'"
+
+                      # Re-sign the app bundle after patching, otherwise macOS reports it as damaged
+                      /usr/bin/codesign --force --deep --sign - "$out/Applications/LM Studio.app"
+                    '';
+                  })
+                else
+                  prev.lmstudio;
+
               catppuccin-zsh-fsh = final.fetchFromGitHub {
                 owner = "catppuccin";
                 repo = "zsh-fsh";
@@ -245,7 +280,6 @@
             "Hidden Bar" = 1452453066;
             colorslurp = 1287239339;
             goodnotes = 1444383602;
-            messenger = 1480068668;
             adgaurd = 1440147259;
             whatsapp = 310633997;
             keynote = 409183694;
@@ -283,7 +317,6 @@
             "/System/Applications/Phone.app"
             "/System/Applications/Messages.app"
             "${pkgs.discord}/Applications/discord.app"
-            "/Applications/Messenger.app"
             "/Applications/WhatsApp.localized/WhatsApp.app"
             "/System/Applications/Calendar.app"
             "/Applications/Goodnotes.app"

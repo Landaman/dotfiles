@@ -501,5 +501,6 @@ in
     clippy
     rust-analyzer
     wuzz
+    lmstudio
   ];
 }
