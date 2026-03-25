@@ -321,6 +321,15 @@ in
     };
   };
 
+  programs.jujutsu = {
+    enable = true;
+    settings = {
+      user = {
+        name = "Ian Wright";
+      };
+    };
+  };
+
   programs.delta = {
     enable = true;
     enableGitIntegration = true;
