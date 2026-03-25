@@ -386,6 +386,8 @@ in
         '
         ";
 
+        alt-f = "fullscreen";
+
         alt-h = "focus left";
         alt-j = "focus down";
         alt-k = "focus up";
