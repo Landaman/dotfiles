@@ -25,200 +25,13 @@
       configuration =
         { pkgs, ... }:
         {
-          nixpkgs.overlays = [
-            (final: prev: {
-              # Ghostty is broken for just MacOS, so rebuild it for just MacOS using the released dmg
-              ghostty =
-                if prev.stdenv.isDarwin then
-                  pkgs.stdenvNoCC.mkDerivation rec {
-                    inherit (prev.ghostty)
-                      pname
-                      version
-                      ;
-
-                    meta = prev.ghostty.meta // {
-                      platforms = prev.ghostty.meta.platforms ++ [ "aarch64-darwin" ];
-                      outputsToInstall = outputs;
-                    };
-
-                    src = prev.fetchurl {
-                      url = "https://release.files.ghostty.org/${version}/Ghostty.dmg";
-                      name = "Ghostty.dmg";
-                      hash = "sha256-817pHxFuKAJ6ufje9FCYx1dbRLQH/4g6Lc0phcSDIGs=";
-                    };
-
-                    nativeBuildInputs = [
-                      final._7zz # Needed to extract from Ghostty dmg
-                      final.makeBinaryWrapper
-                    ];
-
-                    # Suppress warnings about dangerous symbolic paths
-                    unpackPhase = ''
-                      7zz x -snld $src
-                    '';
-
-                    sourceRoot = ".";
-                    installPhase = ''
-                      runHook preInstall
-
-                      mkdir -p $out/Applications
-                      mv Ghostty.app $out/Applications/
-                      makeWrapper $out/Applications/Ghostty.app/Contents/MacOS/ghostty $out/bin/ghostty
-
-                      runHook postInstall
-                    '';
-
-                    outputs = [
-                      "out"
-                      "man"
-                      "shell_integration"
-                      "terminfo"
-                      "vim"
-                    ];
-
-                    postFixup =
-                      let
-                        resources = "$out/Applications/Ghostty.app/Contents/Resources";
-                      in
-                      ''
-                        mkdir -p $man/share
-                        ln -s ${resources}/man $man/share/man
-
-                        mkdir -p $terminfo/share
-                        ln -s ${resources}/terminfo $terminfo/share/terminfo
-
-                        mkdir -p $shell_integration
-                        for folder in "${resources}/ghostty/shell-integration"/*; do
-                                ln -s $folder $shell_integration/$(basename "$folder")
-                        done
-
-                        mkdir -p $vim
-                        for folder in "${resources}/vim/vimfiles"/*; do
-                                ln -s $folder $vim/$(basename "$folder")
-                        done
-
-                        mkdir -p $out/share/bash-completion
-                        cp -R ${resources}/bash-completion/* $out/share/bash-completion
-
-                        mkdir -p $out/share/zsh
-                        cp -R ${resources}/zsh/* $out/share/zsh
-
-                        mkdir -p $out/share/fish
-                        cp -R ${resources}/fish/* $out/share/fish
-
-                        mkdir -p $out/share/bat
-                        cp -R ${resources}/bat/* $out/share/bat
-                      '';
-                  }
-                else
-                  prev.ghostty;
-
-              terraform = prev.terraform.overrideAttrs (oldAttrs: {
-                nativeBuildInputs = (oldAttrs.nativeBuildInputs or [ ]) ++ [ final.installShellFiles ];
-                postInstall = oldAttrs.postInstall + ''
-                  installShellCompletion --name _terraform --zsh <(cat <<EOF
-                    #compdef terraform
-
-                    autoload -U +X bashcompinit && bashcompinit
-                    complete -C $out/bin/terraform terraform
-                  EOF)
-                '';
-              });
-
-              # Add completion for pnpm
-              corepack_22 = prev.corepack_22.overrideAttrs (oldAttrs: {
-                nativeBuildInputs = (oldAttrs.nativeBuildInputs or [ ]) ++ [
-                  final.installShellFiles
-                  final.cacert # This results in us downloading pnpm, so we need certs for that
-                ];
-
-                # They did it wrong, so fix their mistakes...
-                installPhase = ''
-                  runHook preInstall
-                ''
-                + oldAttrs.installPhase
-                + ''
-                  runHook postInstall
-                '';
-
-                postInstall =
-                  (oldAttrs.postInstall or "")
-                  # We need to do the COREPACK_HOME so that downloading pnpm succeeds. Otherwise, it will use the homeless store
-                  + ''
-                    export COREPACK_HOME=$out/tmp && installShellCompletion --cmd pnpm --zsh <($out/bin/pnpm completion zsh) --bash <($out/bin/pnpm completion bash);
-                  '';
-              });
-
-              crystal = prev.crystal_1_18.overrideAttrs (_: {
-                env.FLAGS = "--single-module";
-              });
-
-              lmstudio =
-                if final.stdenv.isDarwin then
-                  # Fixup for LM Studio, which doesn't work because
-                  # it wants to be in /Applications. This fixes that
-                  prev.lmstudio.overrideAttrs (oldAttrs: {
-                    meta.broken = false;
-
-                    nativeBuildInputs = (oldAttrs.nativeBuildInputs or [ ]) ++ [ final.gnused ];
-
-                    postInstall = ''
-                      runHook postFixup
-                    ''
-                    + (oldAttrs.postInstall or "");
-
-                    postFixup = (oldAttrs.postFixup or "") + ''
-                      # Bypass the /Applications path check in the main index.js
-                      # LM Studio verifies the app is running from /Applications and shows an
-                      # error dialog + refuses to auto-update if not. Replace the '/Applications'
-                      # string literal with '/' so that any absolute path (e.g. /nix/store/...)
-                      # passes the startsWith check. This works across obfuscated versions because
-                      # the literal string '/Applications' is stable even when variable names change.
-                      local indexJs="$out/Applications/LM Studio.app/Contents/Resources/app/.webpack/main/index.js"
-                      substituteInPlace "$indexJs" --replace-quiet "'/Applications'" "'/'"
-
-                      # Re-sign the app bundle after patching, otherwise macOS reports it as damaged
-                      /usr/bin/codesign --force --deep --sign - "$out/Applications/LM Studio.app"
-                    '';
-                  })
-                else
-                  prev.lmstudio;
-
-              catppuccin-zsh-fsh = final.fetchFromGitHub {
-                owner = "catppuccin";
-                repo = "zsh-fsh";
-                rev = "a9bdf479f8982c4b83b5c5005c8231c6b3352e2a";
-                hash = "sha256-WeqvsKXTO3Iham+2dI1QsNZWA8Yv9BHn1BgdlvR8zaw=";
-              };
-
-              zoxide-fzf-tmux-session = (import ./zoxide-fzf-tmux-session.nix { pkgs = final; });
-            })
-          ];
+          nixpkgs.overlays = import ./overlays/default.nix;
 
           # Allow unfree packages, e.g., raycast
           nixpkgs.config.allowUnfree = true;
 
           networking.computerName = appleName;
           networking.hostName = hostname;
-
-          # Packages available to all users
-          environment.systemPackages = with pkgs; [
-            vim
-            python313
-            nodejs_22
-            corepack_22
-            bun
-            lua
-            openjdk
-            maven
-            coursier
-            sbt
-            cargo
-            rustc
-            qemu
-            curl
-            wget
-          ];
 
           # Necessary for using flakes on this system.
           nix.settings.experimental-features = "nix-command flakes";
@@ -253,40 +66,6 @@
           # Setup homebrew and install necessary dependencies
           system.primaryUser = username;
           homebrew.enable = true;
-          homebrew.brews = [
-            "webp"
-            "inetutils"
-          ];
-          homebrew.casks = [
-            "tailscale-app"
-            "google-drive"
-            "zoom"
-            "mongodb-compass"
-            "logi-options+"
-            "drawio"
-            "proxyman"
-            "balenaetcher"
-            "figma"
-            "firefox"
-            "docker-desktop"
-            "betterdisplay"
-            "mullvad-vpn"
-          ];
-          homebrew.masApps = {
-            daisydisk = 411643860;
-            bitwarden = 1352778147;
-            "Raycast Companion" = 6738274497;
-            "The Unarchiver" = 425424353;
-            "Hidden Bar" = 1452453066;
-            colorslurp = 1287239339;
-            goodnotes = 1444383602;
-            adgaurd = 1440147259;
-            whatsapp = 310633997;
-            keynote = 409183694;
-            pages = 409201541;
-            numbers = 409203825;
-            xcode = 497799835;
-          };
 
           # Uninstall all Casks/Brews not specified here on activation
           homebrew.onActivation.cleanup = "zap"; # Zap removes associated files for casks (just in brew directory, not ~/.config etc.)
@@ -295,12 +74,6 @@
           system.defaults.dock.mru-spaces = false; # Do not rearrange spaces by MRU, this is super annoying
           system.defaults.dock.show-recents = false; # Disable recents in Dock
           system.defaults.CustomUserPreferences = {
-            # Disable KB shortcuts for ColorSlurp
-            "com.IdeaPunch.ColorSlurp" = {
-              "KeyboardShortcuts_copyLastCopiedColorGlobalShortcut" = 0;
-              "KeyboardShortcuts_showColorSlurpGlobalShortcut" = 0;
-              "KeyboardShortcuts_showMagnifierGlobalShortcut" = 0;
-            };
             "com.apple.dock" = {
               "contents-immutable" = 1; # Disable changing dock contents interactively
               "size-immutable" = 1; # Disable dock resizing
@@ -329,6 +102,48 @@
             "/System/Applications/iPhone Mirroring.app"
             "/System/Applications/System Settings.app"
           ];
+
+          user.username = username;
+
+          window.floatingApps = [
+            "com.apple.MobileSMS"
+            "com.hnc.Discord"
+            "com.facebook.archon"
+            "com.apple.mail"
+            "com.apple.Music"
+            "com.apple.iBooksX"
+            "com.apple.podcasts"
+            "com.bitwarden.desktop"
+            "com.apple.iCal"
+            "net.whatsapp.WhatsApp"
+            "com.apple.weather"
+            "com.spotify.client"
+            "com.flightyapp.flighty"
+            "com.apple.Home"
+          ];
+
+          files.neverShowGlobs = [
+            ".git/"
+            ".DS_Store"
+          ];
+
+          files.ignoreGlobs = [
+            "metals.sbt"
+            "node_modules/"
+            ".venv/"
+            "__pycache__/"
+            ".metals/"
+            ".bloop/"
+            ".ammonite/"
+            ".turbo/"
+            ".yarn/"
+            ".firebase/"
+            ".next/"
+            ".svelte-kit/"
+            "**/.husky/_/"
+            "!.env*"
+            "!.vscode/"
+          ];
         };
 
     in
@@ -336,7 +151,19 @@
     {
       darwinConfigurations.${hostname} = nix-darwin.lib.darwinSystem {
         modules = [
+          ./modules/user.nix
+          ./modules/files.nix
+          ./modules/window.nix
           configuration
+          ./apps/ai
+          ./apps/shell
+          ./apps/tools
+          ./apps/editors
+          ./apps/lang
+          ./apps/window
+          ./apps/utilities
+          ./apps/desktop
+          ./apps/catppuccin.nix
           home-manager.darwinModules.home-manager
           {
             # Without this, home-manager looses its mind

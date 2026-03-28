@@ -1,0 +1,27 @@
+{
+  imports = [
+    ./bat.nix
+    ./bruno.nix
+    ./delta.nix
+    ./docker.nix
+    ./fastmod.nix
+    ./fd.nix
+    ./fzf.nix
+    ./git-crypt.nix
+    ./git.nix
+    ./gnupg.nix
+    ./jujutsu.nix
+    ./lazygit.nix
+    ./lazysql.nix
+    ./mongodb-compass.nix
+    ./netutils.nix
+    ./nosql-workbench.nix
+    ./qemu.nix
+    ./ripgrep.nix
+    ./sqlite.nix
+    ./utm.nix
+    ./webp.nix
+    ./wireshark.nix
+    ./wuzz.nix
+  ];
+}
