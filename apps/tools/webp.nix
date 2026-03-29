@@ -1,4 +1,10 @@
-{ ... }:
 {
-  homebrew.brews = [ "webp" ];
+  config,
+  pkgs,
+  ...
+}:
+{
+  home-manager.users.${config.user.username}.home.packages = [
+    pkgs.libwebp
+  ];
 }

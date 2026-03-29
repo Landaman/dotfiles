@@ -1,4 +1,8 @@
-{ ... }:
 {
-  homebrew.casks = [ "balenaetcher" ];
+  pkgs,
+  lib,
+  ...
+}:
+{
+  homebrew.casks = lib.mkIf pkgs.stdenv.isDarwin [ "balenaetcher" ];
 }

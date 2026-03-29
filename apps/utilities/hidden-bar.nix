@@ -1,6 +1,6 @@
-{ ... }:
+{ pkgs, lib, ... }:
 {
-  homebrew.masApps = {
+  homebrew.masApps = lib.mkIf pkgs.stdenv.isDarwin {
     "Hidden Bar" = 1452453066;
   };
 }

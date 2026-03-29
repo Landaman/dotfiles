@@ -1,4 +1,13 @@
-{ ... }:
 {
-  homebrew.casks = [ "proxyman" ];
+  config,
+  pkgs,
+  lib,
+  ...
+}:
+{
+  homebrew.casks = lib.mkIf pkgs.stdenv.isDarwin [ "proxyman" ];
+
+  home-manager.users.${config.user.username}.home.packages = lib.mkIf (!pkgs.stdenv.isDarwin) [
+    pkgs.proxyman
+  ];
 }

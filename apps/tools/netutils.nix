@@ -1,8 +1,11 @@
-{ pkgs, ... }:
+{ pkgs, config, ... }:
 {
   environment.systemPackages = with pkgs; [
     curl
     wget
   ];
-  homebrew.brews = [ "inetutils" ];
+
+  home-manager.users.${config.user.username}.home.packages = with pkgs; [
+    inetutils
+  ];
 }

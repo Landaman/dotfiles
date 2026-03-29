@@ -1,6 +1,7 @@
 {
   config,
   pkgs,
+  lib,
   ...
 }:
 let
@@ -11,7 +12,7 @@ in
     bitwarden-cli
   ];
 
-  homebrew.masApps = {
+  homebrew.masApps = lib.mkIf pkgs.stdenv.isDarwin {
     bitwarden = 1352778147;
   };
 }

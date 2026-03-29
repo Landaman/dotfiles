@@ -1,6 +1,6 @@
-{ ... }:
+{ pkgs, lib, ... }:
 {
-  homebrew.masApps = {
+  homebrew.masApps = lib.mkIf pkgs.stdenv.isDarwin {
     xcode = 497799835;
   };
 }
