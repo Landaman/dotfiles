@@ -22,7 +22,15 @@ let
   });
 in
 {
-  home-manager.users.${config.user.username} = {
+  options.zsh = {
+    fast-theme = lib.mkOption {
+      type = lib.types.nullOr lib.types.str;
+      default = null;
+      description = "The theme to use for zsh-fast-syntax-highlighting.";
+    };
+  };
+
+  config.home-manager.users.${config.user.username} = {
     home.file.".p10k.zsh".source = ./.p10k.zsh;
 
     programs.zsh = {
@@ -84,7 +92,7 @@ in
               env plugindir="$plugindir" zsh -c "$(cat << 'EOF'
                 export FAST_WORK_DIR="$plugindir"
                 source "$plugindir/fast-syntax-highlighting.plugin.zsh"
-                fast-theme ${catppuccin-zsh-fsh}/themes/catppuccin-mocha
+                ${if config.zsh.fast-theme != null then "fast-theme ${config.zsh.fast-theme}" else ""}
               EOF
               )"
               sed -zE -i 's|[[:blank:]]*if[[:blank:]]*\[\[ ! -w \$FAST_WORK_DIR \]\]; then\r?\n[[:blank:]]*FAST_WORK_DIR="\$\{XDG_CACHE_HOME:-\$HOME/\.cache\}/fsh"\r?\n[[:blank:]]*command mkdir -p "\$FAST_WORK_DIR"\r?\n[[:blank:]]*fi\r?\n?||g' $plugindir/fast-syntax-highlighting.plugin.zsh

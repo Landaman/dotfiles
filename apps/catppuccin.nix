@@ -1,9 +1,11 @@
 {
   config,
   lib,
+  pkgs,
   ...
 }:
 {
+  zsh.fast-theme = "${pkgs.catppuccin-zsh-fsh}/themes/catppuccin-mocha";
   home-manager.users.${config.user.username} = {
     catppuccin = {
       flavor = "mocha";
