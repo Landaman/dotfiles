@@ -153,7 +153,6 @@
         modules = [
           ./modules/user.nix
           ./modules/files.nix
-          ./modules/window.nix
           configuration
           ./apps/ai
           ./apps/shell
