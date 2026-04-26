@@ -1,7 +1,7 @@
 {
   imports = [
     ./vim.nix
-    ./neovim.nix
+    ./neovim
     ./vscode.nix
     ./xcode.nix
   ];
