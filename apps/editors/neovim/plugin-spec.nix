@@ -1,21 +1,23 @@
 { lib, pkgs, ... }:
 
 let
-  types = lib.types;
+  strOrList = lib.types.either lib.types.str (lib.types.listOf lib.types.str);
 
-  strOrList = types.either types.str (types.listOf types.str);
+  luaExpression = lib.types.submoduleOf {
+    options = {
+      __lua = lib.mkOption { type = lib.types.str; };
+    };
+  };
 
-  lua = types.str;
-
-  boolOrLua = types.oneOf [
-    types.bool
-    lua
+  boolOrLuaExpression = lib.types.oneOf [
+    lib.types.bool
+    luaExpression
   ];
 
-  eventType = types.oneOf [
-    types.str
-    (types.listOf types.str)
-    (types.submodule {
+  eventType = lib.types.oneOf [
+    lib.types.str
+    (lib.types.listOf lib.types.str)
+    (lib.types.submodule {
       options = {
         event = lib.mkOption { type = strOrList; };
         pattern = lib.mkOption { type = strOrList; };
@@ -23,18 +25,21 @@ let
     })
   ];
 
+  mkLuaExpression = code: { __lua = code; };
+  isLuaExpression = v: v ? __lua;
+
 in
 {
   options.programs.neovim.lzePlugins = lib.mkOption {
-    type = types.attrsOf (
-      types.submodule (
+    type = lib.types.attrsOf (
+      lib.types.submodule (
         { config, ... }:
         {
           options = {
             enabled = lib.mkOption {
-              type = boolOrLua;
+              type = boolOrLuaExpression;
               default = true;
-              description = "Whther to enable this plugin. Can be a boolean or a Lua expression that evaluates to a boolean.";
+              description = "Whether to enable this plugin. Can be a boolean or a Lua expression.";
             };
 
             # Copied from the HM definition
@@ -45,7 +50,7 @@ in
 
             # Lua module name (independent of package name)
             module = lib.mkOption {
-              type = types.nullOr types.str;
+              type = lib.types.nullOr lib.types.str;
               default = config.plugin.name;
               description = ''
                 Lua module used for require(). Defaults to the package name if unset.
@@ -54,7 +59,7 @@ in
 
             # Options to use when automatically creating an after function to call setup
             options = lib.mkOption {
-              type = types.nullOr types.attrs;
+              type = lib.types.nullOr lib.types.attrs;
               default = null;
               description = ''
                 Options passed to require('<module>').setup(...). Mutually exclusive with `after`.
@@ -62,61 +67,61 @@ in
             };
 
             beforeAll = lib.mkOption {
-              type = types.nullOr lua;
+              type = lib.types.nullOr luaExpression;
               default = null;
               description = "Always executed upon calling require('lze').load(spec) before any plugin specs from that call are triggered to be loaded.";
             };
 
             before = lib.mkOption {
-              type = types.nullOr lua;
+              type = lib.types.nullOr luaExpression;
               default = null;
               description = "Executed before the plugin is loaded.";
             };
 
             after = lib.mkOption {
-              type = types.nullOr lua;
+              type = lib.types.nullOr luaExpression;
               default = null;
-              description = "Executed after the plgugin is loaded. Mutually exclusive with `options`.";
+              description = "Executed after the plugin is loaded. Mutually exclusive with `options`.";
             };
 
             event = lib.mkOption {
-              type = types.nullOr eventType;
+              type = lib.types.nullOr eventType;
               default = null;
               description = "Lazy-load on event. Events can be specified as BufEnter or with a pattern like BufEnter *.lua.";
             };
 
-            cmd = lib.mkOption {
-              type = types.nullOr strOrList;
+            command = lib.mkOption {
+              type = lib.types.nullOr strOrList;
               default = null;
               description = "Lazy-load on command.";
             };
 
-            ft = lib.mkOption {
-              type = types.nullOr strOrList;
+            filetype = lib.mkOption {
+              type = lib.types.nullOr strOrList;
               default = null;
               description = "Lazy-load on filetype.";
             };
 
             keys = lib.mkOption {
-              type = types.nullOr (types.listOf types.attrs);
+              type = lib.types.nullOr (lib.types.listOf lib.types.attrs);
               default = null;
               description = "Lazy-load on key mapping.";
             };
 
             colorscheme = lib.mkOption {
-              type = types.nullOr strOrList;
+              type = lib.types.nullOr strOrList;
               default = null;
               description = "Lazy-load on colorscheme.";
             };
 
-            dep_of = lib.mkOption {
-              type = types.nullOr strOrList;
+            dependencyOf = lib.mkOption {
+              type = lib.types.nullOr strOrList;
               default = null;
               description = "Lazy-load before another plugin but after its before hook. Accepts a plugin name or a list of plugin names.";
             };
 
-            on_plugin = lib.mkOption {
-              type = types.nullOr strOrList;
+            onPlugin = lib.mkOption {
+              type = lib.types.nullOr strOrList;
               default = null;
               description = "Lazy-load after another plugin but before its after hook. Accepts a plugin name or a list of plugin names.";
             };
@@ -137,8 +142,13 @@ in
     default = { };
     description = ''
       lze plugin specifications for Neovim.
-      This automatically injects plugins into the neovim configuraiton and sets up lazy loading in Lua.
+      This automatically injects plugins into the neovim configuration and sets up lazy loading in Lua.
       Keys are meaningless except to merge specs together.
     '';
+  };
+
+  config = {
+    lib.mkLuaExpression = mkLuaExpression;
+    lib.isLuaExpression = isLuaExpression;
   };
 }
