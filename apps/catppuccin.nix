@@ -6,14 +6,15 @@
 }:
 let
   luaUtils = import ../lib/lua.nix { inherit lib; };
+  flavor = "mocha";
 in
 {
-  zsh.fast-theme = "${pkgs.catppuccin-zsh-fsh}/themes/catppuccin-mocha";
+  zsh.fast-theme = "${pkgs.catppuccin-zsh-fsh}/themes/catppuccin-${flavor}";
   home-manager.users.${config.user.username} = {
     catppuccin = {
       enable = true;
       autoEnable = false;
-      flavor = "mocha";
+      flavor = flavor;
 
       ghostty.enable = true;
       bat.enable = true;
@@ -41,6 +42,6 @@ in
       };
     };
 
-    programs.codex.settings.tui.theme = "catppuccin-mocha";
+    programs.codex.settings.tui.theme = "catppuccin-${flavor}";
   };
 }
