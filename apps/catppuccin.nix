@@ -4,11 +4,17 @@
   pkgs,
   ...
 }:
+let
+  luaUtils = import ../lib/lua.nix { inherit lib; };
+in
 {
   zsh.fast-theme = "${pkgs.catppuccin-zsh-fsh}/themes/catppuccin-mocha";
   home-manager.users.${config.user.username} = {
     catppuccin = {
+      enable = true;
+      autoEnable = false;
       flavor = "mocha";
+
       ghostty.enable = true;
       bat.enable = true;
       delta.enable = true;
@@ -18,6 +24,7 @@
       };
       fzf.enable = true;
       lazygit.enable = true;
+      opencode.enable = true;
     };
 
     programs.fzf = {
@@ -33,5 +40,7 @@
         label = lib.mkForce "#CDD6F4";
       };
     };
+
+    programs.codex.settings.tui.theme = "catppuccin-mocha";
   };
 }
