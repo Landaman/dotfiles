@@ -19,7 +19,7 @@
   home.homeDirectory = "/Users/ianwright";
 
   # Used for backwards compatibility, please read the changelog before changing.
-  home.stateVersion = "24.11";
+  home.stateVersion = "26.05";
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
