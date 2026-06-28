@@ -50,14 +50,5 @@ in
         }
       ];
     };
-
-    programs.fzf = {
-      enable = true;
-      defaultOptions = [ "--tmux" ];
-      tmux = {
-        enableShellIntegration = true;
-        shellIntegrationOptions = [ "-p" ];
-      };
-    };
   };
 }
