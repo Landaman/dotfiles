@@ -23,8 +23,8 @@ in
       '';
       defaultOptions = [
         "--multi"
-      ] ++ lib.optionals config.home-manager.users.${username}.programs.tmux.enable
-      [ "--tmux" ];
+      ]
+      ++ lib.optionals config.home-manager.users.${username}.programs.tmux.enable [ "--tmux" ];
       tmux = lib.mkIf config.home-manager.users.${username}.programs.tmux.enable {
         enableShellIntegration = true;
         shellIntegrationOptions = [ "-p" ];
