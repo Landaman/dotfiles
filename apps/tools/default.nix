@@ -1,6 +1,7 @@
 {
   imports = [
     ./bat.nix
+    ./bitwarden.nix
     ./bruno.nix
     ./delta.nix
     ./docker.nix
