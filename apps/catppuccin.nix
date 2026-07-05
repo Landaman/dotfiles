@@ -43,5 +43,17 @@ in
     };
 
     programs.codex.settings.tui.theme = "catppuccin-${flavor}";
+
+    programs.neovim.lzePlugins.catppuccin = {
+      enabled = luaUtils.mkLuaExpression "not vim.g.vscode";
+      plugin = pkgs.vimPlugins.catppuccin-nvim;
+      beforeAll = luaUtils.mkLuaExpression "function() vim.cmd.colorscheme 'catppuccin-${flavor}' end";
+      colorscheme = [
+        "catppuccin-${flavor}"
+        "catppuccin-frappe"
+        "catppuccin-latte"
+        "catppuccin-macchiato"
+      ];
+    };
   };
 }

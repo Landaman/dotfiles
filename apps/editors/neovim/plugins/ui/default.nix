@@ -1,0 +1,5 @@
+{
+  imports = [
+    ./highlight-colors.nix
+  ];
+}
