@@ -5,6 +5,7 @@
     ./drawio.nix
     ./figma.nix
     ./firefox.nix
+    ./flighty.nix
     ./goodnotes.nix
     ./google-drive.nix
     ./office.nix
