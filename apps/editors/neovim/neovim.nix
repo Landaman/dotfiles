@@ -60,6 +60,7 @@ let
     lib.filter (lua: lua != "") [
       vimGAssignments
       extraConfigRequires
+      "vim.loader.enable()" # Enable the experimental loader for performance
       setupLzeLuaExpression
     ]
   );
