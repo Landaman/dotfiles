@@ -3,6 +3,7 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    nixpkgs-stable.url = "github:NixOS/nixpkgs/nixos-26.05";
     nix-darwin.url = "github:LnL7/nix-darwin";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
     home-manager.url = "github:nix-community/home-manager";
@@ -15,6 +16,7 @@
       self,
       nix-darwin,
       nixpkgs,
+      nixpkgs-stable,
       home-manager,
       catppuccin,
     }:
@@ -22,6 +24,10 @@
       hostname = "Ians-MacBook-Pro";
       appleName = "Ian's MacBook Pro";
       username = "ianwright";
+      stablePkgs = import nixpkgs-stable {
+        system = "aarch64-darwin";
+        config.allowUnfree = true;
+      };
       configuration =
         { pkgs, ... }:
         {
@@ -54,6 +60,7 @@
 
           nix.linux-builder = {
             enable = true;
+            package = stablePkgs.darwin.linux-builder;
             config = {
               virtualisation = {
                 darwin-builder = {
