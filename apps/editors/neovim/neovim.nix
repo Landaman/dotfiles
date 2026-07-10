@@ -58,6 +58,8 @@ let
 
   initLua = lib.concatStringsSep "\n" (
     lib.filter (lua: lua != "") [
+      "vim.g.mapleader = ' '"
+      "vim.g.maplocalleader = ' '"
       vimGAssignments
       extraConfigRequires
       "vim.loader.enable()" # Enable the experimental loader for performance
