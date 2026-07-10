@@ -38,6 +38,33 @@ in
             '';
           };
 
+          extraConfigFiles = lib.mkOption {
+            type = lib.types.listOf (
+              lib.types.submodule (
+                { config, ... }:
+                {
+                  options = {
+                    path = lib.mkOption {
+                      type = lib.types.path;
+                      description = "Lua file to source from init.lua.";
+                    };
+
+                    module = lib.mkOption {
+                      type = lib.types.str;
+                      default = lib.removeSuffix ".lua" (baseNameOf config.path);
+                      defaultText = "The file basename without the .lua suffix.";
+                      description = "Lua module name passed to require().";
+                    };
+                  };
+                }
+              )
+            );
+            default = [ ];
+            description = ''
+              Extra Lua config files to link into the Neovim Lua path and source from init.lua.
+            '';
+          };
+
           lzePlugins = lib.mkOption {
             type = lib.types.attrsOf (
               lib.types.submodule (

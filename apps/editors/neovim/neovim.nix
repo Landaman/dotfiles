@@ -43,21 +43,44 @@ let
     )
   );
 
+  extraConfigFiles = config.home-manager.users.${username}.programs.neovim.extraConfigFiles or [ ];
+
+  extraConfigRequires = lib.concatStringsSep "\n" (
+    lib.map (file: "require '${file.module}'") extraConfigFiles
+  );
+
+  extraConfigXdgFiles = lib.listToAttrs (
+    lib.map (file: {
+      name = "nvim/lua/${file.module}.lua";
+      value.source = file.path;
+    }) extraConfigFiles
+  );
+
   initLua = lib.concatStringsSep "\n" (
     lib.filter (lua: lua != "") [
       vimGAssignments
+      extraConfigRequires
       setupLzeLuaExpression
     ]
   );
 in
 {
-  home-manager.users.${username}.programs.neovim = {
-    enable = true;
-    defaultEditor = true;
-    extraPackages = with pkgs; [
-      tree-sitter
-    ];
-    plugins = allPlugins;
-    initLua = initLua;
+  home-manager.users.${username} = {
+    xdg.configFile = extraConfigXdgFiles;
+
+    programs.neovim = {
+      enable = true;
+      defaultEditor = true;
+      extraConfigFiles = lib.mkBefore [
+        { path = ./config/options.lua; }
+        { path = ./config/keymaps.lua; }
+        { path = ./config/diagnostics.lua; }
+      ];
+      extraPackages = with pkgs; [
+        tree-sitter
+      ];
+      plugins = allPlugins;
+      initLua = initLua;
+    };
   };
 }
