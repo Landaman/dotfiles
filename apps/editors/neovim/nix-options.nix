@@ -46,14 +46,14 @@ in
                   options = {
                     path = lib.mkOption {
                       type = lib.types.path;
-                      description = "Lua file to source from init.lua.";
+                      description = "Lua file to source from init.lua";
                     };
 
                     module = lib.mkOption {
                       type = lib.types.str;
                       default = lib.removeSuffix ".lua" (baseNameOf config.path);
                       defaultText = "The file basename without the .lua suffix.";
-                      description = "Lua module name passed to require().";
+                      description = "Lua module name passed to require()";
                     };
                   };
                 }
