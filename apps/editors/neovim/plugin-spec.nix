@@ -29,6 +29,15 @@ in
     {
       options = {
         programs.neovim = {
+          vimG = lib.mkOption {
+            type = lib.types.attrsOf lib.types.anything;
+            default = { };
+            description = ''
+              Values assigned to vim.g before lazy plugin specs are loaded.
+              Values are converted from Nix to Lua using the same conversion as lze plugin specs.
+            '';
+          };
+
           lzePlugins = lib.mkOption {
             type = lib.types.attrsOf (
               lib.types.submodule (

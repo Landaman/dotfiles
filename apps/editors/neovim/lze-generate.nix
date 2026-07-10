@@ -4,52 +4,14 @@ pluginSpec:
 
 let
   luaUtils = import ../../../lib/lua.nix { inherit lib; };
-
-  toLuaValue =
-    value:
-    let
-      type = builtins.typeOf value;
-    in
-    if value == null then
-      null # Callers should use a luaExpression of nil to evaluate this. This one should be basically JS undefined AKA don't set this value at all
-    else if luaUtils.isLuaExpression value then
-      value.__lua
-    else if type == "bool" then
-      lib.boolToString value
-    else if type == "int" || type == "float" then
-      toString value
-    else if type == "string" then
-      ''"${value}"''
-    else if type == "list" then
-      "{ ${lib.concatStringsSep ", " (map toLuaValue value)} }"
-    else if type == "set" then
-      "{ ${
-        lib.concatStringsSep ", " (
-          lib.mapAttrsToList (
-            k: v:
-            if k == "" then
-              if builtins.typeOf v == "list" then lib.concatStringsSep ", " (map toLuaValue v) else toLuaValue v
-            else
-              "${k} = ${toLuaValue v}"
-          ) value
-        )
-      } }"
-    else
-      "";
-
-  toLuaTable =
-    attrs:
-    let
-      filtered = lib.filterAttrs (k: v: v != null && v != "") attrs;
-    in
-    toLuaValue filtered;
+  nixToLua = import ./nix-to-lua.nix { inherit lib; };
 
   afterLua =
     let
       opts = pluginSpec.options;
     in
     if opts != null then
-      luaUtils.mkLuaExpression "function() require(\"${pluginSpec.module}\").setup(${toLuaTable opts}) end"
+      luaUtils.mkLuaExpression "function() require(\"${pluginSpec.module}\").setup(${nixToLua.toLuaTable opts}) end"
     else
       pluginSpec.after;
 
@@ -80,5 +42,5 @@ in
           after = afterLua;
         };
       in
-      toLuaValue fields;
+      nixToLua.toLuaValue fields;
 }
