@@ -9,13 +9,11 @@ let
   username = config.user.username;
 
   lzeGenerate = import ./lze-generate.nix { inherit lib pkgs; };
+  luaUtils = import ../../../lib/lua.nix { inherit lib; };
   nixToLua = import ./nix-to-lua.nix { inherit lib; };
+  pluginSpecs = config.home-manager.users.${username}.programs.neovim.lzePlugins or { };
 
-  processedPluginSpecs = (
-    lib.mapAttrsToList (_: spec: lzeGenerate spec) (
-      config.home-manager.users.${username}.programs.neovim.lzePlugins or { }
-    )
-  );
+  processedPluginSpecs = (lib.mapAttrsToList (_: spec: lzeGenerate spec) pluginSpecs);
 
   lzePlugins = lib.filter (package: package != null) (
     lib.map (spec: spec.package) processedPluginSpecs
@@ -44,16 +42,36 @@ let
   );
 
   extraConfigFiles = config.home-manager.users.${username}.programs.neovim.extraConfigFiles or [ ];
+  pluginLuaModuleFiles =
+    let
+      collect =
+        value:
+        let
+          type = builtins.typeOf value;
+        in
+        if luaUtils.isLuaModuleFile value then
+          [ value ]
+        else if lib.isDerivation value then
+          [ ]
+        else if type == "list" then
+          lib.concatMap collect value
+        else if type == "set" then
+          lib.concatMap collect (lib.attrValues (removeAttrs value [ "plugin" ]))
+        else
+          [ ];
+    in
+    collect pluginSpecs;
+  linkedLuaFiles = extraConfigFiles ++ pluginLuaModuleFiles;
 
   extraConfigRequires = lib.concatStringsSep "\n" (
-    lib.map (file: "require '${file.module}'") extraConfigFiles
+    lib.map (file: (luaUtils.requireLuaModuleFile file).__lua) extraConfigFiles
   );
 
   extraConfigXdgFiles = lib.listToAttrs (
     lib.map (file: {
-      name = "nvim/lua/${file.module}.lua";
+      name = "nvim/lua/${luaUtils.luaModuleName file}.lua";
       value.source = file.path;
-    }) extraConfigFiles
+    }) linkedLuaFiles
   );
 
   initLua = lib.concatStringsSep "\n" (
@@ -78,6 +96,7 @@ in
         { path = ./config/options.lua; }
         { path = ./config/keymaps.lua; }
         { path = ./config/diagnostics.lua; }
+        { path = ./config/plugin/lze/merge_options.lua; }
       ];
       extraPackages = with pkgs; [
         tree-sitter

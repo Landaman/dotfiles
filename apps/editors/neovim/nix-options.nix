@@ -11,17 +11,37 @@ let
   luaUtils = import ../../../lib/lua.nix { inherit lib; };
   luaExpression = luaUtils.luaExpression;
 
-  strOrList = lib.types.either lib.types.str (lib.types.listOf lib.types.str);
-
+  listOfStrOrLuaExpression = lib.types.oneOf [
+    lib.types.str
+    (lib.types.listOf lib.types.str)
+    luaExpression
+  ];
   boolOrLuaExpression = lib.types.oneOf [
     lib.types.bool
     luaExpression
   ];
 
-  eventType = lib.types.oneOf [
-    lib.types.str
-    (lib.types.listOf lib.types.str)
+  optsExtendPath = lib.types.either lib.types.str (lib.types.listOf lib.types.str);
+  luaModuleFileType = lib.types.submodule {
+    options = {
+      path = lib.mkOption {
+        type = lib.types.path;
+        description = "Lua file to link into the Neovim Lua path";
+      };
+
+      call = lib.mkOption {
+        type = lib.types.nullOr lib.types.str;
+        default = null;
+        description = "Optional member function to select from the required Lua module.";
+      };
+    };
+  };
+  optionsFragment = lib.types.oneOf [
+    lib.types.attrs
+    luaExpression
+    luaModuleFileType
   ];
+  optionsFragments = lib.types.either optionsFragment (lib.types.listOf optionsFragment);
 
 in
 {
@@ -39,29 +59,12 @@ in
           };
 
           extraConfigFiles = lib.mkOption {
-            type = lib.types.listOf (
-              lib.types.submodule (
-                { config, ... }:
-                {
-                  options = {
-                    path = lib.mkOption {
-                      type = lib.types.path;
-                      description = "Lua file to source from init.lua";
-                    };
-
-                    module = lib.mkOption {
-                      type = lib.types.str;
-                      default = lib.removeSuffix ".lua" (baseNameOf config.path);
-                      defaultText = "The file basename without the .lua suffix.";
-                      description = "Lua module name passed to require()";
-                    };
-                  };
-                }
-              )
-            );
+            type = lib.types.listOf luaModuleFileType;
             default = [ ];
             description = ''
-              Extra Lua config files to link into the Neovim Lua path and source from init.lua.
+              Startup Lua config files to link into the Neovim Lua path and require from init.lua.
+              Do not use this for lazy plugin setup modules. Lua files referenced from
+              lzePlugins are linked separately without being required at startup.
             '';
           };
 
@@ -88,16 +91,27 @@ in
                       type = lib.types.nullOr lib.types.str;
                       default = config.plugin.pname;
                       description = ''
-                        Lua module used for require(). Defaults to the plugin package name if unset.
+                        Lua module used for automatic setup with require('<module>').setup(opts).
+                        Defaults to the plugin package name if unset.
+                        Automatic setup is used when `options` is set and `after` is unset.
                       '';
                     };
 
                     # Options to use when automatically creating an after function to call setup
                     options = lib.mkOption {
-                      type = lib.types.nullOr lib.types.attrs;
+                      type = lib.types.nullOr optionsFragments;
                       default = null;
                       description = ''
-                        Options passed to require('<module>').setup(...). Mutually exclusive with `after`.
+                        Options fragments merged at runtime. Fragments can be Nix attrsets,
+                        or raw Lua expressions returning tables.
+                      '';
+                    };
+
+                    optsExtend = lib.mkOption {
+                      type = lib.types.listOf optsExtendPath;
+                      default = [ ];
+                      description = ''
+                        Dotted option paths whose list-like values should be appended while merging.
                       '';
                     };
 
@@ -114,25 +128,25 @@ in
                     };
 
                     after = lib.mkOption {
-                      type = lib.types.nullOr luaExpression;
+                      type = lib.types.nullOr (lib.types.either luaExpression luaModuleFileType);
                       default = null;
-                      description = "Executed after the plugin is loaded. Mutually exclusive with `options`.";
+                      description = "Executed after the plugin is loaded. Called with merged options when options are set.";
                     };
 
                     event = lib.mkOption {
-                      type = lib.types.nullOr eventType;
+                      type = lib.types.nullOr listOfStrOrLuaExpression;
                       default = null;
                       description = "Lazy-load on event. Events can be specified as BufEnter or with a pattern like BufEnter *.lua.";
                     };
 
                     command = lib.mkOption {
-                      type = lib.types.nullOr strOrList;
+                      type = lib.types.nullOr listOfStrOrLuaExpression;
                       default = null;
                       description = "Lazy-load on command.";
                     };
 
                     filetype = lib.mkOption {
-                      type = lib.types.nullOr strOrList;
+                      type = lib.types.nullOr listOfStrOrLuaExpression;
                       default = null;
                       description = "Lazy-load on filetype.";
                     };
@@ -144,21 +158,26 @@ in
                     };
 
                     colorscheme = lib.mkOption {
-                      type = lib.types.nullOr strOrList;
+                      type = lib.types.nullOr listOfStrOrLuaExpression;
                       default = null;
                       description = "Lazy-load on colorscheme.";
                     };
 
                     dependencyOf = lib.mkOption {
-                      type = lib.types.nullOr strOrList;
+                      type = lib.types.nullOr listOfStrOrLuaExpression;
                       default = null;
                       description = "Lazy-load before another plugin but after its before hook. Accepts a plugin name or a list of plugin names.";
                     };
 
                     onPlugin = lib.mkOption {
-                      type = lib.types.nullOr strOrList;
+                      type = lib.types.nullOr listOfStrOrLuaExpression;
                       default = null;
                       description = "Lazy-load after another plugin but before its after hook. Accepts a plugin name or a list of plugin names.";
+                    };
+                    onRequire = lib.mkOption {
+                      type = lib.types.nullOr listOfStrOrLuaExpression;
+                      default = null;
+                      description = "Accepts a top-level lua module name or a list of top-level lua module names. Will load when any submodule of those listed is required";
                     };
                   };
                 }
@@ -178,11 +197,11 @@ in
   ];
   assertions = [
     {
-      assertion = lib.all (plugin: plugin.options == null || plugin.after == null) (
-        lib.attrValues config.home-manager.users.${config.user.username}.programs.neovim.lzePlugins
-      );
+      assertion = lib.all (
+        plugin: plugin.options == null || plugin.after != null || plugin.module != null
+      ) (lib.attrValues config.home-manager.users.${config.user.username}.programs.neovim.lzePlugins);
 
-      message = "lzePlugins: each plugin must define at least one of `options` or `after`";
+      message = "lzePlugins: each plugin with `options` must define `after` or `module`";
     }
   ];
 }

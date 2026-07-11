@@ -6,12 +6,58 @@ let
   luaUtils = import ../../../lib/lua.nix { inherit lib; };
   nixToLua = import ./nix-to-lua.nix { inherit lib; };
 
-  afterLua =
+  optsLua =
+    options:
     let
-      opts = pluginSpec.options;
+      fragments = if builtins.typeOf options == "list" then options else [ options ];
+      optsFragmentToLua =
+        fragment:
+        if luaUtils.isLuaModuleFile fragment then
+          "(${nixToLua.toLuaValue fragment})()"
+        else
+          nixToLua.toLuaValue fragment;
     in
-    if opts != null then
-      luaUtils.mkLuaExpression "function() require(\"${pluginSpec.module}\").setup(${nixToLua.toLuaTable opts}) end"
+    "{ ${lib.concatStringsSep ", " (map optsFragmentToLua fragments)} }";
+
+  normalizedOptsExtend = map (
+    path: if builtins.typeOf path == "list" then path else [ path ]
+  ) pluginSpec.optsExtend;
+
+  mergeOptionsRequire =
+    (luaUtils.requireLuaModuleFile {
+      path = ./config/plugin/lze/merge_options.lua;
+    }).__lua;
+
+  mergeOptionsLua = options: ''
+    local opts = ${mergeOptionsRequire}(
+      ${optsLua options},
+      ${nixToLua.toLuaValue normalizedOptsExtend}
+    )
+  '';
+
+  afterLua =
+    if pluginSpec.options != null && pluginSpec.after != null then
+      luaUtils.mkLuaExpression ''
+        function()
+          ${mergeOptionsLua pluginSpec.options}
+          local after = ${nixToLua.toLuaValue pluginSpec.after}
+          after(opts)
+        end
+      ''
+    else if pluginSpec.options != null && pluginSpec.module != null then
+      luaUtils.mkLuaExpression ''
+        function()
+          ${mergeOptionsLua pluginSpec.options}
+          require("${pluginSpec.module}").setup(opts)
+        end
+      ''
+    else if pluginSpec.after != null && luaUtils.isLuaModuleFile pluginSpec.after then
+      luaUtils.mkLuaExpression ''
+        function()
+          local after = ${nixToLua.toLuaValue pluginSpec.after}
+          after()
+        end
+      ''
     else
       pluginSpec.after;
 
@@ -40,6 +86,7 @@ in
           beforeAll = pluginSpec.beforeAll;
           before = pluginSpec.before;
           after = afterLua;
+          on_require = pluginSpec.onRequire;
         };
       in
       nixToLua.toLuaValue fields;
