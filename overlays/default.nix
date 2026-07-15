@@ -6,4 +6,5 @@
   (import ./lmstudio.nix)
   (import ./catppuccin-zsh-fsh.nix)
   (import ./zoxide-fzf-tmux-session.nix)
+  (import ./vscode-langservers-extracted.nix)
 ]
