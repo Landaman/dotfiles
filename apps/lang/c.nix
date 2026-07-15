@@ -7,27 +7,23 @@ let
   username = config.user.username;
 in
 {
-  home-manager.users.${username} = {
-    home.packages = with pkgs; [
-      terraform
+  home-manager.users.${username}.programs.neovim = {
+    extraPackages = with pkgs; [
+      clang-tools
     ];
 
-    programs.neovim.extraPackages = with pkgs; [
-      terraform-ls
-    ];
-
-    programs.neovim.lzePlugins = {
+    lzePlugins = {
       nvim-treesitter.options = [
         {
           ensure_installed = [
-            "terraform"
+            "c"
           ];
         }
       ];
 
       nvim-lspconfig.options = [
         {
-          config.terraformls = { };
+          config.clangd = { };
         }
       ];
     };

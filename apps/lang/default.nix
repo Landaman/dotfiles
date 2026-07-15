@@ -1,13 +1,21 @@
 {
   imports = [
     ./aws.nix
+    ./c.nix
+    ./css.nix
+    ./docker.nix
+    ./html.nix
+    ./json.nix
+    ./markdown.nix
     ./nix.nix
     ./rust.nix
+    ./sql.nix
     ./terraform.nix
     ./javascript.nix
     ./java.nix
     ./scala.nix
     ./python.nix
+    ./yaml.nix
     ./lua.nix
   ];
 }

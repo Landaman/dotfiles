@@ -16,20 +16,28 @@ in
       plugin = pkgs.vimPlugins.blink-cmp;
       module = "blink.cmp";
       event = "InsertEnter";
-      options = {
-        keymap.preset = "default";
-        completion = {
-          documentation.auto_show = true;
-          menu.draw.treesitter = [ "lsp" ];
-        };
-        cmdline.enabled = false;
-        sources.default = [
-          "lsp"
-          "path"
-          "snippets"
-          "buffer"
-        ];
-      };
+      optsExtend = [
+        [
+          "sources"
+          "default"
+        ]
+      ];
+      options = [
+        {
+          keymap.preset = "default";
+          completion = {
+            documentation.auto_show = true;
+            menu.draw.treesitter = [ "lsp" ];
+          };
+          cmdline.enabled = false;
+          sources.default = [
+            "lsp"
+            "path"
+            "snippets"
+            "buffer"
+          ];
+        }
+      ];
     };
 
     friendly-snippets = {

@@ -1,5 +1,6 @@
 {
   imports = [
+    ./conform.nix
     ./neogen.nix
     ./remote.nix
     ./todo-comments.nix
