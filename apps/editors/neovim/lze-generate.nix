@@ -99,6 +99,7 @@ in
           beforeAll = callLuaModuleFile pluginSpec.beforeAll;
           before = callLuaModuleFile pluginSpec.before;
           after = afterLua;
+          priority = pluginSpec.priority;
           on_require = pluginSpec.onRequire;
         };
       in

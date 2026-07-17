@@ -140,6 +140,12 @@ in
                       description = "Executed after the plugin is loaded. Called with merged options when options are set.";
                     };
 
+                    priority = lib.mkOption {
+                      type = lib.types.nullOr lib.types.int;
+                      default = null;
+                      description = "Only useful for start plugins (not lazy-loaded) to force loading certain plugins first. Default priority is 50, or the value of vim.g.lze.default_priority.";
+                    };
+
                     event = lib.mkOption {
                       type = lib.types.nullOr listOfStrOrLuaExpression;
                       default = null;
@@ -181,6 +187,7 @@ in
                       default = null;
                       description = "Lazy-load after another plugin but before its after hook. Accepts a plugin name or a list of plugin names.";
                     };
+
                     onRequire = lib.mkOption {
                       type = lib.types.nullOr listOfStrOrLuaExpression;
                       default = null;
