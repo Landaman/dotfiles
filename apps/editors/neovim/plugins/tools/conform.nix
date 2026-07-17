@@ -13,8 +13,14 @@ in
   home-manager.users.${username}.programs.neovim.lzePlugins.conform-nvim = {
     enabled = luaUtils.mkLuaExpression "not vim.g.vscode";
     plugin = pkgs.vimPlugins.conform-nvim;
+    module = "conform";
+    onRequire = "conform";
     event = [ "BufWritePre" ];
     command = [ "ConformInfo" ];
+    beforeAll = {
+      path = ./conform.lua;
+      call = "beforeAll";
+    };
     options = [
       {
         format_on_save = { };
@@ -28,9 +34,5 @@ in
         call = "opts";
       }
     ];
-    after = {
-      path = ./conform.lua;
-      call = "after";
-    };
   };
 }
