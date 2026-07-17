@@ -20,6 +20,7 @@ let
     lib.types.bool
     luaExpression
   ];
+  luaHook = lib.types.either luaExpression luaModuleFileType;
 
   optsExtendPath = lib.types.either lib.types.str (lib.types.listOf lib.types.str);
   luaModuleFileType = lib.types.submodule {
@@ -116,25 +117,25 @@ in
                     };
 
                     load = lib.mkOption {
-                      type = lib.types.nullOr luaExpression;
+                      type = lib.types.nullOr luaHook;
                       default = null;
                       description = "Can be used to override the vim.g.lze.load(name) function for an individual plugin. (default is vim.cmd.packadd(name))";
                     };
 
                     beforeAll = lib.mkOption {
-                      type = lib.types.nullOr luaExpression;
+                      type = lib.types.nullOr luaHook;
                       default = null;
                       description = "Always executed upon calling require('lze').load(spec) before any plugin specs from that call are triggered to be loaded.";
                     };
 
                     before = lib.mkOption {
-                      type = lib.types.nullOr luaExpression;
+                      type = lib.types.nullOr luaHook;
                       default = null;
                       description = "Executed before the plugin is loaded.";
                     };
 
                     after = lib.mkOption {
-                      type = lib.types.nullOr (lib.types.either luaExpression luaModuleFileType);
+                      type = lib.types.nullOr luaHook;
                       default = null;
                       description = "Executed after the plugin is loaded. Called with merged options when options are set.";
                     };

@@ -35,6 +35,18 @@ let
     )
   '';
 
+  callLuaModuleFile =
+    value:
+    if luaUtils.isLuaModuleFile value then
+      luaUtils.mkLuaExpression ''
+        function(...)
+          local callback = ${nixToLua.toLuaValue value}
+          return callback(...)
+        end
+      ''
+    else
+      value;
+
   afterLua =
     if pluginSpec.options != null && pluginSpec.after != null then
       luaUtils.mkLuaExpression ''
@@ -83,9 +95,9 @@ in
           colorscheme = pluginSpec.colorscheme;
           dep_of = pluginSpec.dependencyOf;
           on_plugin = pluginSpec.onPlugin;
-          load = pluginSpec.load;
-          beforeAll = pluginSpec.beforeAll;
-          before = pluginSpec.before;
+          load = callLuaModuleFile pluginSpec.load;
+          beforeAll = callLuaModuleFile pluginSpec.beforeAll;
+          before = callLuaModuleFile pluginSpec.before;
           after = afterLua;
           on_require = pluginSpec.onRequire;
         };
