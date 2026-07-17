@@ -83,6 +83,7 @@ in
           colorscheme = pluginSpec.colorscheme;
           dep_of = pluginSpec.dependencyOf;
           on_plugin = pluginSpec.onPlugin;
+          load = pluginSpec.load;
           beforeAll = pluginSpec.beforeAll;
           before = pluginSpec.before;
           after = afterLua;

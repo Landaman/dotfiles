@@ -1,9 +1,11 @@
 {
+  lib,
   config,
   pkgs,
   ...
 }:
 let
+  luaUtils = import ../../lib/lua.nix { inherit lib; };
   username = config.user.username;
 in
 {
@@ -33,6 +35,20 @@ in
       rustaceanvim = {
         plugin = pkgs.vimPlugins.rustaceanvim;
         filetype = [ "rust" ];
+        # Rustacean relies on ftplugin files, but packadd only updates runtimepath.
+        # The FileType event already fired before lze loads the plugin, so source them here.
+        load = luaUtils.mkLuaExpression ''
+          function(name)
+            vim.cmd.packadd(name)
+            for _, ext in ipairs({ "vim", "lua" }) do
+              for _, path in ipairs(vim.api.nvim_get_runtime_file("ftplugin/rust." .. ext, true)) do
+                if path:match("/pack/[^/]+/opt/" .. vim.pesc(name) .. "/ftplugin/rust%." .. ext .. "$") then
+                  vim.cmd.source(vim.fn.fnameescape(path))
+                end
+              end
+            end
+          end
+        '';
         options = [
           {
             server.default_settings.rust-analyzer = {

@@ -18,6 +18,13 @@ in
       "BufReadPost"
       "BufNewFile"
     ];
+    # IBL has an after thing, which we need to separately packadd because otherwise it never gets added
+    load = luaUtils.mkLuaExpression ''
+      function(name)
+        vim.cmd.packadd(name)
+        vim.cmd.packadd(name .. "/after")
+      end
+    '';
     options = { };
   };
 }

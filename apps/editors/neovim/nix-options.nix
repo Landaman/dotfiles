@@ -115,6 +115,12 @@ in
                       '';
                     };
 
+                    load = lib.mkOption {
+                      type = lib.types.nullOr luaExpression;
+                      default = null;
+                      description = "Can be used to override the vim.g.lze.load(name) function for an individual plugin. (default is vim.cmd.packadd(name))";
+                    };
+
                     beforeAll = lib.mkOption {
                       type = lib.types.nullOr luaExpression;
                       default = null;
