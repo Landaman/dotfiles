@@ -122,6 +122,12 @@ in
                       description = "Can be used to override the vim.g.lze.load(name) function for an individual plugin. (default is vim.cmd.packadd(name))";
                     };
 
+                    lazy = lib.mkOption {
+                      type = lib.types.nullOr lib.types.bool;
+                      default = null;
+                      description = "Using a handler's field sets this automatically, but you can set this manually as well";
+                    };
+
                     beforeAll = lib.mkOption {
                       type = lib.types.nullOr luaHook;
                       default = null;

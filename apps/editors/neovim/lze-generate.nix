@@ -96,6 +96,7 @@ in
           dep_of = pluginSpec.dependencyOf;
           on_plugin = pluginSpec.onPlugin;
           load = callLuaModuleFile pluginSpec.load;
+          lazy = pluginSpec.lazy;
           beforeAll = callLuaModuleFile pluginSpec.beforeAll;
           before = callLuaModuleFile pluginSpec.before;
           after = afterLua;
