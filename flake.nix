@@ -192,8 +192,20 @@
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
             home-manager.users.${username} = {
+              targets.darwin = {
+                copyApps.enable = true;
+                linkApps.enable = false;
+              };
+
+              home = {
+                inherit username;
+                homeDirectory = "/Users/${username}";
+                stateVersion = "26.05";
+              };
+
+              programs.home-manager.enable = true;
+
               imports = [
-                ./home.nix
                 catppuccin.homeModules.catppuccin
               ];
             };
@@ -206,7 +218,15 @@
       editorHomeManagerConfiguration = home-manager.lib.homeManagerConfiguration {
         pkgs = self.editorDarwinConfiguration.pkgs; # Inherit pkgs from Darwin
         modules = [
-          ./home.nix
+          {
+            home = {
+              inherit username;
+              homeDirectory = "/Users/${username}";
+              stateVersion = "26.05";
+            };
+
+            programs.home-manager.enable = true;
+          }
           catppuccin.homeModules.catppuccin
 
         ];
