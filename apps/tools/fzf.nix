@@ -17,8 +17,8 @@ in
           lib.concatMapStringsSep " " (globPattern: "--exclude=${globPattern}") config.files.neverShowGlobs
         }
       '';
-      fileWidgetCommand = "${defaultCommand}";
-      changeDirWidgetCommand = ''
+      fileWidget.command = "${defaultCommand}";
+      changeDirWidget.command = ''
         fd --type d --follow --color=never --hidden ${
           lib.concatMapStringsSep " " (globPattern: "--exclude=${globPattern}") config.files.neverShowGlobs
         }
