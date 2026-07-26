@@ -82,6 +82,9 @@
           system.primaryUser = username;
           homebrew.enable = true;
 
+          # Cleanup the store periodically
+          nix.gc.automatic = true;
+
           # Uninstall all Casks/Brews not specified here on activation
           homebrew.onActivation.cleanup = "zap"; # Zap removes associated files for casks (just in brew directory, not ~/.config etc.)
 
