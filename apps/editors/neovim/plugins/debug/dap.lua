@@ -1,4 +1,88 @@
-return function(opts)
+local M = {}
+
+function M.keys()
+  return {
+    {
+      lhs = "<F5>",
+      rhs = function()
+        require("dap").continue()
+      end,
+      desc = "Debug start/continue",
+    },
+    {
+      lhs = "<F6>",
+      rhs = function()
+        require("dap").run_last()
+      end,
+      desc = "Debug restart",
+    },
+    {
+      lhs = "<F7>",
+      rhs = function()
+        require("dap").terminate()
+      end,
+      desc = "Debug terminate",
+    },
+    {
+      lhs = "<F1>",
+      rhs = function()
+        require("dap").step_into()
+      end,
+      desc = "Step into",
+    },
+    {
+      lhs = "<F2>",
+      rhs = function()
+        require("dap").step_over()
+      end,
+      desc = "Step over",
+    },
+    {
+      lhs = "<F3>",
+      rhs = function()
+        require("dap").step_out()
+      end,
+      desc = "Step out",
+    },
+    {
+      lhs = "<F4>",
+      rhs = function()
+        require("dap").step_back()
+      end,
+      desc = "Step back",
+    },
+    {
+      lhs = "<leader>b",
+      rhs = function()
+        require("dap").toggle_breakpoint()
+      end,
+      desc = "Toggle breakpoint",
+    },
+    {
+      lhs = "<leader>B",
+      rhs = function()
+        require("dap").set_breakpoint(vim.fn.input("Breakpoint condition: "))
+      end,
+      desc = "Set breakpoint",
+    },
+    {
+      lhs = "<F10>",
+      rhs = function()
+        require("dapui").toggle()
+      end,
+      desc = "See last debug session result",
+    },
+    {
+      lhs = "<F9>",
+      rhs = function()
+        require("dapui").toggle({ layout = 0, reset = true })
+      end,
+      desc = "Reset debug UI layout",
+    },
+  }
+end
+
+function M.after(opts)
   for _, setup_adapter in ipairs(opts.adapters or {}) do
     if type(setup_adapter) == "function" then
       setup_adapter(opts)
@@ -32,3 +116,5 @@ return function(opts)
     return result
   end
 end
+
+return M
