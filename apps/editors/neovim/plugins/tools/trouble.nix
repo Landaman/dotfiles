@@ -16,21 +16,23 @@ in
     module = "trouble";
     command = "Trouble";
     options = { };
-    keys = [
-      {
-        "" = [
-          "<leader>wq"
-          "<cmd>Trouble diagnostics toggle<cr>"
-        ];
-        desc = "Trouble workspace diagnostics";
-      }
-      {
-        "" = [
-          "<leader>dd"
-          "<cmd>Trouble diagnostics toggle filter.buf=0<cr>"
-        ];
-        desc = "Trouble document diagnostics";
-      }
-    ];
+    keys = {
+      "" = [
+        {
+          "" = [
+            "<leader>wq"
+            "<cmd>Trouble diagnostics toggle<cr>"
+          ];
+          desc = "Trouble workspace diagnostics";
+        }
+        {
+          "" = [
+            "<leader>dd"
+            "<cmd>Trouble diagnostics toggle filter.buf=0<cr>"
+          ];
+          desc = "Trouble document diagnostics";
+        }
+      ];
+    };
   };
 }

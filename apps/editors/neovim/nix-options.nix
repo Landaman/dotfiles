@@ -37,12 +37,13 @@ let
       };
     };
   };
-  optionsFragment = lib.types.oneOf [
+  mergeableFragment = lib.types.oneOf [
     lib.types.attrs
+    (lib.types.listOf lib.types.attrs)
     luaExpression
     luaModuleFileType
   ];
-  optionsFragments = lib.types.either optionsFragment (lib.types.listOf optionsFragment);
+  mergeableFragments = lib.types.either mergeableFragment (lib.types.listOf mergeableFragment);
 
 in
 {
@@ -100,7 +101,7 @@ in
 
                     # Options to use when automatically creating an after function to call setup
                     options = lib.mkOption {
-                      type = lib.types.nullOr optionsFragments;
+                      type = lib.types.nullOr mergeableFragments;
                       default = null;
                       description = ''
                         Options fragments merged at runtime. Fragments can be Nix attrsets,
@@ -171,9 +172,12 @@ in
                     };
 
                     keys = lib.mkOption {
-                      type = lib.types.nullOr (lib.types.listOf lib.types.attrs);
+                      type = lib.types.nullOr mergeableFragments;
                       default = null;
-                      description = "Lazy-load on key mapping.";
+                      description = ''
+                        Lazy-load on key mapping. Can be a Nix list of key mappings,
+                        or mergeable fragments whose Lua expressions/modules return key mappings.
+                      '';
                     };
 
                     colorscheme = lib.mkOption {

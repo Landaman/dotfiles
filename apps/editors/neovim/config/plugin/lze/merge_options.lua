@@ -48,6 +48,11 @@ local function merge_into(target, source, path, extend)
     return target
   end
 
+  if should_extend(path, extend) and is_list(target) and is_list(source) then
+    merge_list(target, source)
+    return target
+  end
+
   for key, value in pairs(source) do
     local child_path = extend_path(path, key)
     if should_extend(child_path, extend) and type(target[key]) == "table" and type(value) == "table" then

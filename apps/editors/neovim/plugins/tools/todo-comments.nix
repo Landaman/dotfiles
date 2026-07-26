@@ -25,28 +25,30 @@ in
       "BufNewFile"
     ];
     options.signs = false;
-    keys = [
-      {
-        "" = [
-          "<leader>wo"
-          "<cmd>Trouble todo<cr>"
-        ];
-        desc = "Todo list";
-      }
-      {
-        "" = [
-          "<leader>do"
-          "<cmd>Trouble todo filter.buf=0<cr>"
-        ];
-        desc = "Document todo list";
-      }
-      {
-        "" = [
-          "<leader>so"
-          "<cmd>TodoFzfLua<cr>"
-        ];
-        desc = "Search todo";
-      }
-    ];
+    keys = {
+      "" = [
+        {
+          "" = [
+            "<leader>wo"
+            "<cmd>Trouble todo<cr>"
+          ];
+          desc = "Todo list";
+        }
+        {
+          "" = [
+            "<leader>do"
+            "<cmd>Trouble todo filter.buf=0<cr>"
+          ];
+          desc = "Document todo list";
+        }
+        {
+          "" = [
+            "<leader>so"
+            "<cmd>TodoFzfLua<cr>"
+          ];
+          desc = "Search todo";
+        }
+      ];
+    };
   };
 }

@@ -6,34 +6,67 @@ let
   luaUtils = import ../../../lib/lua.nix { inherit lib; };
   nixToLua = import ./nix-to-lua.nix { inherit lib; };
 
-  optsLua =
-    options:
+  fragmentsLua =
+    value:
     let
-      fragments = if builtins.typeOf options == "list" then options else [ options ];
-      optsFragmentToLua =
+      fragments = if builtins.typeOf value == "list" then value else [ value ];
+      fragmentToLua =
         fragment:
         if luaUtils.isLuaModuleFile fragment then
           "(${nixToLua.toLuaValue fragment})()"
         else
           nixToLua.toLuaValue fragment;
     in
-    "{ ${lib.concatStringsSep ", " (map optsFragmentToLua fragments)} }";
+    "{ ${lib.concatStringsSep ", " (map fragmentToLua fragments)} }";
 
   normalizedOptsExtend = map (
     path: if builtins.typeOf path == "list" then path else [ path ]
   ) pluginSpec.optsExtend;
 
-  mergeOptionsRequire =
+  mergeFragmentsRequire =
     (luaUtils.requireLuaModuleFile {
       path = ./config/plugin/lze/merge_options.lua;
     }).__lua;
 
-  mergeOptionsLua = options: ''
-    local opts = ${mergeOptionsRequire}(
-      ${optsLua options},
-      ${nixToLua.toLuaValue normalizedOptsExtend}
-    )
-  '';
+  mergeFragmentsLua =
+    {
+      name,
+      value,
+      extend ? [ ],
+    }:
+    ''
+      local ${name} = ${mergeFragmentsRequire}(
+        ${fragmentsLua value},
+        ${nixToLua.toLuaValue extend}
+      )
+    '';
+
+  mergeOptionsLua =
+    options:
+    mergeFragmentsLua {
+      name = "opts";
+      value = options;
+      extend = normalizedOptsExtend;
+    };
+
+  mergeKeysLua =
+    keys:
+    mergeFragmentsLua {
+      name = "keys";
+      value = keys;
+      extend = [ [ ] ];
+    };
+
+  mergedKeys =
+    if pluginSpec.keys == null then
+      null
+    else
+      luaUtils.mkLuaExpression ''
+        (function()
+          ${mergeKeysLua pluginSpec.keys}
+          return keys
+        end)()
+      '';
 
   callLuaModuleFile =
     value:
@@ -91,7 +124,7 @@ in
           event = pluginSpec.event;
           cmd = pluginSpec.command;
           ft = pluginSpec.filetype;
-          keys = pluginSpec.keys;
+          keys = mergedKeys;
           colorscheme = pluginSpec.colorscheme;
           dep_of = pluginSpec.dependencyOf;
           on_plugin = pluginSpec.onPlugin;
