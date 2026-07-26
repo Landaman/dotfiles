@@ -186,5 +186,7 @@ in
             );
       };
     };
+
+    programs.neovim.lzePlugins.nvim-web-devicons.dependencyOf = [ "fzf-lua" ];
   };
 }
