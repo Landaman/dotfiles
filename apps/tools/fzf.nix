@@ -36,6 +36,7 @@ in
     programs.neovim.lzePlugins.fzf-lua = {
       enabled = luaUtils.mkLuaExpression "not vim.g.vscode";
       plugin = pkgs.vimPlugins.fzf-lua;
+      onRequire = "fzf-lua";
       command = "FzfLua";
       beforeAll = {
         path = ./fzf.lua;
