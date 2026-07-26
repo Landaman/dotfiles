@@ -35,6 +35,7 @@ in
       ];
       after = {
         path = ./treesitter.lua;
+        call = "after";
       };
     };
 
@@ -63,6 +64,10 @@ in
           move.set_jumps = true;
         }
       ];
+      keys = {
+        path = ./treesitter.lua;
+        call = "keys";
+      };
     };
   };
 }
