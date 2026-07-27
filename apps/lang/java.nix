@@ -34,6 +34,7 @@ in
           {
             java_debug_path = "${pkgs.vscode-extensions.vscjava.vscode-java-debug}";
             java_test_path = "${pkgs.vscode-extensions.vscjava.vscode-java-test}";
+            lombok_path = "${pkgs.lombok}/share/java/lombok.jar";
           }
         ];
         after = {

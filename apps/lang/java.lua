@@ -27,7 +27,10 @@ return function(opts)
     local fname = vim.api.nvim_buf_get_name(0)
     local root_dir = require("lspconfig.configs.jdtls").default_config.root_dir(fname)
     local project_name = root_dir and vim.fs.basename(root_dir)
-    local cmd = { vim.fn.exepath("jdtls") }
+    local cmd = {
+      vim.fn.exepath("jdtls"),
+      string.format("--jvm-arg=-javaagent:%s", opts.lombok_path),
+    }
 
     if project_name then
       vim.list_extend(cmd, {
