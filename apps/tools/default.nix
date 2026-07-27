@@ -13,13 +13,11 @@
     ./gnupg.nix
     ./jujutsu.nix
     ./lazygit.nix
-    ./lazysql.nix
     ./mongodb-compass.nix
     ./netutils.nix
     ./nosql-workbench.nix
     ./qemu.nix
     ./ripgrep.nix
-    ./sqlite.nix
     ./utm.nix
     ./webp.nix
     ./wireshark.nix
