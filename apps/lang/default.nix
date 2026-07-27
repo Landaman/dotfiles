@@ -10,6 +10,7 @@
     ./nix.nix
     ./rust.nix
     ./sql.nix
+    ./svelte.nix
     ./terraform.nix
     ./javascript.nix
     ./java.nix

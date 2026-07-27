@@ -21,7 +21,6 @@ in
       oxfmt
       prettierd
       prisma-language-server
-      svelte-language-server
       tailwindcss-language-server
       vscode-langservers-extracted
       vscode-js-debug
@@ -35,7 +34,6 @@ in
             "javascript"
             "jsdoc"
             "prisma"
-            "svelte"
             "typescript"
           ];
         }
@@ -54,7 +52,6 @@ in
             };
             oxlint = { };
             prismals = { };
-            svelte = { };
             tailwindCSS = { };
             vtsls = {
               settings = {
@@ -92,7 +89,6 @@ in
           formatters_by_ft = {
             javascript = [ "web" ];
             javascriptreact = [ "web" ];
-            svelte = [ "prettierd" ];
             typescript = [ "web" ];
             typescriptreact = [ "web" ];
           };
