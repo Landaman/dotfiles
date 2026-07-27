@@ -21,8 +21,6 @@ in
           ensure_installed = [
             "bash"
             "diff"
-            "markdown"
-            "markdown_inline"
             "query"
             "regex"
             "vim"
