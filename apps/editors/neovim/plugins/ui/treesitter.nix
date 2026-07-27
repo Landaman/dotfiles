@@ -27,8 +27,6 @@ in
             "regex"
             "vim"
             "vimdoc"
-            "gitcommit"
-            "gitignore"
             "csv"
           ];
         }

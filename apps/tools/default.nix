@@ -8,11 +8,9 @@
     ./fastmod.nix
     ./fd.nix
     ./fzf.nix
-    ./git-crypt.nix
     ./git.nix
     ./gnupg.nix
     ./jujutsu.nix
-    ./lazygit.nix
     ./mongodb-compass.nix
     ./netutils.nix
     ./nosql-workbench.nix
