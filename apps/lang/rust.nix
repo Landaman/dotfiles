@@ -7,6 +7,7 @@
 let
   luaUtils = import ../../lib/lua.nix { inherit lib; };
   username = config.user.username;
+  codelldb = pkgs.vscode-extensions.vadimcn.vscode-lldb.adapter;
 in
 {
   home-manager.users.${username} = {
@@ -51,6 +52,8 @@ in
         '';
         options = [
           {
+            codelldb_path = "${codelldb}/bin/codelldb";
+            liblldb_path = "${codelldb}/share/lldb/lib/liblldb.dylib";
             server.default_settings.rust-analyzer = {
               cargo = {
                 allFeatures = true;
