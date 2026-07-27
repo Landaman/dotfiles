@@ -33,8 +33,10 @@ in
     fidget-nvim = {
       plugin = pkgs.vimPlugins.fidget-nvim;
       module = "fidget";
-      dependencyOf = "nvim-lspconfig";
+      dependencyOf = [ "nvim-lspconfig" ];
       options = { };
     };
+
+    blink-cmp.dependencyOf = [ "nvim-lspconfig" ];
   };
 }

@@ -54,7 +54,7 @@ in
 
     plenary-nvim = {
       plugin = pkgs.vimPlugins.plenary-nvim;
-      dependencyOf = "nvim-dap";
+      dependencyOf = [ "nvim-dap" ];
     };
   };
 }

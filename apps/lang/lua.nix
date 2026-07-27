@@ -79,6 +79,7 @@ in
           };
         }
       ];
+      blink-cmp.dependencyOf = [ "lazydev.nvim" ];
     };
   };
 }

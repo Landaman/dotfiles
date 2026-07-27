@@ -30,7 +30,6 @@ in
         enabled = luaUtils.mkLuaExpression "not vim.g.vscode";
         plugin = pkgs.vimPlugins.nvim-jdtls;
         filetype = [ "java" ];
-        dependencyOf = "nvim-dap";
         options = [
           {
             java_debug_path = "${pkgs.vscode-extensions.vscjava.vscode-java-debug}";
@@ -52,6 +51,8 @@ in
           '';
         }
       ];
+
+      blink-cmp.dependencyOf = [ "nvim-jdtls" ];
     };
   };
 }

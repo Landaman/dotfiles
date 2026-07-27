@@ -58,7 +58,6 @@ in
         enabled = luaUtils.mkLuaExpression "not vim.g.vscode";
         plugin = pkgs.vimPlugins.nvim-dap-python;
         filetype = [ "python" ];
-        dependencyOf = "nvim-dap";
         after = {
           path = ./python.lua;
         };

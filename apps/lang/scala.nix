@@ -18,7 +18,6 @@ in
         "sbt"
         "java"
       ];
-      dependencyOf = "nvim-dap";
       after = {
         path = ./scala.lua;
       };
@@ -51,6 +50,11 @@ in
         '';
       }
     ];
+
+    blink-cmp.dependencyOf = [ "nvim-metals" ];
+    fidget-nvim.dependencyOf = [ "nvim-metals" ];
+    nvim-dap.dependencyOf = [ "nvim-metals" ];
+    plenary-nvim.dependencyOf = [ "nvim-metals" ];
   };
 
   environment.systemPackages = with pkgs; [
