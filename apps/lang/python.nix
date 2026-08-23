@@ -67,7 +67,7 @@ in
         {
           handlers.debugpy = luaUtils.mkLuaExpression ''
             function(config)
-              require("lze").load({ "nvim-dap-python" })
+              require("lze").trigger_load({ "nvim-dap-python" })
               return config
             end
           '';

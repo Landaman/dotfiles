@@ -46,7 +46,7 @@ in
         {
           handlers.java = luaUtils.mkLuaExpression ''
             function(config)
-              require("lze").load({ "nvim-jdtls" })
+              require("lze").trigger_load({ "nvim-jdtls" })
               return config
             end
           '';

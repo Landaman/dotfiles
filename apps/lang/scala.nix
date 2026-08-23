@@ -33,7 +33,7 @@ in
       {
         handlers.scala = luaUtils.mkLuaExpression ''
           function(config)
-            require("lze").load({ "nvim-metals" })
+            require("lze").trigger_load({ "nvim-metals" })
             require("metals").setup_dap()
 
             local scala_config = { metals = {} }

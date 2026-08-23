@@ -3,7 +3,7 @@ local M = {}
 function M.beforeAll()
 	local f = vim.fn.expand("%:p")
 	if vim.fn.isdirectory(f) ~= 0 then
-		require("lze").load({ "oil" })
+		require("lze").trigger_load({ "oil.nvim" })
 		return
 	end
 
@@ -14,7 +14,7 @@ function M.beforeAll()
 		callback = function()
 			local event_f = vim.fn.expand("%:p")
 			if vim.fn.isdirectory(event_f) ~= 0 then
-				require("lze").load({ "oil" })
+				require("lze").trigger_load({ "oil.nvim" })
 				vim.api.nvim_del_augroup_by_id(augroup)
 			end
 		end,
