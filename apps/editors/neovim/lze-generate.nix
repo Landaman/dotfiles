@@ -108,13 +108,17 @@ let
 
 in
 {
-  package = {
-    plugin = pluginSpec.plugin;
-    optional = true;
-  };
+  package =
+    if pluginSpec.plugin == null then
+      null
+    else
+      {
+        plugin = pluginSpec.plugin;
+        optional = true;
+      };
 
   luaSpec =
-    if pluginSpec.enabled == false then
+    if pluginSpec.plugin == null || pluginSpec.enabled == false then
       null # Can trivially skip the step
     else
       let

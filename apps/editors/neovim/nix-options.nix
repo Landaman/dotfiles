@@ -82,16 +82,21 @@ in
                       description = "Whether to enable this plugin. Can be a boolean or a Lua expression.";
                     };
 
-                    # Copied from the HM definition
-                    plugin = lib.mkPackageOption pkgs.vimPlugins "plugin" {
-                      example = "pkgs.vimPlugins.nvim-treesitter";
-                      pkgsText = "pkgs.vimPlugins";
+                    plugin = lib.mkOption {
+                      type = lib.types.nullOr lib.types.package;
+                      default = null;
+                      example = lib.literalExpression "pkgs.vimPlugins.nvim-treesitter";
+                      description = ''
+                        Plugin package. A spec without a package is ignored, allowing
+                        other modules to contribute options conditionally when the
+                        module that provides the plugin is not imported.
+                      '';
                     };
 
                     # Lua module name (independent of package name)
                     module = lib.mkOption {
                       type = lib.types.nullOr lib.types.str;
-                      default = config.plugin.pname;
+                      default = if config.plugin == null then null else config.plugin.pname;
                       description = ''
                         Lua module used for automatic setup with require('<module>').setup(opts).
                         Defaults to the plugin package name if unset.
@@ -222,7 +227,11 @@ in
   assertions = [
     {
       assertion = lib.all (
-        plugin: plugin.options == null || plugin.after != null || plugin.module != null
+        plugin:
+        plugin.plugin == null
+        || plugin.options == null
+        || plugin.after != null
+        || plugin.module != null
       ) (lib.attrValues config.home-manager.users.${config.user.username}.programs.neovim.lzePlugins);
 
       message = "lzePlugins: each plugin with `options` must define `after` or `module`";
