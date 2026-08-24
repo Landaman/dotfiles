@@ -3,7 +3,6 @@
     ./aws.nix
     ./c.nix
     ./css.nix
-    ./docker.nix
     ./html.nix
     ./json.nix
     ./markdown.nix

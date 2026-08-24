@@ -4,10 +4,42 @@
   lib,
   ...
 }:
+let
+  username = config.user.username;
+in
 {
-  homebrew.casks = lib.mkIf pkgs.stdenv.isDarwin [ "docker-desktop" ];
+  home-manager.users.${username} = {
+    programs.neovim = {
+      extraPackages = with pkgs; [
+        docker-compose-language-service
+        dockerfile-language-server
+      ];
 
-  home-manager.users.${config.user.username}.home.packages = lib.mkIf (!pkgs.stdenv.isDarwin) [
-    pkgs.docker
-  ];
+      lzePlugins = {
+        nvim-treesitter.options = [
+          {
+            ensure_installed = [
+              "dockerfile"
+              "yaml"
+            ];
+          }
+        ];
+
+        nvim-lspconfig.options = [
+          {
+            config = {
+              docker_compose_language_service = { };
+              dockerls = { };
+            };
+          }
+        ];
+      };
+    };
+
+    home.packages = lib.mkIf (!pkgs.stdenv.isDarwin) [
+      pkgs.docker
+    ];
+  };
+
+  homebrew.casks = lib.mkIf pkgs.stdenv.isDarwin [ "docker-desktop" ];
 }
