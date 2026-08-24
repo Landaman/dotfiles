@@ -10,7 +10,6 @@ in
   home-manager.users.${username}.programs.neovim = {
     extraPackages = with pkgs; [
       markdownlint-cli
-      prettierd
     ];
 
     lzePlugins = {

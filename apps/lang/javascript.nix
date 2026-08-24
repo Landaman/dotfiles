@@ -18,8 +18,6 @@ in
   home-manager.users.${username}.programs.neovim = {
     extraPackages = with pkgs; [
       oxlint
-      oxfmt
-      prettierd
       prisma-language-server
       tailwindcss-language-server
       vscode-langservers-extracted

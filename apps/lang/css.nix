@@ -9,7 +9,6 @@ in
 {
   home-manager.users.${username}.programs.neovim = {
     extraPackages = with pkgs; [
-      prettierd
       tailwindcss-language-server
       vscode-langservers-extracted
     ];
