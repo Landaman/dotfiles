@@ -28,6 +28,8 @@ in
         };
       };
 
+      gh.enable = true;
+
       lazygit.enable = true;
 
       neovim = {
