@@ -4,5 +4,5 @@
   ...
 }:
 {
-  homebrew.casks = lib.mkIf pkgs.stdenv.isDarwin [ "balenaetcher" ];
+  homebrew.casks = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin [ "balenaetcher" ];
 }

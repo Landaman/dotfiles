@@ -4,11 +4,11 @@
   ...
 }:
 {
-  homebrew.masApps = lib.mkIf pkgs.stdenv.isDarwin {
+  homebrew.masApps = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin {
     colorslurp = 1287239339;
   };
 
-  system.defaults = lib.mkIf pkgs.stdenv.isDarwin {
+  system.defaults = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin {
     CustomUserPreferences = {
       # Disable KB shortcuts for ColorSlurp
       "com.IdeaPunch.ColorSlurp" = {

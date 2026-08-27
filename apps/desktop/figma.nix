@@ -1,4 +1,4 @@
 { pkgs, lib, ... }:
 {
-  homebrew.casks = lib.mkIf pkgs.stdenv.isDarwin [ "figma" ];
+  homebrew.casks = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin [ "figma" ];
 }

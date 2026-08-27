@@ -1,6 +1,6 @@
 final: prev: {
   lmstudio =
-    if final.stdenv.isDarwin then
+    if final.stdenv.hostPlatform.isDarwin then
       prev.lmstudio.overrideAttrs (oldAttrs: {
         meta.broken = false;
 

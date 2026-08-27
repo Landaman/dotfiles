@@ -4,7 +4,7 @@
   ...
 }:
 {
-  homebrew.masApps = lib.mkIf pkgs.stdenv.isDarwin {
+  homebrew.masApps = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin {
     whatsapp = 310633997;
   };
 }

@@ -36,10 +36,10 @@ in
       };
     };
 
-    home.packages = lib.mkIf (!pkgs.stdenv.isDarwin) [
+    home.packages = lib.mkIf (!pkgs.stdenv.hostPlatform.isDarwin) [
       pkgs.docker
     ];
   };
 
-  homebrew.casks = lib.mkIf pkgs.stdenv.isDarwin [ "docker-desktop" ];
+  homebrew.casks = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin [ "docker-desktop" ];
 }

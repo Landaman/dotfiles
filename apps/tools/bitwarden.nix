@@ -12,7 +12,7 @@ in
     bitwarden-cli
   ];
 
-  homebrew.masApps = lib.mkIf pkgs.stdenv.isDarwin {
+  homebrew.masApps = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin {
     bitwarden = 1352778147;
   };
 }

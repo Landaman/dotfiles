@@ -1,6 +1,6 @@
 final: prev: {
   ghostty =
-    if prev.stdenv.isDarwin then
+    if prev.stdenv.hostPlatform.isDarwin then
       prev.stdenvNoCC.mkDerivation rec {
         inherit (prev.ghostty)
           pname
