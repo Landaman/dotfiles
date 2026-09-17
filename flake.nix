@@ -9,6 +9,7 @@
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     catppuccin.url = "github:catppuccin/nix";
+    herdr.url = "github:herdrdev/herdr";
   };
 
   outputs =
@@ -19,6 +20,7 @@
       nixpkgs-stable,
       home-manager,
       catppuccin,
+      herdr,
     }:
     let
       hostname = "Ians-MacBook-Pro";
@@ -31,7 +33,10 @@
       configuration =
         { pkgs, ... }:
         {
-          nixpkgs.overlays = import ./overlays/default.nix;
+          nixpkgs.overlays = [
+            (import ./overlays/herdr.nix { inherit herdr; })
+          ]
+          ++ import ./overlays/default.nix;
 
           # Allow unfree packages, e.g., raycast
           nixpkgs.config.allowUnfree = true;
@@ -168,6 +173,9 @@
     # Doing this out of line like this allows for inference via nixd
     {
       darwinConfigurations.${hostname} = nix-darwin.lib.darwinSystem {
+        specialArgs = {
+          homeManager = home-manager;
+        };
         modules = [
           ./modules/user.nix
           ./modules/files.nix
