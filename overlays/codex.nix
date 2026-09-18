@@ -1,11 +1,11 @@
 final: prev:
 let
-  version = "0.153.4";
+  version = "0.155.0";
   src = final.fetchFromGitHub {
     owner = "openai";
     repo = "codex";
     tag = "rust-v${version}";
-    hash = "sha256-lHiDj5SodaM3mh8goMm6esfejeAT+Y3JJWrRnyj6sJo=";
+    hash = "sha256-O+onwNd5YdE/KUJNBeQxBfK5JohzXenE4eOwejxFptc=";
   };
 in
 {
