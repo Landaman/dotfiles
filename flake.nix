@@ -38,7 +38,7 @@
           ]
           ++ import ./overlays/default.nix;
 
-          # Allow unfree packages, e.g., raycast
+          # Allow unfree packages
           nixpkgs.config.allowUnfree = true;
 
           networking.computerName = appleName;
