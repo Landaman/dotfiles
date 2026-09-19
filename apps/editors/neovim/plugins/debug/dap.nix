@@ -13,6 +13,8 @@ in
   home-manager.users.${username}.programs.neovim.lzePlugins = {
     nvim-dap = {
       enabled = luaUtils.mkLuaExpression "not vim.g.vscode";
+      module = "dap";
+      onRequire = "dap";
       plugin = pkgs.vimPlugins.nvim-dap;
       options = [
         { handlers = { }; }
@@ -29,7 +31,8 @@ in
 
     nvim-dap-ui = {
       plugin = pkgs.vimPlugins.nvim-dap-ui;
-      dependencyOf = "nvim-dap";
+      onPlugin = "nvim-dap";
+      onRequire = "dapui";
       options = [ { } ];
       after = {
         path = ./dapui.lua;
@@ -38,7 +41,7 @@ in
 
     nvim-dap-virtual-text = {
       plugin = pkgs.vimPlugins.nvim-dap-virtual-text;
-      dependencyOf = "nvim-dap";
+      onPlugin = "nvim-dap";
       options = [
         {
           clear_on_continue = false;
