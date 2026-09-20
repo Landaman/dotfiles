@@ -179,7 +179,9 @@ in
         ];
       };
       options = {
-        "" = [ ] ++ lib.optionals config.home-manager.users.${username}.programs.tmux.enable [ "fzf-tmux" ];
+        "" = lib.optionals config.home-manager.users.${username}.programs.tmux.enable [
+          (luaUtils.mkLuaExpression ''vim.env.TMUX and "fzf-tmux" or nil'')
+        ];
         previewers.codeaction_native.pager =
           lib.mkIf config.home-manager.users.${username}.programs.delta.enable
             (
