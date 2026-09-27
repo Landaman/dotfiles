@@ -5,7 +5,6 @@
     ./betterdisplay.nix
     ./colorslurp.nix
     ./daisydisk.nix
-    ./hidden-bar.nix
     ./logi-options.nix
     ./mullvad-vpn.nix
     ./proxyman.nix
