@@ -1,11 +1,11 @@
 final: prev:
 let
-  version = "0.155.0";
+  version = "0.157.1";
   src = final.fetchFromGitHub {
     owner = "openai";
     repo = "codex";
     tag = "rust-v${version}";
-    hash = "sha256-O+onwNd5YdE/KUJNBeQxBfK5JohzXenE4eOwejxFptc=";
+    hash = "sha256-HuNL5VGd2LenhbCdcz0i8b6lRw3sicwXytyfXgCgy88=";
   };
 in
 {
@@ -17,7 +17,7 @@ in
       pname = "codex";
       inherit version src;
       sourceRoot = "${src.name}/codex-rs";
-      hash = "sha256-6IAX/SFSSgSKKFxKsUXoZ9nNQaHJ+EjZ5a4bJwyDdF0=";
+      hash = "sha256-Mp4chq9QuQB19FrOZBhmUtPrDoEpZZna79+MZs9rGUo=";
     };
   });
 }

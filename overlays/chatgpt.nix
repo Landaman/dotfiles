@@ -1,6 +1,6 @@
 final: prev:
 let
-  version = "26.915.31029";
+  version = "26.924.22138";
 in
 {
   chatgpt = prev.chatgpt.overrideAttrs {
@@ -8,7 +8,7 @@ in
 
     src = final.fetchurl {
       url = "https://persistent.oaistatic.com/codex-app-prod/ChatGPT-darwin-arm64-${version}.zip";
-      hash = "sha256-NkZ257h9T1Kx5SwCCu1OLsgSmAy94VZD9bOcyRv7H3c=";
+      hash = "sha256-fPlWmxFqMq9hpqtOmXlGZ3S23I6dvPcCZFlqGuLf1X0=";
     };
   };
 }
