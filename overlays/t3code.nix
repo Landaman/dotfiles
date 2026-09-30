@@ -1,6 +1,6 @@
 final: prev:
 let
-  version = "0.0.42";
+  version = "0.0.44";
 
   unwrapped = prev.t3code.unwrapped.overrideAttrs (
     finalAttrs: _: {
@@ -10,7 +10,7 @@ let
         owner = "pingdotgg";
         repo = "t3code";
         tag = "v${version}";
-        hash = "sha256-YV86WqqpGQwjeovXB0IoE3f/o4IUC5DDVdBEdT4xzjc=";
+        hash = "sha256-cSkGa6b+WGbXJ+lbpJ3tfCibtvaj7DwWhn66UGiXlWk=";
       };
 
       pnpmDeps = final.fetchPnpmDeps {
@@ -22,7 +22,7 @@ let
           ;
         pnpm = final.pnpm_11;
         fetcherVersion = 4;
-        hash = "sha256-gEY2em9pNTC1EuVX0V3L/Wu1apZ+BKBXxALEcPQ/pwA=";
+        hash = "sha256-xdS9+PqIDULKIu3+lQRMabA23D0dxCEME96NhFggWPY=";
       };
     }
   );
