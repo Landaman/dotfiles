@@ -228,10 +228,7 @@ in
     {
       assertion = lib.all (
         plugin:
-        plugin.plugin == null
-        || plugin.options == null
-        || plugin.after != null
-        || plugin.module != null
+        plugin.plugin == null || plugin.options == null || plugin.after != null || plugin.module != null
       ) (lib.attrValues config.home-manager.users.${config.user.username}.programs.neovim.lzePlugins);
 
       message = "lzePlugins: each plugin with `options` must define `after` or `module`";
