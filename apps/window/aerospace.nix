@@ -10,11 +10,23 @@ in
   options.window = {
     floatingApps = lib.mkOption {
       type = lib.types.listOf lib.types.str;
+      default = [ ];
       description = "Apps that should always open in floating window mode";
     };
   };
 
   config = {
+    window.floatingApps = [
+      "com.apple.MobileSMS"
+      "com.apple.mail"
+      "com.apple.Music"
+      "com.apple.iBooksX"
+      "com.apple.podcasts"
+      "com.apple.iCal"
+      "com.apple.weather"
+      "com.apple.Home"
+    ];
+
     home-manager.users.${username}.programs.aerospace = {
       enable = true;
       launchd = {

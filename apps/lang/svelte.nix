@@ -7,6 +7,8 @@ let
   username = config.user.username;
 in
 {
+  files.ignoreGlobs = [ ".svelte-kit/" ];
+
   home-manager.users.${username}.programs.neovim = {
     extraPackages = with pkgs; [
       prettierd

@@ -128,45 +128,6 @@
 
           user.username = username;
 
-          window.floatingApps = [
-            "com.apple.MobileSMS"
-            "com.hnc.Discord"
-            "com.facebook.archon"
-            "com.apple.mail"
-            "com.apple.Music"
-            "com.apple.iBooksX"
-            "com.apple.podcasts"
-            "com.bitwarden.desktop"
-            "com.apple.iCal"
-            "net.whatsapp.WhatsApp"
-            "com.apple.weather"
-            "com.spotify.client"
-            "com.flightyapp.flighty"
-            "com.apple.Home"
-          ];
-
-          files.neverShowGlobs = [
-            ".git/"
-            ".DS_Store"
-          ];
-
-          files.ignoreGlobs = [
-            "metals.sbt"
-            "node_modules/"
-            ".venv/"
-            "__pycache__/"
-            ".metals/"
-            ".bloop/"
-            ".ammonite/"
-            ".turbo/"
-            ".yarn/"
-            ".firebase/"
-            ".next/"
-            ".svelte-kit/"
-            "**/.husky/_/"
-            "!.env*"
-            "!.vscode/"
-          ];
         };
 
     in

@@ -8,6 +8,8 @@ let
   username = config.user.username;
 in
 {
+  window.floatingApps = [ "com.bitwarden.desktop" ];
+
   home-manager.users.${username}.home.packages = with pkgs; [
     bitwarden-cli
   ];

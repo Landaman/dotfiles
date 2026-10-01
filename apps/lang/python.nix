@@ -9,6 +9,11 @@ let
   username = config.user.username;
 in
 {
+  files.ignoreGlobs = [
+    ".venv/"
+    "__pycache__/"
+  ];
+
   environment.systemPackages = with pkgs; [ python313 ];
 
   home-manager.users.${username}.programs.neovim = {

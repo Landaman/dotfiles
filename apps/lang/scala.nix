@@ -9,6 +9,13 @@ let
   username = config.user.username;
 in
 {
+  files.ignoreGlobs = [
+    "metals.sbt"
+    ".metals/"
+    ".bloop/"
+    ".ammonite/"
+  ];
+
   home-manager.users.${username}.programs.neovim.lzePlugins = {
     nvim-metals = {
       enabled = luaUtils.mkLuaExpression "not vim.g.vscode";

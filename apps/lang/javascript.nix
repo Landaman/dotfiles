@@ -9,6 +9,14 @@ let
   username = config.user.username;
 in
 {
+  files.ignoreGlobs = [
+    "node_modules/"
+    ".turbo/"
+    ".yarn/"
+    ".firebase/"
+    ".next/"
+  ];
+
   environment.systemPackages = with pkgs; [
     nodejs_22
     corepack_22

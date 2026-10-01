@@ -9,6 +9,8 @@ let
   username = config.user.username;
 in
 {
+  files.ignoreGlobs = [ "**/.husky/_/" ];
+
   home-manager.users.${username} = {
     home.packages = with pkgs; [
       git-crypt
