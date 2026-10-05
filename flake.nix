@@ -67,6 +67,8 @@
             enable = true;
             package = stablePkgs.darwin.linux-builder;
             config = {
+              nix.gc.automatic = true;
+
               virtualisation = {
                 darwin-builder = {
                   diskSize = 24 * 1024;
