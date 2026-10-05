@@ -30,6 +30,13 @@ in
     };
   };
 
+  # Disable compinit for ZSH, since we will use it locally
+  config.programs.zsh = {
+    promptInit = "";
+    enableCompletion = false;
+    enableBashCompletion = false;
+  };
+
   config.home-manager.users.${config.user.username} = {
     home.file.".p10k.zsh".source = ./.p10k.zsh;
 

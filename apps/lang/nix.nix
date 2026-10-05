@@ -1,12 +1,20 @@
 {
   config,
   pkgs,
+  nixpkgs,
+  flake,
   ...
 }:
 let
   username = config.user.username;
 in
 {
+  # This allows nixd to find the Flake easier
+  nix.nixPath = [
+    "nixpkgs=${nixpkgs}" # Nixd looks for this even if not explicitly requested
+    "flakepath=${flake.outPath}"
+  ];
+
   home-manager.users.${username} = {
     home.packages = with pkgs; [
       nixd

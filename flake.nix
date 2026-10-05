@@ -24,162 +24,30 @@
     }:
     let
       hostname = "Ians-MacBook-Pro";
-      appleName = "Ian's MacBook Pro";
-      username = "ianwright";
-      stablePkgs = import nixpkgs-stable {
-        system = "aarch64-darwin";
-        config.allowUnfree = true;
-      };
-      configuration =
-        { pkgs, ... }:
-        {
-          nixpkgs.overlays = [
-            (import ./overlays/herdr.nix { inherit herdr; })
-          ]
-          ++ import ./overlays/default.nix;
-
-          # Allow unfree packages
-          nixpkgs.config.allowUnfree = true;
-
-          networking.computerName = appleName;
-          networking.hostName = hostname;
-
-          # Necessary for using flakes on this system.
-          nix.settings.experimental-features = "nix-command flakes";
-
-          # This allows nixd to find the Flake easier
-          nix.nixPath = [
-            "nixpkgs=${nixpkgs}" # Nixd looks for this even if not explicitly requested
-            "flakepath=${self.outPath}"
-          ];
-
-          # Set Git commit hash for darwin-version.
-          system.configurationRevision = self.rev or self.dirtyRev or null;
-
-          # Used for backwards compatibility, please read the changelog before changing.
-          # $ darwin-rebuild changelog
-          system.stateVersion = 6;
-
-          # The platform the configuration will be used on.
-          nixpkgs.hostPlatform = "aarch64-darwin";
-
-          nix.linux-builder = {
-            enable = true;
-            package = stablePkgs.darwin.linux-builder;
-            config = {
-              nix.gc.automatic = true;
-
-              virtualisation = {
-                darwin-builder = {
-                  diskSize = 24 * 1024;
-                  memorySize = 8 * 1024;
-                };
-              };
-            };
-          };
-
-          security.pam.services.sudo_local.touchIdAuth = true;
-
-          # Disable compinit for ZSH, since we will use it locally
-          programs.zsh.promptInit = "";
-          programs.zsh.enableCompletion = false;
-          programs.zsh.enableBashCompletion = false;
-
-          # Setup homebrew and install necessary dependencies
-          system.primaryUser = username;
-          homebrew.enable = true;
-
-          # Cleanup the store periodically
-          nix.gc.automatic = true;
-
-          # Uninstall all Casks/Brews not specified here on activation
-          homebrew.onActivation.cleanup = "zap"; # Zap removes associated files for casks (just in brew directory, not ~/.config etc.)
-
-          # Defaults
-          system.defaults.dock.mru-spaces = false; # Do not rearrange spaces by MRU, this is super annoying
-          system.defaults.dock.show-recents = false; # Disable recents in Dock
-          system.defaults.CustomUserPreferences = {
-            "com.apple.dock" = {
-              "contents-immutable" = 1; # Disable changing dock contents interactively
-              "size-immutable" = 1; # Disable dock resizing
-              "position-immutable" = 1; # Disable dock position changes
-            };
-          };
-
-          # Dock contents
-          system.defaults.dock.persistent-apps = [
-            "/System/Applications/Apps.app"
-            "/Applications/Bitwarden.app"
-            "/System/Cryptexes/App/System/Applications/Safari.app"
-            "/System/Applications/Mail.app"
-            "/System/Applications/Phone.app"
-            "/System/Applications/Messages.app"
-            "${pkgs.discord}/Applications/discord.app"
-            "/Applications/WhatsApp.localized/WhatsApp.app"
-            "/System/Applications/Calendar.app"
-            "/Applications/Goodnotes.app"
-            "/System/Applications/Notes.app"
-            "/System/Applications/Reminders.app"
-            "/System/Applications/Books.app"
-            "/System/Applications/Music.app"
-            "/System/Applications/Podcasts.app"
-            "/System/Applications/Home.app"
-            "/System/Applications/iPhone Mirroring.app"
-            "/System/Applications/System Settings.app"
-          ];
-
-          user.username = username;
-
-        };
-
     in
     # Doing this out of line like this allows for inference via nixd
     {
       darwinConfigurations.${hostname} = nix-darwin.lib.darwinSystem {
         specialArgs = {
+          inherit
+            hostname
+            nixpkgs-stable
+            catppuccin
+            nixpkgs
+            ;
+          flake = self;
           homeManager = home-manager;
         };
         modules = [
-          ./modules/user.nix
-          ./modules/files.nix
-          configuration
-          ./apps/ai
-          ./apps/shell
-          ./apps/tools
-          ./apps/editors
-          ./apps/lang
-          ./apps/window
-          ./apps/utilities
-          ./apps/desktop
-          ./apps/catppuccin.nix
+          ./hosts/Ians-MacBook-Pro.nix
           home-manager.darwinModules.home-manager
           {
-            # Without this, home-manager looses its mind
-            users.users.${username}.home = "/Users/${username}";
-
-            # I trust myself :)
-            nix.settings.trusted-users = [ username ];
-
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-            home-manager.users.${username} = {
-              targets.darwin = {
-                copyApps.enable = true;
-                linkApps.enable = false;
-              };
-
-              home = {
-                inherit username;
-                homeDirectory = "/Users/${username}";
-                stateVersion = "26.05";
-              };
-
-              programs.home-manager.enable = true;
-
-              imports = [
-                catppuccin.homeModules.catppuccin
-              ];
-            };
+            nixpkgs.overlays = [
+              (import ./overlays/herdr.nix { inherit herdr; })
+            ]
+            ++ import ./overlays/default.nix;
+            # Set Git commit hash for darwin-version.
+            system.configurationRevision = self.rev or self.dirtyRev or null;
           }
         ];
       };
@@ -189,17 +57,18 @@
       editorHomeManagerConfiguration = home-manager.lib.homeManagerConfiguration {
         pkgs = self.editorDarwinConfiguration.pkgs; # Inherit pkgs from Darwin
         modules = [
-          {
-            home = {
-              inherit username;
-              homeDirectory = "/Users/${username}";
-              stateVersion = "26.05";
-            };
-
-            programs.home-manager.enable = true;
-          }
+          ./settings/home.nix
           catppuccin.homeModules.catppuccin
-
+          {
+            home =
+              let
+                config = self.editorDarwinConfiguration.config;
+                home = config.home-manager.users.${config.user.username}.home;
+              in
+              {
+                inherit (home) username homeDirectory stateVersion;
+              };
+          }
         ];
       };
     };
