@@ -8,10 +8,5 @@ in
 {
   home-manager.users.${username}.programs.jujutsu = {
     enable = true;
-    settings = {
-      user = {
-        name = "Ian Wright";
-      };
-    };
   };
 }

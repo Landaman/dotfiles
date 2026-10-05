@@ -23,10 +23,6 @@ in
           init.defaultBranch = "main";
           merge.tool = "nvimdiff";
           merge.conflictstyle = "zdiff3";
-          user = {
-            email = "49083526+Landaman@users.noreply.github.com";
-            name = "Ian Wright";
-          };
         };
       };
 

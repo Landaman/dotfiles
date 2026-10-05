@@ -1,10 +1,12 @@
 {
+  config,
   hostname,
   nixpkgs-stable,
   pkgs,
   ...
 }:
 let
+  username = config.user.username;
   stablePkgs = import nixpkgs-stable {
     system = pkgs.stdenv.hostPlatform.system;
     config.allowUnfree = true;
@@ -35,7 +37,15 @@ in
   # Used for backwards compatibility, please read the changelog before changing.
   # $ darwin-rebuild changelog
   system.stateVersion = 6;
-  home-manager.users.ianwright.home.stateVersion = "26.05";
+  home-manager.users.${username} = {
+    home.stateVersion = "26.05";
+    home.file.".codex/AGENTS.md".source = ./personal-agents.md;
+    programs.git.settings.user = {
+      name = "Ian Wright";
+      email = "49083526+Landaman@users.noreply.github.com";
+    };
+    programs.jujutsu.settings.user.name = "Ian Wright";
+  };
 
   nix.linux-builder = {
     enable = true;

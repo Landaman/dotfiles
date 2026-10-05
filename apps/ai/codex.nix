@@ -12,8 +12,6 @@ in
 {
   home-manager.users.${username} = {
     home = {
-      file.".codex/AGENTS.md".source = ./AGENTS.md;
-
       activation.herdrCodexIntegration = lib.mkIf herdrInstalled (
         homeManager.lib.hm.dag.entryAfter [ "writeBoundary" ] ''
           ${pkgs.herdr}/bin/herdr integration install codex
