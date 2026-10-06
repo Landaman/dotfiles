@@ -40,3 +40,15 @@ Each branch should be named based on the function, i.e., `fix-no-auth-token`.
 There is no need to prefix the branch name with `codex/`. The only reason
 to prefix a branch name is if we're doing a bunch of stacked PRs building
 on each other for a feature
+
+### Fixing Up Commits
+
+If I'm asking you to fix an issue and you feel you should commit those changes
+(because I told you to or based on context), unless I specify otherwise or
+the changes are pushed up, you should default to fixing up the changes onto
+the commit that introduced the issue
+
+## Modifying Comments
+
+If you're refactoring/moving code, unless a comment will become inaccurate
+you should default to preserving the comment exactly as it stands
