@@ -2,6 +2,7 @@
   imports = [
     ./aws.nix
     ./c.nix
+    ./csharp.nix
     ./css.nix
     ./html.nix
     ./json.nix
