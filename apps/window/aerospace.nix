@@ -34,6 +34,8 @@ in
         keepAlive = true;
       };
       settings = {
+        config-version = 2;
+
         accordion-padding = 30;
         gaps = {
           outer.left = 0;
@@ -51,6 +53,18 @@ in
             run = [ "layout floating" ];
           }) config.window.floatingApps
         );
+
+        persistent-workspaces = [
+          "1"
+          "2"
+          "3"
+          "4"
+          "5"
+          "6"
+          "7"
+          "8"
+          "9"
+        ];
 
         mode.main.binding = {
           alt-slash = "layout tiles horizontal vertical";
