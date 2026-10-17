@@ -54,31 +54,6 @@ in
           {
             codelldb_path = "${codelldb}/bin/codelldb";
             liblldb_path = "${codelldb}/share/lldb/lib/liblldb.dylib";
-            server.default_settings.rust-analyzer = {
-              cargo = {
-                allFeatures = true;
-                loadOutDirsFromCheck = true;
-                buildScripts.enable = true;
-              };
-              checkOnSave = true;
-              diagnostics.enable = true;
-              procMacro.enable = true;
-              files = {
-                exclude = [
-                  ".direnv"
-                  ".git"
-                  ".jj"
-                  ".github"
-                  ".gitlab"
-                  "bin"
-                  "node_modules"
-                  "target"
-                  "venv"
-                  ".venv"
-                ];
-                watcher = "client";
-              };
-            };
           }
         ];
         after = {
@@ -110,19 +85,6 @@ in
           extensions = [ pkgs.vscode-extensions.rust-lang.rust-analyzer ];
           userSettings = {
             "rust-analyzer.server.path" = "${pkgs.rust-analyzer}/bin/rust-analyzer";
-            "rust-analyzer.cargo.features" = "all";
-            "rust-analyzer.files.exclude" = [
-              ".direnv"
-              ".git"
-              ".jj"
-              ".github"
-              ".gitlab"
-              "bin"
-              "node_modules"
-              "target"
-              "venv"
-              ".venv"
-            ];
           };
         };
   };
