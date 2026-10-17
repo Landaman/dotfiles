@@ -21,5 +21,17 @@ in
         }
       ];
     };
+
+    programs.vscode.profiles.default =
+      lib.mkIf config.home-manager.users.${username}.programs.vscode.enable
+        {
+          extensions = with pkgs.vscode-extensions; [
+            esbenp.prettier-vscode
+            oxc.oxc-vscode
+          ];
+
+          # Oxfmt projects select Oxc in workspace settings. Prettier is the default
+          userSettings."oxc.path.oxfmt" = "${pkgs.oxfmt}/bin/oxfmt";
+        };
   };
 }

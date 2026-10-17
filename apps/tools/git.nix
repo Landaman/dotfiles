@@ -64,5 +64,14 @@ in
         };
       };
     };
+
+    programs.vscode.profiles.default =
+      lib.mkIf config.home-manager.users.${username}.programs.vscode.enable
+        {
+          extensions = [
+            pkgs.vscode-extensions.github.vscode-github-actions
+            pkgs.vscode-extensions.github.vscode-pull-request-github
+          ];
+        };
   };
 }

@@ -103,6 +103,28 @@ in
         ];
       };
     };
+
+    programs.vscode.profiles.default =
+      lib.mkIf config.home-manager.users.${username}.programs.vscode.enable
+        {
+          extensions = [ pkgs.vscode-extensions.rust-lang.rust-analyzer ];
+          userSettings = {
+            "rust-analyzer.server.path" = "${pkgs.rust-analyzer}/bin/rust-analyzer";
+            "rust-analyzer.cargo.features" = "all";
+            "rust-analyzer.files.exclude" = [
+              ".direnv"
+              ".git"
+              ".jj"
+              ".github"
+              ".gitlab"
+              "bin"
+              "node_modules"
+              "target"
+              "venv"
+              ".venv"
+            ];
+          };
+        };
   };
 
   environment.systemPackages = with pkgs; [

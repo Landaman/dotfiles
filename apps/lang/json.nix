@@ -1,5 +1,6 @@
 {
   config,
+  lib,
   pkgs,
   ...
 }:
@@ -7,38 +8,49 @@ let
   username = config.user.username;
 in
 {
-  home-manager.users.${username}.programs.neovim = {
-    extraPackages = with pkgs; [
-      vscode-langservers-extracted
-    ];
-
-    lzePlugins = {
-      nvim-treesitter.options = [
-        {
-          ensure_installed = [
-            "json"
-            "json5"
-          ];
-        }
+  home-manager.users.${username} = {
+    programs.neovim = {
+      extraPackages = with pkgs; [
+        vscode-langservers-extracted
       ];
 
-      nvim-lspconfig.options = [
-        {
-          config.jsonls.settings.json = {
-            format.enable = true;
-            validate.enable = true;
-          };
-        }
-      ];
+      lzePlugins = {
+        nvim-treesitter.options = [
+          {
+            ensure_installed = [
+              "json"
+              "json5"
+            ];
+          }
+        ];
 
-      conform-nvim.options = [
-        {
-          formatters_by_ft = {
-            json = [ "web" ];
-            jsonc = [ "web" ];
-          };
-        }
-      ];
+        nvim-lspconfig.options = [
+          {
+            config.jsonls.settings.json = {
+              format.enable = true;
+              validate.enable = true;
+            };
+          }
+        ];
+
+        conform-nvim.options = [
+          {
+            formatters_by_ft = {
+              json = [ "web" ];
+              jsonc = [ "web" ];
+            };
+          }
+        ];
+      };
     };
+
+    programs.vscode.profiles.default =
+      lib.mkIf config.home-manager.users.${username}.programs.vscode.enable
+        {
+          userSettings = {
+            "[json]"."editor.defaultFormatter" = "esbenp.prettier-vscode";
+            "[jsonc]"."editor.defaultFormatter" = "esbenp.prettier-vscode";
+          };
+        };
   };
 }

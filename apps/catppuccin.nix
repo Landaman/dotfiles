@@ -45,6 +45,13 @@ in
       };
     };
 
+    programs.vscode.profiles.default =
+      lib.mkIf config.home-manager.users.${config.user.username}.programs.vscode.enable
+        {
+          extensions = [ pkgs.vscode-extensions.catppuccin.catppuccin-vsc ];
+          userSettings."workbench.colorTheme" = "Catppuccin ${lib.toSentenceCase flavor}";
+        };
+
     programs.codex.settings.tui.theme = "catppuccin-${flavor}";
 
     programs.neovim.lzePlugins.catppuccin = {

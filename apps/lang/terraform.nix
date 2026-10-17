@@ -1,5 +1,6 @@
 {
   config,
+  lib,
   pkgs,
   ...
 }:
@@ -31,5 +32,12 @@ in
         }
       ];
     };
+
+    programs.vscode.profiles.default =
+      lib.mkIf config.home-manager.users.${username}.programs.vscode.enable
+        {
+          extensions = [ pkgs.vscode-extensions.hashicorp.terraform ];
+          userSettings."terraform.languageServer.path" = "${pkgs.terraform-ls}/bin/terraform-ls";
+        };
   };
 }
