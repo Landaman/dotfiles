@@ -11,11 +11,6 @@ let
 in
 {
   home-manager.users.${username}.programs.neovim = {
-    extraPackages = with pkgs; [
-      oxfmt
-      prettierd
-    ];
-
     lzePlugins.conform-nvim = {
       enabled = luaUtils.mkLuaExpression "not vim.g.vscode";
       plugin = pkgs.vimPlugins.conform-nvim;
@@ -34,10 +29,6 @@ in
             lsp_format = "fallback";
             stop_after_first = true;
           };
-        }
-        {
-          path = ./conform.lua;
-          call = "opts";
         }
       ];
     };
