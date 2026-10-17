@@ -1,16 +1,11 @@
 {
   config,
   hostname,
-  nixpkgs-stable,
   pkgs,
   ...
 }:
 let
   username = config.user.username;
-  stablePkgs = import nixpkgs-stable {
-    system = pkgs.stdenv.hostPlatform.system;
-    config.allowUnfree = true;
-  };
 in
 {
   imports = [
@@ -49,7 +44,11 @@ in
 
   nix.linux-builder = {
     enable = true;
-    package = stablePkgs.darwin.linux-builder;
+    package = pkgs.darwin.linux-builder-vz;
+    systems = [
+      "aarch64-linux"
+      "x86_64-linux"
+    ];
     config = {
       nix.gc.automatic = true;
 
