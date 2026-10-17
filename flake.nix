@@ -37,6 +37,14 @@
     in
     {
       nixosConfigurations = {
+        fedora-home-server = nixpkgs.lib.nixosSystem {
+          specialArgs = {
+            inherit secrets;
+            systemName = "fedora-home-server";
+          };
+          modules = [ ./hosts/fedora-home-server.nix ];
+        };
+
         nine-cross-pi-hole = mkPiHole {
           systemName = "nine-cross-pi-hole";
         };
