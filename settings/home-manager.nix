@@ -6,10 +6,14 @@ in
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;
+
+    sharedModules = [
+      catppuccin.homeModules.catppuccin
+    ];
+
     users.${username} = {
       imports = [
         ./home.nix
-        catppuccin.homeModules.catppuccin
       ];
       home = {
         inherit username;

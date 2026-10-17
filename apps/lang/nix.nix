@@ -1,5 +1,6 @@
 {
   config,
+  hostname,
   lib,
   pkgs,
   nixpkgs,
@@ -8,11 +9,19 @@
 }:
 let
   username = config.user.username;
+  host = builtins.toJSON hostname;
+
+  configurationSet =
+    if pkgs.stdenv.hostPlatform.isDarwin then "darwinConfigurations" else "nixosConfigurations";
+  optionSet = if pkgs.stdenv.hostPlatform.isDarwin then "nix-darwin" else "nixos";
+
+  systemExpr = "(builtins.getFlake (builtins.toString <flakepath>)).${configurationSet}.${host}";
+
   nixdSettings = {
     formatting.command = [ "${pkgs.nixfmt}/bin/nixfmt" ];
     options = {
-      nix-darwin.expr = "(builtins.getFlake (builtins.toString <flakepath>)).editorDarwinConfiguration.options";
-      home-manager.expr = "(builtins.getFlake (builtins.toString <flakepath>)).editorHomeManagerConfiguration.options";
+      ${optionSet}.expr = "${systemExpr}.options";
+      home-manager.expr = "${systemExpr}.options.home-manager.users.type.getSubOptions []";
     };
   };
 in

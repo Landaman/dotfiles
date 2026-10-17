@@ -51,25 +51,5 @@
           }
         ];
       };
-
-      # Configurations for typehinting. These aren't really used for anything, just for nixd inference
-      editorDarwinConfiguration = self.darwinConfigurations.${hostname};
-      editorHomeManagerConfiguration = home-manager.lib.homeManagerConfiguration {
-        pkgs = self.editorDarwinConfiguration.pkgs; # Inherit pkgs from Darwin
-        modules = [
-          ./settings/home.nix
-          catppuccin.homeModules.catppuccin
-          {
-            home =
-              let
-                config = self.editorDarwinConfiguration.config;
-                home = config.home-manager.users.${config.user.username}.home;
-              in
-              {
-                inherit (home) username homeDirectory stateVersion;
-              };
-          }
-        ];
-      };
     };
 }
