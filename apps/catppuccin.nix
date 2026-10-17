@@ -59,7 +59,7 @@ in
       plugin = pkgs.vimPlugins.catppuccin-nvim;
       beforeAll = luaUtils.mkLuaExpression "function() vim.cmd.colorscheme 'catppuccin-${flavor}' end";
       colorscheme = [
-        "catppuccin-${flavor}"
+        "catppuccin-mocha"
         "catppuccin-frappe"
         "catppuccin-latte"
         "catppuccin-macchiato"
