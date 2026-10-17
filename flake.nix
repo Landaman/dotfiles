@@ -30,28 +30,9 @@
       hostname = "Ians-MacBook-Pro";
       secrets = builtins.fromJSON (builtins.readFile ./secrets.json);
 
-      # Helper to make multiple pi systems with the same config
-      mkPiHole =
-        {
-          systemName,
-          specialArgs ? { },
-          extraModules ? [ ],
-        }:
-        nixpkgs.lib.nixosSystem {
-          specialArgs = specialArgs // {
-            inherit secrets systemName;
-            hardware = nixos-hardware;
-          };
-          modules = [
-            ./hardware/pi/hardware-pi02.nix
-            ./common.nix
-            ./components/pi-hole.nix
-            {
-              nixpkgs.overlays = [ (import ./overlays/pihole-ftl.nix) ];
-            }
-          ]
-          ++ extraModules;
-        };
+      mkPiHole = import ./hosts/pi-hole.nix {
+        inherit nixpkgs nixos-hardware secrets;
+      };
 
     in
     {
