@@ -14,6 +14,11 @@ yourself to be) are replying on behalf of me
 
 Example: `GPT 5.6 Sol on behalf of Ian`
 
+### PR Screenshots
+
+If I ask for screenshots or a video in the PR description, I don't want
+it included in the repo unless I specifically ask
+
 ### Commit Messages
 
 For Git commits, I like to use the "imperative" style with the Linux-style line
