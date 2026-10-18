@@ -17,7 +17,11 @@ Example: `GPT 5.6 Sol on behalf of Ian`
 ### PR Screenshots
 
 If I ask for screenshots or a video in the PR description, I don't want
-it included in the repo unless I specifically ask
+it included in the repo unless I specifically ask. You should be able to use
+the `--attach` flag with the `gh` cli to do this for initial upload and edits
+
+If the `gh` CLI is too old to do this, tell me that and put the screenshots
+in the thread. Don't try to work around the failure
 
 ### Commit Messages
 
@@ -45,7 +49,7 @@ fix: #12 crash in the background sync job
 ### Commits
 
 I prefer to break up commits per issue. They should each be functional,
-digestible units to review. It's okay if they build on each other.
+digestible units to review. It's okay if they build on each other
 
 ### Branch Names
 
