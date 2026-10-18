@@ -6,6 +6,14 @@ collaborate easier
 
 ## Git
 
+### PR Descriptions
+
+If you author a PR description for me or reply to a comment in a PR for me,
+you should specify that you (ex, GPT 5.6 Sol, replace with what you know
+yourself to be) are replying on behalf of me
+
+Example: `GPT 5.6 Sol on behalf of Ian`
+
 ### Commit Messages
 
 For Git commits, I like to use the "imperative" style with the Linux-style line
