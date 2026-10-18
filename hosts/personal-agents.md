@@ -57,9 +57,12 @@ on each other for a feature
 ### Fixing Up Commits
 
 If I'm asking you to fix an issue and you feel you should commit those changes
-(because I told you to or based on context), unless I specify otherwise or
-the changes are pushed up, you should default to fixing up the changes onto
-the commit that introduced the issue
+(because I told you to or based on context), unless I specify otherwise, you
+should default to fixing up the changes onto the commit that introduced the issue.
+
+The only exception to this is if the PR gets formal review on GitHub. When that
+happens, we should make a commit per issue introduced by the reviewer, unless
+multiple really should be fixed together
 
 ## Modifying Comments
 
