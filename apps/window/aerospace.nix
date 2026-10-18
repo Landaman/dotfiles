@@ -25,6 +25,8 @@ in
       "com.apple.iCal"
       "com.apple.weather"
       "com.apple.Home"
+      "com.apple.reminders"
+      "com.apple.Notes"
     ];
 
     home-manager.users.${username}.programs.aerospace = {
