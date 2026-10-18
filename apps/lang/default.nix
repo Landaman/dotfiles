@@ -6,6 +6,7 @@
     ./css.nix
     ./html.nix
     ./json.nix
+    ./go.nix
     ./markdown.nix
     ./nix.nix
     ./rust.nix
