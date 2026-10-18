@@ -26,7 +26,7 @@ in
         nvim-lspconfig.options = [
           {
             config.dotrush = {
-              cmd = [ "${dotrush}/bin/dotrush" ];
+              cmd = [ "dotrush" ];
               filetypes = [ "cs" ];
               root_dir = luaUtils.mkLuaExpression ''
                 function(bufnr, on_dir)
