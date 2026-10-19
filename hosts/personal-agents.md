@@ -68,7 +68,23 @@ The only exception to this is if the PR gets formal review on GitHub. When that
 happens, we should make a commit per issue introduced by the reviewer, unless
 multiple really should be fixed together
 
-## Modifying Comments
+## Comments
+
+### One Sentence Comments
+
+I typically try to avoid ending one sentence comments
+with a ".". Multi-sentence it's okay. Same goes for writing
+prose in general
+
+### Functions/Interfaces
+
+Every function/interface/class/property should get a doc comment
+at the top of it. Don't go overkill, simple is always acceptable.
+
+Same goes for blocks of code that are non-obvious - one or two sentence
+explanations can help. If it's obvious, skip it
+
+### Refactoring
 
 If you're refactoring/moving code, unless a comment will become inaccurate
 you should default to preserving the comment exactly as it stands
