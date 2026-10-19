@@ -14,19 +14,19 @@ let
   sources = {
     aarch64-linux = {
       runtime = "linux-arm64";
-      hash = "sha256:ea468edd899b0b1560f843b0ebc38b3921be757a1e3ba57239f66f042b5971c0";
+      hash = "sha256-2Sn+a9Ufwve7IznYSzFSJhMOxX1MsG6D8zcF7HWH6Ds=";
     };
     x86_64-linux = {
       runtime = "linux-x64";
-      hash = "sha256:6de5eda5b48dddba3b60773d58019e5353cb3a9b3646031ee8ff3c154f996038";
+      hash = "sha256-Fgzl/gmNiIwSJZ3TxHAyexCI0sRig8hYeiSoP0aeeWM=";
     };
     aarch64-darwin = {
       runtime = "osx-arm64";
-      hash = "sha256:c60a0c5d65971f638b3690211568550eaec30c1dd0a2953504b6dd493700216a";
+      hash = "sha256-XtBqO4is3ZR01/knXPb+ozwe23Qh8v98T39MM0aFRfY=";
     };
     x86_64-darwin = {
       runtime = "osx-x64";
-      hash = "sha256:7393d88770565b8268c154c5a6d7e6c0d76482fa69af64196c811b1e1261fdab";
+      hash = "sha256-OweKYN2ZsdH9KQXpZRGfPZkTFQ+rfpkMrdzf/QsBfm0=";
     };
   };
   source = sources.${stdenvNoCC.hostPlatform.system};
