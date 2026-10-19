@@ -54,9 +54,6 @@ digestible units to review. It's okay if they build on each other
 ### Branch Names
 
 Each branch should be named based on the function, i.e., `fix-no-auth-token`.
-There is no need to prefix the branch name with `codex/`. The only reason
-to prefix a branch name is if we're doing a bunch of stacked PRs building
-on each other for a feature
 
 ### Fixing Up Commits
 
