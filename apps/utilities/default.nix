@@ -2,7 +2,6 @@
   imports = [
     ./adgaurd.nix
     ./balenaetcher.nix
-    ./betterdisplay.nix
     ./colorslurp.nix
     ./daisydisk.nix
     ./logi-options.nix
