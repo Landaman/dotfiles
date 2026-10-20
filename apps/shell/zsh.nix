@@ -32,11 +32,11 @@ in
 
   config.users.users.${config.user.username}.shell = pkgs.zsh; # Set zsh as default
 
-  # Disable compinit for ZSH, since we will use it locally
   config.programs.zsh = {
     enable = true;
     promptInit = "";
-    enableCompletion = false;
+    enableCompletion = true;
+    enableGlobalCompInit = false; # Home manager should set this locally
     enableBashCompletion = false;
   };
 
