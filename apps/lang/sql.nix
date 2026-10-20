@@ -6,6 +6,8 @@
 }:
 let
   username = config.user.username;
+  # Keep Prisma installation and configuration tied to the vtsls integration
+  hasVtsls = lib.elem pkgs.vtsls config.home-manager.users.${username}.programs.neovim.extraPackages;
 in
 {
   home-manager.users.${username} = {
@@ -21,6 +23,8 @@ in
           {
             config = {
               postgres_lsp = { };
+            }
+            // lib.optionalAttrs hasVtsls {
               prismals = { };
             };
           }

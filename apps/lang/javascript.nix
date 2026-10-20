@@ -58,7 +58,6 @@ in
                 '';
               };
               oxlint = { };
-              prismals = { };
               tailwindCSS = { };
               vtsls = {
                 settings = {
