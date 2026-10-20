@@ -9,6 +9,7 @@
   icu,
   openssl,
   zlib,
+  lttng-ust_2_12,
 }:
 let
   sources = {
@@ -49,6 +50,7 @@ stdenvNoCC.mkDerivation rec {
     zlib
     openssl
     icu
+    lttng-ust_2_12
   ];
   # CoreCLR loads these libraries dynamically rather than through ELF dependencies.
   runtimeDependencies = lib.optionals stdenvNoCC.hostPlatform.isLinux [

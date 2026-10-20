@@ -1,4 +1,7 @@
+{ config, ... }:
 {
+  system.primaryUser = config.user.username;
+
   security.pam.services.sudo_local.touchIdAuth = true;
 
   # Defaults

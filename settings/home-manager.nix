@@ -1,4 +1,10 @@
-{ config, catppuccin, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  catppuccin,
+  ...
+}:
 let
   username = config.user.username;
 in
@@ -19,7 +25,7 @@ in
         inherit username;
         homeDirectory = config.users.users.${username}.home;
       };
-      targets.darwin = {
+      targets.darwin = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin {
         copyApps.enable = true;
         linkApps.enable = false;
       };

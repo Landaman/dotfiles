@@ -29,6 +29,7 @@ in
       ];
       extraPackages = with pkgs; [
         tree-sitter
+        gcc # Needed for treesitter compilation at runtime
       ];
       plugins = generated.allPlugins;
       initLua = generated.initLua;

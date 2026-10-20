@@ -1,4 +1,9 @@
-{ config, lib, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 {
   options.user.username = lib.mkOption {
     type = lib.types.str;
@@ -6,8 +11,11 @@
   };
 
   config = {
-    system.primaryUser = config.user.username;
     # Without this, home-manager looses its mind
-    users.users.${config.user.username}.home = "/Users/${config.user.username}";
+    users.users.${config.user.username}.home =
+      if pkgs.stdenv.hostPlatform.isDarwin then
+        "/Users/${config.user.username}"
+      else
+        "/home/${config.user.username}";
   };
 }
