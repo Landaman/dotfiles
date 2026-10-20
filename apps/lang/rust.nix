@@ -11,6 +11,7 @@ let
 in
 {
   home-manager.users.${username} = {
+    programs.neovim.extraPackages = [ codelldb ];
     home.packages = with pkgs; [
       rustfmt
       clippy
@@ -50,15 +51,6 @@ in
             end
           end
         '';
-        options = [
-          {
-            codelldb_path = "${codelldb}/bin/codelldb";
-            liblldb_path = "${codelldb}/share/lldb/lib/liblldb.dylib";
-          }
-        ];
-        after = {
-          path = ./rust.lua;
-        };
       };
 
       crates-nvim = {
