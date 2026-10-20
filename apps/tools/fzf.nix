@@ -185,7 +185,7 @@ in
         previewers.codeaction_native.pager =
           lib.mkIf config.home-manager.users.${username}.programs.delta.enable
             (
-              luaUtils.mkLuaExpression ''vim.fn.executable 'delta' and [[delta --width=$COLUMNS --hunk-header-style="omit" --file-style="omit"]] or nil''
+              luaUtils.mkLuaExpression ''vim.fn.executable('delta') == 1 and [[delta --width=$COLUMNS --hunk-header-style="omit" --file-style="omit"]] or nil''
             );
       };
     };

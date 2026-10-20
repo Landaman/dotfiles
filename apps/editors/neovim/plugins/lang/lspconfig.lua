@@ -45,7 +45,7 @@ return function(opts)
 
 		local resolved_config = vim.lsp.config[lsp]
 		local cmd = resolved_config and resolved_config.cmd -- Sometimes these can be fns, which we can't really check this way
-		if type(cmd) == "table" and cmd[1] and not vim.fn.executable(cmd[1]) then
+		if type(cmd) == "table" and cmd[1] and vim.fn.executable(cmd[1]) == 0 then
 			vim.notify("lspconfig: Failed to find executable for LSP " .. lsp, vim.log.levels.WARN)
 		else
 			vim.lsp.enable(lsp) -- Otherwise, start up
