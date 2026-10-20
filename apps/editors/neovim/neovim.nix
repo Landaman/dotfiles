@@ -25,7 +25,6 @@ in
         { path = ./config/options.lua; }
         { path = ./config/keymaps.lua; }
         { path = ./config/diagnostics.lua; }
-        { path = ./config/plugin/lze/merge_options.lua; }
       ];
       extraPackages = with pkgs; [
         tree-sitter

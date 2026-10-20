@@ -57,7 +57,13 @@ let
           [ ];
     in
     collect pluginSpecs;
-  linkedLuaFiles = extraConfigFiles ++ pluginLuaModuleFiles;
+  # Include the exact merge helper referenced by generated Lua so its path hash matches the module name
+  linkedLuaFiles =
+    extraConfigFiles
+    ++ pluginLuaModuleFiles
+    ++ [
+      { path = ./config/plugin/lze/merge_options.lua; }
+    ];
 
   extraConfigRequires = lib.concatStringsSep "\n" (
     lib.map (file: (luaUtils.requireLuaModuleFile file).__lua) extraConfigFiles
