@@ -61,9 +61,9 @@ let
     end
 
     -- Load required plugins right away with packadd
-    vim.pack.add(${nixToLua.toLuaValue startupPlugins}, { load = false })
+    vim.pack.add(${nixToLua.toLuaValue startupPlugins}, { load = false, confirm = false })
     -- Leave optional plugins off runtimepath until lze loads them
-    vim.pack.add(${nixToLua.toLuaValue optionalPlugins}, { load = function() end })
+    vim.pack.add(${nixToLua.toLuaValue optionalPlugins}, { load = function() end, confirm = false })
   '';
 
   # The output will need to actually be edited by hand to remove
