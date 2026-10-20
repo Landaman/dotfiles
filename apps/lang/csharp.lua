@@ -1,9 +1,9 @@
-return function(opts)
+return function()
 	local dap = require("dap")
 
 	dap.adapters.coreclr = {
 		type = "executable",
-		command = opts.clrdbg_path,
+		command = "clrdbg",
 	}
 
 	require("dap.ext.vscode").type_to_filetypes.coreclr = { "cs" }

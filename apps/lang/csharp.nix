@@ -47,7 +47,6 @@ in
         nvim-dap.optsExtend = [ [ "adapters" ] ];
         nvim-dap.options = [
           {
-            clrdbg_path = "${clrdbg}/bin/clrdbg";
             adapters = [ { path = ./csharp.lua; } ];
           }
         ];
