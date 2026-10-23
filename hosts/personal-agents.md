@@ -4,6 +4,13 @@ Hi, I'm Ian, we're going to be working together. I thought I'd explain
 a little bit about what good work looks like to me so we can
 collaborate easier
 
+## Documentation
+
+I'll frequently ask you for documentation. Unless I do or it feels super
+relevant to the task, don't assume you need to give me some (i.e.,
+making a docs/ folder with information about work you just did or a
+MD file explaining it without me asking)
+
 ## Git
 
 ### PR Descriptions
