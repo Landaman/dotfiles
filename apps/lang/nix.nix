@@ -18,7 +18,7 @@ let
   systemExpr = "(builtins.getFlake (builtins.toString <flakepath>)).${configurationSet}.${host}";
 
   nixdSettings = {
-    formatting.command = [ "${pkgs.nixfmt}/bin/nixfmt" ];
+    formatting.command = [ "nixfmt" ];
     options = {
       ${optionSet}.expr = "${systemExpr}.options";
       home-manager.expr = "${systemExpr}.options.home-manager.users.type.getSubOptions []";
