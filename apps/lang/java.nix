@@ -16,6 +16,11 @@ in
 
   home-manager.users.${username} = {
     programs.neovim = {
+      mason.packages = [
+        "jdtls"
+        "java-debug-adapter"
+        "java-test"
+      ];
       extraPackages = with pkgs; [
         jdt-language-server
       ];
@@ -32,11 +37,20 @@ in
           plugin = pkgs.vimPlugins.nvim-jdtls;
           filetype = [ "java" ];
           options = [
-            {
-              java_debug_path = "${pkgs.vscode-extensions.vscjava.vscode-java-debug}";
-              java_test_path = "${pkgs.vscode-extensions.vscjava.vscode-java-test}";
-              lombok_path = "${pkgs.lombok}/share/java/lombok.jar";
-            }
+            (
+              if config.home-manager.users.${username}.programs.neovim.standalone then
+                {
+                  java_debug_path = luaUtils.mkLuaExpression ''vim.fn.stdpath("data") .. "/mason/share/java-debug-adapter"'';
+                  java_test_path = luaUtils.mkLuaExpression ''vim.fn.stdpath("data") .. "/mason/share/java-test"'';
+                  lombok_path = luaUtils.mkLuaExpression ''vim.fn.stdpath("data") .. "/mason/share/jdtls/lombok.jar"'';
+                }
+              else
+                {
+                  java_debug_path = "${pkgs.vscode-extensions.vscjava.vscode-java-debug}/share/vscode/extensions/vscjava.vscode-java-debug/server";
+                  java_test_path = "${pkgs.vscode-extensions.vscjava.vscode-java-test}/share/vscode/extensions/vscjava.vscode-java-test/server";
+                  lombok_path = "${pkgs.lombok}/share/java/lombok.jar";
+                }
+            )
           ];
           after = {
             path = ./java.lua;

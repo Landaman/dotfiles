@@ -9,14 +9,20 @@ return function(opts)
 
   local function bundles()
     local patterns = {
-      (opts.java_debug_path or "") .. "/share/vscode/extensions/vscjava.vscode-java-debug/server/com.microsoft.java.debug.plugin-*.jar",
-      (opts.java_test_path or "") .. "/share/vscode/extensions/vscjava.vscode-java-test/server/*.jar",
+      opts.java_debug_path .. "/com.microsoft.java.debug.plugin-*.jar",
+      opts.java_test_path .. "/*.jar",
     }
     local result = {}
+    local seen = {}
 
     for _, pattern in ipairs(patterns) do
       for _, bundle in ipairs(vim.split(vim.fn.glob(pattern), "\n", { trimempty = true })) do
-        table.insert(result, bundle)
+        -- Mason can expose the same JAR through multiple share links
+        local path = vim.uv.fs_realpath(bundle) or bundle
+        if not seen[path] then
+          seen[path] = true
+          table.insert(result, path)
+        end
       end
     end
 
