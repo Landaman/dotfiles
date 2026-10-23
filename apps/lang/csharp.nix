@@ -15,6 +15,61 @@ in
 
   home-manager.users.${username} = {
     programs.neovim = {
+      mason.packages = [
+        "dotrush"
+        "clrdbg"
+      ];
+      mason.registryPackages = {
+        dotrush = {
+          description = "DotRush C# language server";
+          homepage = "https://github.com/JaneySprings/DotRush";
+          licenses = [ "MIT" ];
+          languages = [ "C#" ];
+          categories = [ "LSP" ];
+          source = {
+            id = "pkg:generic/JaneySprings/DotRush@latest";
+            download.files."dotrush.zip" =
+              "https://github.com/JaneySprings/DotRush/releases/latest/download/DotRush.Bundle.LanguageServer.zip";
+          };
+          bin.dotrush = "dotnet:DotRush.dll";
+        };
+        clrdbg = {
+          description = ".NET debug adapter used by DotRush";
+          homepage = "https://github.com/JaneySprings/clrdbg";
+          licenses = [ "MIT" ];
+          languages = [ "C#" ];
+          categories = [ "DAP" ];
+          source = {
+            id = "pkg:generic/JaneySprings/clrdbg@latest";
+            download =
+              map
+                (target: {
+                  inherit (target) target;
+                  files."libexec/clrdbg.zip" =
+                    "https://github.com/JaneySprings/clrdbg/releases/latest/download/clrdbg_${target.runtime}.zip";
+                })
+                [
+                  {
+                    target = "darwin_arm64";
+                    runtime = "osx-arm64";
+                  }
+                  {
+                    target = "darwin_x64";
+                    runtime = "osx-x64";
+                  }
+                  {
+                    target = "linux_arm64_gnu";
+                    runtime = "linux-arm64";
+                  }
+                  {
+                    target = "linux_x64_gnu";
+                    runtime = "linux-x64";
+                  }
+                ];
+          };
+          bin.clrdbg = "exec:libexec/clrdbg";
+        };
+      };
       extraPackages = [
         dotrush
         clrdbg
