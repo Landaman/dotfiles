@@ -9,6 +9,7 @@ let
 in
 {
   home-manager.users.${username} = {
+    programs.neovim.mason.packages = [ "terraform-ls" ];
     home.packages = with pkgs; [
       terraform
     ];

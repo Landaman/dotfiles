@@ -10,6 +10,10 @@ in
 {
   home-manager.users.${username} = {
     programs.neovim = {
+      mason.packages = [
+        "docker-compose-language-service"
+        "dockerfile-language-server"
+      ];
       extraPackages = with pkgs; [
         docker-compose-language-service
         dockerfile-language-server

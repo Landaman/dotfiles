@@ -10,6 +10,7 @@ in
 {
   home-manager.users.${username} = {
     programs.neovim = {
+      mason.packages = [ "clangd" ];
       extraPackages = with pkgs; [
         clang-tools
       ];

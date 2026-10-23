@@ -10,6 +10,10 @@ in
 {
   home-manager.users.${username} = {
     programs.neovim = {
+      mason.packages = [
+        "tailwindcss-language-server"
+        "css-lsp"
+      ];
       extraPackages = with pkgs; [
         tailwindcss-language-server
         vscode-langservers-extracted

@@ -10,6 +10,7 @@ in
 {
   home-manager.users.${username} = {
     programs.neovim = {
+      mason.packages = [ "markdownlint" ];
       extraPackages = with pkgs; [
         markdownlint-cli
       ];

@@ -12,6 +12,9 @@ in
 
   home-manager.users.${username} = {
     programs.neovim = {
+      mason.packages = [
+        "svelte-language-server"
+      ];
       extraPackages = with pkgs; [
         svelte-language-server
       ];

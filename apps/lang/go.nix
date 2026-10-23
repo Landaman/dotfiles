@@ -9,6 +9,7 @@ let
 in
 {
   home-manager.users.${username} = {
+    programs.neovim.mason.packages = [ "gopls" ];
     home.packages = with pkgs; [
       go
       gopls

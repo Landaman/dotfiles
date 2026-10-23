@@ -25,6 +25,12 @@ in
 
   home-manager.users.${username} = {
     programs.neovim = {
+      mason.packages = [
+        "oxlint"
+        "tailwindcss-language-server"
+        "eslint-lsp"
+        "vtsls"
+      ];
       extraPackages = with pkgs; [
         oxlint
         prisma-language-server

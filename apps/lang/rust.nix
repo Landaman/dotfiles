@@ -12,6 +12,10 @@ in
 {
   home-manager.users.${username} = {
     programs.neovim.extraPackages = [ codelldb ];
+    programs.neovim.mason.packages = [
+      "rust-analyzer"
+      "codelldb"
+    ];
     home.packages = with pkgs; [
       rustfmt
       clippy

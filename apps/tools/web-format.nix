@@ -10,6 +10,10 @@ in
 {
   home-manager.users.${username} = {
     programs.neovim = {
+      mason.packages = [
+        "prettierd"
+        "oxfmt"
+      ];
       extraPackages = with pkgs; [
         prettierd
         oxfmt

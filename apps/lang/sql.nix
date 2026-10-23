@@ -12,6 +12,12 @@ in
 {
   home-manager.users.${username} = {
     programs.neovim = {
+      mason.packages = [
+        "pgformatter"
+        "postgres-language-server"
+        "sql-formatter"
+      ]
+      ++ lib.optional hasVtsls "prisma-language-server";
       extraPackages = with pkgs; [
         pgformatter
         postgres-language-server

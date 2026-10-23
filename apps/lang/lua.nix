@@ -15,6 +15,10 @@ in
 
   home-manager.users.${username} = {
     programs.neovim = {
+      mason.packages = [
+        "lua-language-server"
+        "stylua"
+      ];
       extraPackages = with pkgs; [
         lua-language-server
         stylua

@@ -26,6 +26,7 @@ in
         { path = ./config/keymaps.lua; }
         { path = ./config/diagnostics.lua; }
       ];
+      mason.packages = [ "tree-sitter-cli" ];
       extraPackages = with pkgs; [
         tree-sitter
         gcc # Needed for treesitter compilation at runtime

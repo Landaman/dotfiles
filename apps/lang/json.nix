@@ -10,6 +10,7 @@ in
 {
   home-manager.users.${username} = {
     programs.neovim = {
+      mason.packages = [ "json-lsp" ];
       extraPackages = with pkgs; [
         vscode-langservers-extracted
       ];

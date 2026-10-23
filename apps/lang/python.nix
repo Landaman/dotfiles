@@ -18,6 +18,10 @@ in
 
   home-manager.users.${username} = {
     programs.neovim = {
+      mason.packages = [
+        "basedpyright"
+        "black"
+      ];
       extraPackages = with pkgs; [
         basedpyright
         black
