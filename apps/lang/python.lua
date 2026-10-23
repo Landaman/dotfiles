@@ -1,4 +1,4 @@
+---Use the debugpy adapter supplied on PATH by Nix or Mason
 return function()
-  local python = vim.fn.exepath("python3")
-  require("dap-python").setup(python)
+  require("dap-python").setup("debugpy-adapter")
 end

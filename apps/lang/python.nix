@@ -21,6 +21,7 @@ in
       mason.packages = [
         "basedpyright"
         "black"
+        "debugpy"
       ];
       extraPackages = with pkgs; [
         basedpyright
