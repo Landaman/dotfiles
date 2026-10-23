@@ -1,11 +1,18 @@
-# configuration: Evaluated system configuration containing the Neovim settings
+# configuration: Evaluated system configuration to extend for standalone Neovim
 { configuration }:
 
 let
-  inherit (configuration) pkgs;
-  inherit (pkgs) lib;
   username = configuration.config.user.username;
-  neovim = configuration.config.home-manager.users.${username}.programs.neovim;
+  exported = configuration.extendModules {
+    modules = [
+      {
+        home-manager.users.${username}.programs.neovim.standalone = true;
+      }
+    ];
+  };
+  inherit (exported) pkgs;
+  inherit (pkgs) lib;
+  neovim = exported.config.home-manager.users.${username}.programs.neovim;
   generated = import ./generate-config.nix { inherit lib pkgs neovim; };
   nixToLua = import ./nix-to-lua.nix { inherit lib; };
 
@@ -57,7 +64,7 @@ let
     lib.filter (pluginConfig: pluginConfig.optional) pluginsWithDependencies
   );
 
-  # Load required plugins right awawy, let optional plugins be loaded by lze
+  # Load required plugins right away, let optional plugins be loaded by lze
   # false means do :packadd!, so we need to manually skip the optional ones
   installLua = ''
     if vim.fn.has('nvim-0.12') == 0 then
@@ -70,11 +77,7 @@ let
     vim.pack.add(${nixToLua.toLuaValue optionalPlugins}, { load = function() end, confirm = false })
   '';
 
-  # The output will need to actually be edited by hand to remove
-  # the nix dependencies. This essentially means "create a new package that drops those"
-  initLua = pkgs.writeText "nvim-export-init.lua" (
-    builtins.unsafeDiscardStringContext (installLua + "\n" + generated.initLua)
-  );
+  initLua = pkgs.writeText "nvim-export-init.lua" (installLua + "\n" + generated.initLua);
 in
 pkgs.runCommand "neovim-export" { } ''
   mkdir -p "$out/nvim"

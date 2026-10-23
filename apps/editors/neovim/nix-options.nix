@@ -1,7 +1,6 @@
 {
   lib,
   config,
-  pkgs,
   ...
 }:
 
@@ -51,6 +50,12 @@ in
     {
       options = {
         programs.neovim = {
+          standalone = lib.mkOption {
+            type = lib.types.bool;
+            default = false;
+            internal = true;
+            description = "Whether to generate a standalone Neovim configuration";
+          };
           vimG = lib.mkOption {
             type = lib.types.attrsOf lib.types.anything;
             default = { };
