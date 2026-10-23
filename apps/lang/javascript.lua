@@ -1,6 +1,6 @@
-return function(opts)
+---Configure JavaScript debugging with the adapter executable on PATH
+return function()
   local dap = require("dap")
-  local debug_server = (opts.js_debug_path or "") .. "/src/dapDebugServer.js"
 
   local function js_debug_adapter()
     return {
@@ -8,9 +8,9 @@ return function(opts)
       host = "localhost",
       port = "${port}",
       executable = {
-        command = "node",
+        -- Both commands run microsoft/vscode-js-debug's dapDebugServer.js
+        command = vim.fn.executable("js-debug-adapter") == 1 and "js-debug-adapter" or "js-debug",
         args = {
-          debug_server,
           "${port}",
         },
       },

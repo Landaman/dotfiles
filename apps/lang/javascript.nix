@@ -29,6 +29,7 @@ in
         "oxlint"
         "tailwindcss-language-server"
         "eslint-lsp"
+        "js-debug-adapter"
         "vtsls"
       ];
       extraPackages = with pkgs; [
@@ -109,7 +110,6 @@ in
 
         nvim-dap.options = [
           {
-            js_debug_path = "${pkgs.vscode-js-debug}/share/vscode-js-debug";
             adapters = [
               {
                 path = ./javascript.lua;
