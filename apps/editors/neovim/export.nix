@@ -1,7 +1,11 @@
-{ pkgs, neovim }:
+# configuration: Evaluated system configuration containing the Neovim settings
+{ configuration }:
 
 let
+  inherit (configuration) pkgs;
   inherit (pkgs) lib;
+  username = configuration.config.user.username;
+  neovim = configuration.config.home-manager.users.${username}.programs.neovim;
   generated = import ./generate-config.nix { inherit lib pkgs neovim; };
   nixToLua = import ./nix-to-lua.nix { inherit lib; };
 
