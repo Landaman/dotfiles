@@ -34,7 +34,8 @@ in the thread. Don't try to work around the failure
 
 For Git commits, I like to use the "imperative" style with the Linux-style line
 lengths (50 for the summary, 72 for the body). I also like linking issue #s
-in the trailer if they exist
+in the trailer if they exist. Try to include a body explaining the commit
+unless it is extremely simple
 
 Good example:
 
