@@ -10,7 +10,7 @@ let
 in
 {
   environment.systemPackages = with pkgs; [
-    openjdk
+    openjdk25
     maven
   ];
 
