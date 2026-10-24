@@ -5,6 +5,7 @@
   (import ./catppuccin-zsh-fsh.nix)
   (import ./zoxide-fzf-tmux-session.nix)
   (import ./chatgpt.nix)
+  (import ./claude-code.nix)
   (import ./codex.nix)
   (import ./t3code.nix)
 ]
