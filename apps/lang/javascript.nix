@@ -27,7 +27,6 @@ in
     programs.neovim = {
       mason.packages = [
         "oxlint"
-        "tailwindcss-language-server"
         "eslint-lsp"
         "js-debug-adapter"
         "vtsls"
@@ -35,7 +34,6 @@ in
       extraPackages = with pkgs; [
         oxlint
         prisma-language-server
-        tailwindcss-language-server
         vscode-langservers-extracted
         vscode-js-debug
         vtsls
@@ -65,7 +63,6 @@ in
                 '';
               };
               oxlint = { };
-              tailwindCSS = { };
               vtsls = {
                 settings = {
                   vtsls = {
