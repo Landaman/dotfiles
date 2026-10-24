@@ -85,6 +85,10 @@ prose in general
 Every function/interface/class/property should get a doc comment
 at the top of it. Don't go overkill, simple is always acceptable.
 
+For functions, you should document all inputs and outputs
+in the header, along with exceptions thrown if you think
+it's meaningful for callers to know about those
+
 Same goes for blocks of code that are non-obvious - one or two sentence
 explanations can help. If it's obvious, skip it
 
