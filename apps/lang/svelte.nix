@@ -8,6 +8,8 @@ let
   username = config.user.username;
 in
 {
+  webFormat.languages = [ "svelte" ];
+
   files.ignoreGlobs = [ ".svelte-kit/" ];
 
   home-manager.users.${username} = {
@@ -32,12 +34,6 @@ in
           }
         ];
 
-        conform-nvim.options = [
-          {
-            formatters_by_ft.svelte = [ "prettierd" ];
-          }
-        ];
-
         nvim-dap.options = [
           {
             adapters = [
@@ -55,7 +51,6 @@ in
         {
           extensions = [ pkgs.vscode-extensions.svelte.svelte-vscode ];
           userSettings = {
-            "[svelte]"."editor.defaultFormatter" = "esbenp.prettier-vscode";
             "svelte.enable-ts-plugin" = true;
           };
         };
