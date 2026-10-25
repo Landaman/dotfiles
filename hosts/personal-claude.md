@@ -81,7 +81,9 @@ at the top of it. Don't go overkill, simple is always acceptable.
 
 For functions, you should document all inputs and outputs
 in the header, along with exceptions thrown if you think
-it's meaningful for callers to know about those
+it's meaningful for callers to know about those. An exception
+to this is arrow-functions or other inline functions - those should get a short
+comment if their purpose is not clear, but a full doc comment is not needed
 
 Same goes for blocks of code that are non-obvious - one or two sentence
 explanations can help. If it's obvious, skip it
