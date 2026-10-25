@@ -1,5 +1,5 @@
 {
-  description = "My nix-darwin system Flake";
+  description = "My Darwin and NixOS configurations";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
@@ -12,6 +12,7 @@
     herdr.url = "github:herdrdev/herdr";
     rex.url = "https://pkgs.superlogical.com/rex/nix/snapshot.tar.gz";
     nixos-hardware.url = "github:nixos/nixos-hardware";
+    homelab.url = "path:./homelab";
   };
 
   outputs =
@@ -25,45 +26,15 @@
       herdr,
       rex,
       nixos-hardware,
+      homelab,
     }:
     let
       hostname = "Ians-MacBook-Pro";
-      secrets = builtins.fromJSON (builtins.readFile ./secrets.json);
-
-      mkPiHole = import ./hosts/pi-hole.nix {
-        inherit nixpkgs nixos-hardware secrets;
-      };
-
     in
+    # Doing this out of line like this allows for inference via nixd
     {
-      nixosConfigurations = {
-        fedora-home-server = nixpkgs.lib.nixosSystem {
-          specialArgs = {
-            inherit secrets;
-            systemName = "fedora-home-server";
-          };
-          modules = [ ./hosts/fedora-home-server.nix ];
-        };
+      inherit (homelab) nixosConfigurations;
 
-        nine-cross-pi-hole = mkPiHole {
-          systemName = "nine-cross-pi-hole";
-        };
-
-        nine-cross-pi-hole-secondary = mkPiHole {
-          systemName = "nine-cross-pi-hole-secondary";
-          extraModules = [
-            ./components/homebridge.nix
-          ];
-        };
-
-        adria-pi-hole = mkPiHole {
-          systemName = "adria-pi-hole";
-        };
-
-        adria-pi-hole-secondary = mkPiHole {
-          systemName = "adria-pi-hole-secondary";
-        };
-      };
       darwinConfigurations.${hostname} = nix-darwin.lib.darwinSystem {
         specialArgs = {
           inherit
