@@ -17,6 +17,7 @@
     ./qemu.nix
     ./ripgrep.nix
     ./utm.nix
+    ./web-formatters/biome.nix
     ./web-formatters/oxfmt.nix
     ./web-formatters/prettierd.nix
     ./webp.nix
