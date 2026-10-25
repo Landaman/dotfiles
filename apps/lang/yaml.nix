@@ -8,6 +8,10 @@ let
   username = config.user.username;
 in
 {
+  webFormat.languages = [
+    "yaml"
+  ];
+
   home-manager.users.${username} = {
     programs.neovim = {
       extraPackages = with pkgs; [
@@ -22,16 +26,8 @@ in
             ];
           }
         ];
-
-        conform-nvim.options = [
-          {
-            formatters_by_ft.yaml = [ "web" ];
-          }
-        ];
       };
     };
-
-    programs.vscode.webFormattedLanguages = [ "yaml" ];
 
     programs.vscode.profiles.default =
       lib.mkIf config.home-manager.users.${username}.programs.vscode.enable

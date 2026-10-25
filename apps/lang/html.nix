@@ -7,6 +7,10 @@ let
   username = config.user.username;
 in
 {
+  webFormat.languages = [
+    "html"
+  ];
+
   home-manager.users.${username} = {
     programs.neovim = {
       mason.packages = [ "html-lsp" ];
@@ -28,15 +32,7 @@ in
             config.html = { };
           }
         ];
-
-        conform-nvim.options = [
-          {
-            formatters_by_ft.html = [ "web" ];
-          }
-        ];
       };
     };
-
-    programs.vscode.webFormattedLanguages = [ "html" ];
   };
 }

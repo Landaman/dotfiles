@@ -7,6 +7,11 @@ let
   username = config.user.username;
 in
 {
+  webFormat.languages = [
+    "json"
+    "jsonc"
+  ];
+
   home-manager.users.${username} = {
     programs.neovim = {
       mason.packages = [ "json-lsp" ];
@@ -32,21 +37,7 @@ in
             };
           }
         ];
-
-        conform-nvim.options = [
-          {
-            formatters_by_ft = {
-              json = [ "web" ];
-              jsonc = [ "web" ];
-            };
-          }
-        ];
       };
     };
-
-    programs.vscode.webFormattedLanguages = [
-      "json"
-      "jsonc"
-    ];
   };
 }

@@ -8,6 +8,14 @@ let
   username = config.user.username;
 in
 {
+  webFormat.languages = [
+    "markdown"
+    {
+      nvim = "markdown.mdx";
+      vscode = "mdx";
+    }
+  ];
+
   home-manager.users.${username} = {
     programs.neovim = {
       mason.packages = [ "markdownlint" ];
@@ -16,15 +24,6 @@ in
       ];
 
       lzePlugins = {
-        conform-nvim.options = [
-          {
-            formatters_by_ft = {
-              markdown = [ "web" ];
-              "markdown.mdx" = [ "web" ];
-            };
-          }
-        ];
-
         nvim-treesitter.options = [
           {
             ensure_installed = [
@@ -41,8 +40,6 @@ in
         ];
       };
     };
-
-    programs.vscode.webFormattedLanguages = [ "markdown" ];
 
     programs.vscode.profiles.default =
       lib.mkIf config.home-manager.users.${username}.programs.vscode.enable

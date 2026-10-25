@@ -9,6 +9,13 @@ let
   username = config.user.username;
 in
 {
+  webFormat.languages = [
+    "javascript"
+    "javascriptreact"
+    "typescript"
+    "typescriptreact"
+  ];
+
   files.ignoreGlobs = [
     "node_modules/"
     ".turbo/"
@@ -94,17 +101,6 @@ in
           }
         ];
 
-        conform-nvim.options = [
-          {
-            formatters_by_ft = {
-              javascript = [ "web" ];
-              javascriptreact = [ "web" ];
-              typescript = [ "web" ];
-              typescriptreact = [ "web" ];
-            };
-          }
-        ];
-
         nvim-dap.options = [
           {
             adapters = [
@@ -136,13 +132,6 @@ in
         ];
       };
     };
-
-    programs.vscode.webFormattedLanguages = [
-      "javascript"
-      "javascriptreact"
-      "typescript"
-      "typescriptreact"
-    ];
 
     programs.vscode.profiles.default =
       lib.mkIf config.home-manager.users.${username}.programs.vscode.enable

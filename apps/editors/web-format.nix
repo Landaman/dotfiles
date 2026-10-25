@@ -34,47 +34,70 @@ in
     '';
   };
 
+  options.webFormat.languages = lib.mkOption {
+    type = lib.types.listOf (
+      lib.types.coercedTo lib.types.str
+        # Expand a shared language identifier into explicit editor identifiers
+        (language: {
+          nvim = language;
+          vscode = language;
+        })
+        (
+          lib.types.submodule {
+            options = {
+              nvim = lib.mkOption {
+                type = lib.types.str;
+                description = "Neovim filetype that uses the web formatter";
+              };
+              vscode = lib.mkOption {
+                type = lib.types.str;
+                description = "VSCode language identifier that uses the default web formatter";
+              };
+            };
+          }
+        )
+    );
+    default = [ ];
+    description = ''
+      Languages that use the web formatter in Neovim and VSCode.
+      Each entry is a shared language identifier or an attribute set with both nvim and vscode identifiers.
+    '';
+  };
+
   config.home-manager.users.${username} = {
-    options.programs.vscode.webFormattedLanguages = lib.mkOption {
-      type = lib.types.listOf lib.types.str;
-      default = [ ];
-      description = "VSCode language identifiers that use the default web formatter";
-    };
+    programs.neovim.lzePlugins.conform-nvim.options = [
+      {
+        formatters_by_ft = lib.genAttrs (map (language: language.nvim) config.webFormat.languages) (_: [
+          "web"
+        ]);
 
-    config = {
-      programs.neovim.lzePlugins.conform-nvim.options = [
-        {
-          # Select the first configured web formatter for a buffer, falling back to the first entry
-          formatters.web = luaUtils.mkLuaExpression ''
-            function(bufnr)
-              local formatters = ${nixToLua.toLuaValue config.webFormat.formatters}
-              local path = vim.fs.dirname(vim.api.nvim_buf_get_name(bufnr))
+        # Select the first configured web formatter for a buffer, falling back to the first entry
+        formatters.web = luaUtils.mkLuaExpression ''
+          function(bufnr)
+            local formatters = ${nixToLua.toLuaValue config.webFormat.formatters}
+            local path = vim.fs.dirname(vim.api.nvim_buf_get_name(bufnr))
 
-              for _, formatter in ipairs(formatters) do
-                if #vim.fs.find(formatter.configFiles, { path = path, upward = true, type = "file" }) > 0 then
-                  return { inherit = formatter.conformName }
-                end
+            for _, formatter in ipairs(formatters) do
+              if #vim.fs.find(formatter.configFiles, { path = path, upward = true, type = "file" }) > 0 then
+                return { inherit = formatter.conformName }
               end
-
-              return { inherit = formatters[1].conformName }
             end
-          '';
-        }
-      ];
 
-      # VSCode uses the first, better extensions + options.json configure the rest
-      programs.vscode.profiles.default =
-        lib.mkIf config.home-manager.users.${username}.programs.vscode.enable
-          {
-            userSettings =
-              lib.genAttrs
-                (map (
-                  language: "[${language}]"
-                ) config.home-manager.users.${username}.programs.vscode.webFormattedLanguages)
-                (_: {
-                  "editor.defaultFormatter" = (builtins.head config.webFormat.formatters).vscodeExtension;
-                });
-          };
-    };
+            return { inherit = formatters[1].conformName }
+          end
+        '';
+      }
+    ];
+
+    # VSCode uses the first, better extensions + options.json configure the rest
+    programs.vscode.profiles.default =
+      lib.mkIf config.home-manager.users.${username}.programs.vscode.enable
+        {
+          userSettings =
+            lib.genAttrs (map (language: "[${language.vscode}]") config.webFormat.languages)
+              (_: {
+                "editor.defaultFormatter" = (builtins.head config.webFormat.formatters).vscodeExtension;
+              });
+        };
   };
 }

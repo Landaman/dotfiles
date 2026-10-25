@@ -8,6 +8,12 @@ let
   username = config.user.username;
 in
 {
+  webFormat.languages = [
+    "css"
+    "scss"
+    "less"
+  ];
+
   home-manager.users.${username} = {
     programs.neovim = {
       mason.packages = [
@@ -35,24 +41,8 @@ in
             config.tailwindCSS = { };
           }
         ];
-
-        conform-nvim.options = [
-          {
-            formatters_by_ft = {
-              css = [ "web" ];
-              less = [ "web" ];
-              scss = [ "web" ];
-            };
-          }
-        ];
       };
     };
-
-    programs.vscode.webFormattedLanguages = [
-      "css"
-      "scss"
-      "less"
-    ];
 
     programs.vscode.profiles.default =
       lib.mkIf config.home-manager.users.${username}.programs.vscode.enable
