@@ -17,6 +17,11 @@ local diagnostic_goto = function(next, severity)
 end
 
 if not vim.g.vscode then
+  vim.keymap.set('n', '<leader>dD', function()
+    local bufnr = vim.api.nvim_get_current_buf()
+    vim.diagnostic.enable(not vim.diagnostic.is_enabled { bufnr = bufnr }, { bufnr = bufnr })
+  end, { desc = 'Toggle buffer diagnostics' })
+
   vim.keymap.set('n', ']e', diagnostic_goto(true, 'ERROR'), { desc = 'Next error' })
   vim.keymap.set('n', '[e', diagnostic_goto(false, 'ERROR'), { desc = 'Previous error' })
   vim.keymap.set('n', ']w', diagnostic_goto(true, 'WARN'), { desc = 'Next warning' })
