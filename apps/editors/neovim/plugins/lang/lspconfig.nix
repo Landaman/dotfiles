@@ -23,6 +23,7 @@ in
         {
           config = { };
           keymaps = [ ];
+          highlightFallback = { path = ./document-highlight.lua; };
         }
       ];
       after = {

@@ -60,6 +60,7 @@ return function(opts)
 			if not client then
 				return
 			end
+			opts.highlightFallback(client, event.buf)
 
 			for _, keymap in pairs(resolve_keymaps(opts.keymaps)) do
 				if not keymap.has or client:supports_method(keymap.has, event.buf) then
