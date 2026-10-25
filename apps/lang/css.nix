@@ -48,6 +48,12 @@ in
       };
     };
 
+    programs.vscode.webFormattedLanguages = [
+      "css"
+      "scss"
+      "less"
+    ];
+
     programs.vscode.profiles.default =
       lib.mkIf config.home-manager.users.${username}.programs.vscode.enable
         {
@@ -55,9 +61,6 @@ in
           userSettings = {
             "files.associations"."*.css" = "tailwindcss";
             "editor.quickSuggestions".strings = "on"; # Since classes a string...
-            "[css]"."editor.defaultFormatter" = "esbenp.prettier-vscode";
-            "[scss]"."editor.defaultFormatter" = "esbenp.prettier-vscode";
-            "[less]"."editor.defaultFormatter" = "esbenp.prettier-vscode";
           };
         };
   };

@@ -17,7 +17,8 @@
     ./qemu.nix
     ./ripgrep.nix
     ./utm.nix
-    ./web-format.nix
+    ./web-formatters/oxfmt.nix
+    ./web-formatters/prettierd.nix
     ./webp.nix
     ./wireshark.nix
     ./wuzz.nix

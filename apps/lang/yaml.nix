@@ -31,11 +31,12 @@ in
       };
     };
 
+    programs.vscode.webFormattedLanguages = [ "yaml" ];
+
     programs.vscode.profiles.default =
       lib.mkIf config.home-manager.users.${username}.programs.vscode.enable
         {
           extensions = [ pkgs.vscode-extensions.redhat.vscode-yaml ];
-          userSettings."[yaml]"."editor.defaultFormatter" = "esbenp.prettier-vscode";
         };
   };
 }

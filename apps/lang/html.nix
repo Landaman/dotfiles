@@ -1,6 +1,5 @@
 {
   config,
-  lib,
   pkgs,
   ...
 }:
@@ -38,10 +37,6 @@ in
       };
     };
 
-    programs.vscode.profiles.default =
-      lib.mkIf config.home-manager.users.${username}.programs.vscode.enable
-        {
-          userSettings."[html]"."editor.defaultFormatter" = "esbenp.prettier-vscode";
-        };
+    programs.vscode.webFormattedLanguages = [ "html" ];
   };
 }

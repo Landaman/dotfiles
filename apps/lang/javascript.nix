@@ -137,6 +137,13 @@ in
       };
     };
 
+    programs.vscode.webFormattedLanguages = [
+      "javascript"
+      "javascriptreact"
+      "typescript"
+      "typescriptreact"
+    ];
+
     programs.vscode.profiles.default =
       lib.mkIf config.home-manager.users.${username}.programs.vscode.enable
         {
@@ -148,10 +155,6 @@ in
           ];
 
           userSettings = {
-            "[javascript]"."editor.defaultFormatter" = "esbenp.prettier-vscode";
-            "[javascriptreact]"."editor.defaultFormatter" = "esbenp.prettier-vscode";
-            "[typescript]"."editor.defaultFormatter" = "esbenp.prettier-vscode";
-            "[typescriptreact]"."editor.defaultFormatter" = "esbenp.prettier-vscode";
             "oxc.path.oxlint" = "${pkgs.oxlint}/bin/oxlint";
             "eslint.workingDirectories" = [ { mode = "auto"; } ];
             "typescript.enablePromptUseWorkspaceTsdk" = true;

@@ -42,11 +42,12 @@ in
       };
     };
 
+    programs.vscode.webFormattedLanguages = [ "markdown" ];
+
     programs.vscode.profiles.default =
       lib.mkIf config.home-manager.users.${username}.programs.vscode.enable
         {
           extensions = [ pkgs.vscode-extensions.davidanson.vscode-markdownlint ];
-          userSettings."[markdown]"."editor.defaultFormatter" = "esbenp.prettier-vscode";
         };
   };
 }

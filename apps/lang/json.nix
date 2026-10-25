@@ -1,6 +1,5 @@
 {
   config,
-  lib,
   pkgs,
   ...
 }:
@@ -45,13 +44,9 @@ in
       };
     };
 
-    programs.vscode.profiles.default =
-      lib.mkIf config.home-manager.users.${username}.programs.vscode.enable
-        {
-          userSettings = {
-            "[json]"."editor.defaultFormatter" = "esbenp.prettier-vscode";
-            "[jsonc]"."editor.defaultFormatter" = "esbenp.prettier-vscode";
-          };
-        };
+    programs.vscode.webFormattedLanguages = [
+      "json"
+      "jsonc"
+    ];
   };
 }
