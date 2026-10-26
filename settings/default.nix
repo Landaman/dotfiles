@@ -1,8 +1,14 @@
+# Select platform module imports from Nix's built-in module class
+{ _class, ... }:
 {
-  imports = [
-    ./mac.nix
-    ./nix.nix
-    ./homebrew.nix
-    ./home-manager.nix
-  ];
+  imports =
+    if _class == "darwin" then
+      [
+        ./mac.nix
+        ./homebrew.nix
+        ./home-manager.nix
+        ./nix.nix
+      ]
+    else
+      [ ./linux ];
 }

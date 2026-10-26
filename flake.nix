@@ -12,7 +12,6 @@
     herdr.url = "github:herdrdev/herdr";
     rex.url = "https://pkgs.superlogical.com/rex/nix/snapshot.tar.gz";
     nixos-hardware.url = "github:nixos/nixos-hardware";
-    homelab.url = "path:./homelab";
   };
 
   outputs =
@@ -26,14 +25,42 @@
       herdr,
       rex,
       nixos-hardware,
-      homelab,
     }:
     let
       hostname = "Ians-MacBook-Pro";
+      secrets = builtins.fromJSON (builtins.readFile ./secrets.json);
+      mkPiHole = import ./hosts/mk-pi-hole.nix {
+        inherit nixpkgs nixos-hardware secrets;
+      };
     in
     # Doing this out of line like this allows for inference via nixd
     {
-      inherit (homelab) nixosConfigurations;
+      nixosConfigurations = {
+        fedora-home-server = nixpkgs.lib.nixosSystem {
+          specialArgs = {
+            inherit secrets;
+            systemName = "fedora-home-server";
+          };
+          modules = [ ./hosts/fedora-home-server.nix ];
+        };
+
+        nine-cross-pi-hole = mkPiHole {
+          systemName = "nine-cross-pi-hole";
+        };
+
+        nine-cross-pi-hole-secondary = mkPiHole {
+          systemName = "nine-cross-pi-hole-secondary";
+          extraModules = [ ./apps/services/homebridge.nix ];
+        };
+
+        adria-pi-hole = mkPiHole {
+          systemName = "adria-pi-hole";
+        };
+
+        adria-pi-hole-secondary = mkPiHole {
+          systemName = "adria-pi-hole-secondary";
+        };
+      };
 
       darwinConfigurations.${hostname} = nix-darwin.lib.darwinSystem {
         specialArgs = {

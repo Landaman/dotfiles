@@ -1,10 +1,13 @@
 { ... }: {
   imports = [
     ../hardware/asus-gl552vw.nix
-    ../common.nix
+    ../settings
+    ../apps/utilities/tailscale
   ];
 
   system.stateVersion = "26.05";
+
+  services.tailscale.autoConnect.enable = true;
 
   # Keep the server running with the laptop lid closed
   services.logind.settings.Login = {

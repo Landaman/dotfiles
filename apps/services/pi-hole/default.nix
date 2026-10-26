@@ -20,7 +20,7 @@ in
         url = "file://${
           pkgs.writeTextFile {
             name = "local-allowlist.txt";
-            text = builtins.readFile ../pi-hole/allow.txt;
+            text = builtins.readFile ./allow.txt;
           }
         }";
         description = "Local Allowlist";
@@ -31,7 +31,7 @@ in
         url = "file://${
           pkgs.writeTextFile {
             name = "local-blocklist.txt";
-            text = builtins.readFile ../pi-hole/block.txt;
+            text = builtins.readFile ./block.txt;
           }
         }";
         description = "Local Blacklist";
