@@ -53,11 +53,13 @@ in
           }
         ];
 
-        nvim-lspconfig.options = [
-          {
-            config.nixd.settings.nixd = nixdSettings;
-          }
-        ];
+        nvim-lspconfig.options =
+          lib.mkIf (!config.home-manager.users.${username}.programs.neovim.standalone)
+            [
+              {
+                config.nixd.settings.nixd = nixdSettings;
+              }
+            ];
       };
     };
 
