@@ -11,6 +11,10 @@ in
   webFormat.formatters = [
     {
       conformName = "biome";
+      conformOptions = {
+        lsp_format = "prefer";
+        name = "biome";
+      };
       configFiles = [
         "biome.json"
         "biome.jsonc"
@@ -25,6 +29,11 @@ in
     programs.neovim = {
       mason.packages = [ "biome" ];
       extraPackages = [ pkgs.biome ];
+      lzePlugins.nvim-lspconfig.options = [
+        {
+          config.biome = { };
+        }
+      ];
     };
 
     programs.vscode.profiles.default =
