@@ -1,4 +1,6 @@
 [
+  (import ./dotrush.nix)
+  (import ./clrdbg.nix)
   (import ./ghostty.nix)
   (import ./terraform.nix)
   (import ./corepack.nix)

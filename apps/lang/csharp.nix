@@ -7,8 +7,6 @@
 let
   luaUtils = import ../../lib/lua.nix { inherit lib; };
   username = config.user.username;
-  dotrush = pkgs.callPackage ../../packages/dotrush.nix { };
-  clrdbg = pkgs.callPackage ../../packages/clrdbg.nix { };
 in
 {
   environment.systemPackages = [ pkgs.dotnetCorePackages.sdk_10_0 ];
@@ -82,8 +80,8 @@ in
         };
       };
       extraPackages = [
-        dotrush
-        clrdbg
+        pkgs.dotrush
+        pkgs.clrdbg
       ];
 
       lzePlugins = {
@@ -134,7 +132,7 @@ in
               };
               # Otherwise DotRush downloads its debugger into the immutable extension directory
               postInstall = ''
-                ln -s ${clrdbg}/lib/clrdbg "$out/$installPrefix/extension/bin/Debugger"
+                ln -s ${pkgs.clrdbg}/lib/clrdbg "$out/$installPrefix/extension/bin/Debugger"
               '';
             })
           ];
