@@ -25,7 +25,6 @@
     let
       hostname = "Ians-MacBook-Pro";
     in
-    # Doing this out of line like this allows for inference via nixd
     {
       darwinConfigurations.${hostname} = nix-darwin.lib.darwinSystem {
         specialArgs = {
