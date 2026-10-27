@@ -9,7 +9,7 @@ return function()
       port = "${port}",
       executable = {
         -- Both commands run microsoft/vscode-js-debug's dapDebugServer.js
-        command = vim.fn.executable("js-debug-adapter") == 1 and "js-debug-adapter" or "js-debug",
+        command = vim.fn.exepath(vim.fn.executable("js-debug-adapter") == 1 and "js-debug-adapter" or "js-debug"),
         args = {
           "${port}",
         },

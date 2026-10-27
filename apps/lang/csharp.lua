@@ -3,7 +3,7 @@ return function()
 
 	dap.adapters.coreclr = {
 		type = "executable",
-		command = "clrdbg",
+		command = vim.fn.exepath("clrdbg"),
 	}
 
 	require("dap.ext.vscode").type_to_filetypes.coreclr = { "cs" }
