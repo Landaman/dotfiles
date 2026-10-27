@@ -47,8 +47,19 @@ in
                   inherit (target) target;
                   files."libexec/clrdbg.zip" =
                     "https://github.com/JaneySprings/clrdbg/releases/latest/download/clrdbg_${target.runtime}.zip";
+                  bin = target.bin or "exec:libexec/clrdbg";
                 })
                 [
+                  {
+                    target = "win_x64";
+                    runtime = "win-x64";
+                    bin = "libexec/clrdbg.exe";
+                  }
+                  {
+                    target = "win_arm64";
+                    runtime = "win-arm64";
+                    bin = "libexec/clrdbg.exe";
+                  }
                   {
                     target = "darwin_arm64";
                     runtime = "osx-arm64";
@@ -67,7 +78,7 @@ in
                   }
                 ];
           };
-          bin.clrdbg = "exec:libexec/clrdbg";
+          bin.clrdbg = "{{source.download.bin}}";
         };
       };
       extraPackages = [
