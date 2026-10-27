@@ -85,7 +85,7 @@ pkgs.runCommand "neovim-export" { } ''
   ${lib.concatStringsSep "\n" (
     lib.mapAttrsToList (configPath: configFile: ''
       mkdir -p "$out"/${lib.escapeShellArg (dirOf configPath)}
-      cp -L ${lib.escapeShellArg (toString configFile.source)} "$out"/${lib.escapeShellArg configPath}
+      cp -L ${lib.escapeShellArg "${configFile.source}"} "$out"/${lib.escapeShellArg configPath}
     '') generated.extraConfigXdgFiles
   )}
 ''
