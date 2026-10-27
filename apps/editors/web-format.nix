@@ -17,6 +17,11 @@ in
             type = lib.types.str;
             description = "Conform formatter name";
           };
+          conformOptions = lib.mkOption {
+            type = lib.types.attrsOf lib.types.anything;
+            default = { };
+            description = "Conform format options to override when this entry is selected";
+          };
           configFiles = lib.mkOption {
             type = lib.types.listOf lib.types.str;
             description = "Project configuration filenames that select this formatter";
@@ -67,25 +72,28 @@ in
   config.home-manager.users.${username} = {
     programs.neovim.lzePlugins.conform-nvim.options = [
       {
-        formatters_by_ft = lib.genAttrs (map (language: language.nvim) config.webFormat.languages) (_: [
-          "web"
-        ]);
-
         # Select the first configured web formatter for a buffer, falling back to the first entry
-        formatters.web = luaUtils.mkLuaExpression ''
-          function(bufnr)
-            local formatters = ${nixToLua.toLuaValue config.webFormat.formatters}
-            local path = vim.fs.dirname(vim.api.nvim_buf_get_name(bufnr))
+        formatters_by_ft = lib.genAttrs (map (language: language.nvim) config.webFormat.languages) (
+          _:
+          luaUtils.mkLuaExpression ''
+            ---@param bufnr integer Buffer whose project configuration selects the formatter
+            ---@return table Formatter names and options for Conform
+            function(bufnr)
+              local formatters = ${nixToLua.toLuaValue config.webFormat.formatters}
+              local path = vim.fs.dirname(vim.api.nvim_buf_get_name(bufnr))
+              local selected = formatters[1]
 
-            for _, formatter in ipairs(formatters) do
-              if #vim.fs.find(formatter.configFiles, { path = path, upward = true, type = "file" }) > 0 then
-                return { inherit = formatter.conformName }
+              for _, formatter in ipairs(formatters) do
+                if #vim.fs.find(formatter.configFiles, { path = path, upward = true, type = "file" }) > 0 then
+                  selected = formatter
+                  break
+                end
               end
-            end
 
-            return { inherit = formatters[1].conformName }
-          end
-        '';
+              return vim.tbl_extend("force", { selected.conformName }, selected.conformOptions)
+            end
+          ''
+        );
       }
     ];
 
