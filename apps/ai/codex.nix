@@ -24,11 +24,29 @@ in
         with pkgs;
         [
           chatgpt
-          codex
         ]
       );
     };
 
-    programs.codex.package = pkgs.codex;
+    programs.codex = {
+      enable = true;
+      package = pkgs.codex;
+
+      # Codex LOVES to change its settings
+      mutableSettings = true;
+
+      settings.tui.statusline = [
+        "model-with-reasoning"
+        "current-dir"
+        "git-branch"
+        "branch-changes"
+        "approval-mode"
+        "five-hour-limit"
+        "weekly-limit"
+        "used-tokens"
+        "fast-mode"
+        "estimated-thread-cost"
+      ];
+    };
   };
 }
