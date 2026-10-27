@@ -13,9 +13,9 @@ in
   home-manager.users.${username} = {
     home = {
       activation.herdrCodexIntegration = lib.mkIf herdrInstalled (
-        # Setup herdr, which needs .claude to exist (it won't if you're installing)
+        # Setup herdr, which needs .codex to exist (it won't if you're installing)
         homeManager.lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-          run mkdir -p "$HOME/.claude"
+          run mkdir -p "$HOME/.codex"
           ${pkgs.herdr}/bin/herdr integration install codex
         ''
       );
