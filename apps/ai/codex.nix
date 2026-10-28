@@ -35,18 +35,39 @@ in
       # Codex LOVES to change its settings
       mutableSettings = true;
 
-      settings.tui.statusline = [
-        "model-with-reasoning"
-        "current-dir"
-        "git-branch"
-        "branch-changes"
-        "approval-mode"
-        "five-hour-limit"
-        "weekly-limit"
-        "used-tokens"
-        "fast-mode"
-        "estimated-thread-cost"
-      ];
+      settings = {
+        approvals_reviewer = "auto_review";
+        sandbox_mode = "workspace-write";
+
+        features = {
+          hooks = true;
+          memories = true;
+        };
+
+        desktop = {
+          "ambient-suggestions-enabled" = true;
+          preventSleepWhileRunning = true;
+          "show-context-window-usage" = false;
+          followUpQueueMode = "steer";
+          "external-agent-import-sync-enabled" = false;
+        };
+
+        tui = {
+          theme = "catppuccin-mocha";
+          status_line = [
+            "model-with-reasoning"
+            "current-dir"
+            "git-branch"
+            "branch-changes"
+            "approval-mode"
+            "five-hour-limit"
+            "weekly-limit"
+            "used-tokens"
+            "fast-mode"
+            "estimated-thread-cost"
+          ];
+        };
+      };
     };
   };
 }

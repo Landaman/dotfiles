@@ -52,7 +52,13 @@ in
           userSettings."workbench.colorTheme" = "Catppuccin ${lib.toSentenceCase flavor}";
         };
 
-    programs.codex.settings.tui.theme = "catppuccin-${flavor}";
+    programs.codex.settings = {
+      tui.theme = "catppuccin-${flavor}";
+      desktop = {
+        appearanceLightCodeThemeId = "catppuccin";
+        appearanceDarkCodeThemeId = "catppuccin";
+      };
+    };
 
     programs.neovim.lzePlugins.catppuccin = {
       enabled = luaUtils.mkLuaExpression "not vim.g.vscode";
