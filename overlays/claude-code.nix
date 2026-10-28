@@ -10,15 +10,15 @@ in
         platforms = {
           darwin-arm64 = {
             binary = "claude.zst";
-            checksum = "7d759495d011057b6e8b8ee911c5be3cd36e9491c71a4ab194a425cdb1418073";
+            checksum = "sha256-fXWUldARBXtui47pEcW+PNNulJHHGkqxlKQlzbFBgHM=";
           };
           linux-arm64 = {
             binary = "claude.zst";
-            checksum = "863ee1d2a91a39ee22fa13322582e4c3fb45bfb4739b22ec7e396dde694d8581";
+            checksum = "sha256-hj7h0qkaOe4i+hMyJYLkw/tFv7RzmyLsfjlt3mlNhYE=";
           };
           linux-x64 = {
             binary = "claude.zst";
-            checksum = "6fb9e329947c003740be888f98db1aecaa238d6c7d9ceef8581eb71d5a59480b";
+            checksum = "sha256-b7njKZR8ADdAvoiPmNsa7KojjWx9nO74WB63HVpZSAs=";
           };
         };
       };
