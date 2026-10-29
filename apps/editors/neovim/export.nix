@@ -35,6 +35,13 @@ let
     operator = pluginConfig: map normalizePlugin (pluginConfig.plugin.dependencies or [ ]);
   };
 
+  remotePlugins = lib.filter (
+    pluginConfig: !(pluginConfig.plugin.bundleStandalone or false)
+  ) pluginsWithDependencies;
+  bundledPlugins = lib.filter (
+    pluginConfig: pluginConfig.plugin.bundleStandalone or false
+  ) pluginsWithDependencies;
+
   # Helper to convert each plugin to something that nvim packadd can load
   pluginSpec =
     { plugin, ... }:
@@ -57,11 +64,11 @@ let
       version = plugin.src.rev or archiveSpec.version;
     };
 
-  startupPlugins = map pluginSpec (
-    lib.filter (pluginConfig: !pluginConfig.optional) pluginsWithDependencies
+  remoteStartupPlugins = map pluginSpec (
+    lib.filter (pluginConfig: !pluginConfig.optional) remotePlugins
   );
-  optionalPlugins = map pluginSpec (
-    lib.filter (pluginConfig: pluginConfig.optional) pluginsWithDependencies
+  remoteOptionalPlugins = map pluginSpec (
+    lib.filter (pluginConfig: pluginConfig.optional) remotePlugins
   );
 
   # Load required plugins right away, let optional plugins be loaded by lze
@@ -72,9 +79,9 @@ let
     end
 
     -- Load required plugins right away with packadd
-    vim.pack.add(${nixToLua.toLuaValue startupPlugins}, { load = false, confirm = false })
+    vim.pack.add(${nixToLua.toLuaValue remoteStartupPlugins}, { load = false, confirm = false })
     -- Leave optional plugins off runtimepath until lze loads them
-    vim.pack.add(${nixToLua.toLuaValue optionalPlugins}, { load = function() end, confirm = false })
+    vim.pack.add(${nixToLua.toLuaValue remoteOptionalPlugins}, { load = function() end, confirm = false })
   '';
 
   initLua = pkgs.writeText "nvim-export-init.lua" (installLua + "\n" + generated.initLua);
@@ -82,6 +89,18 @@ in
 pkgs.runCommand "neovim-export" { } ''
   mkdir -p "$out/nvim"
   cp ${initLua} "$out/nvim/init.lua"
+  ${lib.concatMapStringsSep "\n" (
+    pluginConfig:
+    let
+      destination = "nvim/pack/local/${
+        if pluginConfig.optional then "opt" else "start"
+      }/${pluginConfig.plugin.pname}";
+    in
+    ''
+      mkdir -p "$out"/${lib.escapeShellArg destination}
+      cp -RL ${lib.escapeShellArg "${pluginConfig.plugin}/."} "$out"/${lib.escapeShellArg destination}/
+    ''
+  ) bundledPlugins}
   ${lib.concatStringsSep "\n" (
     lib.mapAttrsToList (configPath: configFile: ''
       mkdir -p "$out"/${lib.escapeShellArg (dirOf configPath)}
