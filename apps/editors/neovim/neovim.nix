@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  homeManager,
   ...
 }:
 
@@ -17,6 +18,11 @@ in
 {
   home-manager.users.${username} = {
     xdg.configFile = generated.extraConfigXdgFiles;
+
+    # Nix plugin updates can preserve size and mtime, leaving vim.loader's bytecode cache stale
+    home.activation.clearNeovimLuaCache = homeManager.lib.hm.dag.entryAfter [ "linkGeneration" ] ''
+      run rm -rf -- ${lib.escapeShellArg "${config.home-manager.users.${username}.xdg.cacheHome}/nvim/luac"}
+    '';
 
     programs.neovim = {
       enable = true;
