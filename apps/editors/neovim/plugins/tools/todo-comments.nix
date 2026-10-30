@@ -33,7 +33,7 @@ in
               "<leader>wo"
               "<cmd>Trouble todo<cr>"
             ];
-            desc = "Todo list";
+            desc = "Workspace todo list";
           }
           {
             "" = [

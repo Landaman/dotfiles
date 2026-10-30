@@ -23,14 +23,14 @@ in
             "<leader>wq"
             "<cmd>Trouble diagnostics toggle<cr>"
           ];
-          desc = "Trouble workspace diagnostics";
+          desc = "Workspace diagnostics";
         }
         {
           "" = [
             "<leader>dd"
             "<cmd>Trouble diagnostics toggle filter.buf=0<cr>"
           ];
-          desc = "Trouble document diagnostics";
+          desc = "Document diagnostics";
         }
       ];
     };
