@@ -1,10 +1,15 @@
 {
   pkgs,
+  config,
   lib,
   ...
 }:
+let
+  username = config.user.username;
+in
 {
-  homebrew.masApps = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin {
-    daisydisk = 411643860;
-  };
+
+  home-manager.users.${username}.home.packages = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin [
+    pkgs.daisydisk
+  ];
 }
