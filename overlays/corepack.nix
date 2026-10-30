@@ -13,7 +13,10 @@ final: prev: {
     '';
 
     postInstall = (oldAttrs.postInstall or "") + ''
-      export HOME=$TMPDIR && installShellCompletion --cmd pnpm --zsh <(${final.pnpm}/bin/pnpm completion zsh) --bash <(${final.pnpm}/bin/pnpm completion bash);
+      export HOME=$TMPDIR && installShellCompletion --cmd pnpm \
+        --zsh <(${final.pnpm}/bin/pnpm completion zsh) \
+        --bash <(${final.pnpm}/bin/pnpm completion bash) \
+        --fish <(${final.pnpm}/bin/pnpm completion fish);
     '';
   });
 }
