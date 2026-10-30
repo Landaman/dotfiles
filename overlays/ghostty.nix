@@ -15,7 +15,7 @@ final: prev: {
         src = prev.fetchurl {
           url = "https://release.files.ghostty.org/${version}/Ghostty.dmg";
           name = "Ghostty.dmg";
-          hash = "sha256-GM/ysKbO6Q7q2cfTBk6AiiUqQLryFKp1LB7LeTuPX2k=";
+          hash = "sha256-OgIHXb0kMY13hCavQd7lUH1T7MRXjt6WkS7Jzm0Y0+g=";
         };
 
         nativeBuildInputs = [
