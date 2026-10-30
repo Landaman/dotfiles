@@ -7,11 +7,11 @@
 }:
 stdenvNoCC.mkDerivation rec {
   pname = "rex";
-  version = "0.1.0-1613";
+  version = "0.1.0-1652";
 
   src = fetchurl {
     url = "https://blob.superlogical.com/public/rex-app/snapshot/Rex-${version}.dmg";
-    hash = "sha256-xEDtZrOW7nwUPJevmAiSLimpulndQgimvvOBxD2oIcs=";
+    hash = "sha256-JjLPnEF6R64k+IAok56SouNB99tFkfM3CEGMfi2ClQ8=";
   };
 
   nativeBuildInputs = [
