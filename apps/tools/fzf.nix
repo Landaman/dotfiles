@@ -183,7 +183,7 @@ in
           (luaUtils.mkLuaExpression ''vim.env.TMUX and "fzf-tmux" or nil'')
         ];
         # Avoid cmd.exe quoting issues when fzf launches on windows
-        defaults.pipe_cmd = luaUtils.mkLuaExpression ''vim.fn.has("win32" == 1")'';
+        defaults.pipe_cmd = luaUtils.mkLuaExpression ''vim.fn.has("win32") == 1'';
       }
       // lib.optionalAttrs config.home-manager.users.${username}.programs.delta.enable {
         lsp.code_actions.previewer = luaUtils.mkLuaExpression ''vim.fn.executable('delta') == 1 and "codeaction_native" or nil'';
