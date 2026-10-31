@@ -1,13 +1,14 @@
 {
   config,
-  lib,
   pkgs,
   ...
 }:
 {
-  home-manager.users.${config.user.username}.home.packages =
-    lib.mkIf pkgs.stdenv.hostPlatform.isDarwin
-      [
-        pkgs.rex
-      ];
+  home-manager.users.${config.user.username} = {
+    programs.rex = {
+      enable = true;
+      package = pkgs.rex;
+      sshGuard = false; # SSH is not currently managed in this flake
+    };
+  };
 }

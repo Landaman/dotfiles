@@ -10,5 +10,4 @@
   (import ./claude-code.nix)
   (import ./codex.nix)
   (import ./t3code.nix)
-  (import ./rex.nix)
 ]

@@ -10,6 +10,7 @@
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     catppuccin.url = "github:catppuccin/nix";
     herdr.url = "github:herdrdev/herdr";
+    rex.url = "https://pkgs.superlogical.com/rex/nix/snapshot.tar.gz";
   };
 
   outputs =
@@ -21,6 +22,7 @@
       home-manager,
       catppuccin,
       herdr,
+      rex,
     }:
     let
       hostname = "Ians-MacBook-Pro";
@@ -41,8 +43,10 @@
           ./hosts/Ians-MacBook-Pro.nix
           home-manager.darwinModules.home-manager
           {
+            home-manager.sharedModules = [ rex.homeManagerModules.default ];
             nixpkgs.overlays = [
               (import ./overlays/herdr.nix { inherit herdr; })
+              (import ./overlays/rex.nix { inherit rex; })
             ]
             ++ import ./overlays/default.nix;
             # Set Git commit hash for darwin-version.
