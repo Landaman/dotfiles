@@ -8,6 +8,7 @@
 let
   username = config.user.username;
   herdrInstalled = lib.elem pkgs.herdr (config.home-manager.users.${username}.home.packages or [ ]);
+  rexInstalled = lib.elem pkgs.rex (config.home-manager.users.${username}.home.packages or [ ]);
 in
 {
   home-manager.users.${username} = {
@@ -17,6 +18,12 @@ in
         homeManager.lib.hm.dag.entryAfter [ "writeBoundary" ] ''
           run mkdir -p "$HOME/.codex"
           ${pkgs.herdr}/bin/herdr integration install codex
+        ''
+      );
+
+      activation.rexCodexIntegration = lib.mkIf rexInstalled (
+        homeManager.lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+          run ${pkgs.rex}/bin/rex skill setup --agent codex
         ''
       );
 
