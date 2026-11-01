@@ -1,39 +1,29 @@
 {
   config,
-  lib,
   pkgs,
+  lib,
   ...
 }:
 let
   username = config.user.username;
 in
 {
-  options.herdr.theme = lib.mkOption {
-    type = lib.types.nullOr lib.types.str;
-    default = null;
-    description = "The theme to use for Herdr";
-  };
-
   config.home-manager.users.${username} = {
-    home.packages = [
-      pkgs.herdr
-      pkgs.herdr-app
-    ];
+    home.packages = lib.optionals (
+      pkgs.stdenv.hostPlatform.isDarwin && pkgs.stdenv.hostPlatform.isAarch64
+    ) [ pkgs.herdr-app ];
 
-    xdg.configFile."herdr/config.toml".text = ''
-      onboarding = false
-
-      [keys]
-      prefix = "ctrl+a"
-
-      [ui]
-      prompt_new_tab_name = false
-
-      [ui.toast]
-      delivery = "terminal"
-
-      [theme]
-      ${lib.optionalString (config.herdr.theme != null) ''name = "${config.herdr.theme}"''}
-    '';
+    programs.herdr = {
+      enable = true;
+      package = pkgs.herdr;
+      settings = {
+        onboarding = false;
+        keys.prefix = "ctrl+a";
+        ui = {
+          prompt_new_tab_name = false;
+          toast.delivery = "terminal";
+        };
+      };
+    };
   };
 }

@@ -11,9 +11,9 @@ in
 {
   zsh.fast-theme = "${pkgs.catppuccin-zsh-fsh}/themes/catppuccin-${flavor}";
 
-  herdr.theme = "catppuccin";
-
   home-manager.users.${config.user.username} = {
+    programs.herdr.settings.theme.name = "catppuccin";
+
     catppuccin = {
       enable = true;
       autoEnable = false;
