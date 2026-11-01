@@ -15,7 +15,10 @@ in
   };
 
   config.home-manager.users.${username} = {
-    home.packages = [ pkgs.herdr ];
+    home.packages = [
+      pkgs.herdr
+      pkgs.herdr-app
+    ];
 
     xdg.configFile."herdr/config.toml".text = ''
       onboarding = false
