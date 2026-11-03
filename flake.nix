@@ -29,8 +29,14 @@
     let
       hostname = "Ians-MacBook-Pro";
       secrets = builtins.fromJSON (builtins.readFile ./secrets.json);
+      overlays = import ./overlays { inherit herdr rex; };
       mkPiHole = import ./hosts/mk-pi-hole.nix {
-        inherit nixpkgs nixos-hardware secrets;
+        inherit
+          nixpkgs
+          nixos-hardware
+          secrets
+          overlays
+          ;
       };
     in
     # Doing this out of line like this allows for inference via nixd
@@ -41,7 +47,10 @@
             inherit secrets;
             systemName = "fedora-home-server";
           };
-          modules = [ ./hosts/fedora-home-server.nix ];
+          modules = [
+            ./hosts/fedora-home-server.nix
+            { nixpkgs.overlays = overlays; }
+          ];
         };
 
         nine-cross-pi-hole = mkPiHole {
@@ -78,11 +87,7 @@
           home-manager.darwinModules.home-manager
           {
             home-manager.sharedModules = [ rex.homeManagerModules.default ];
-            nixpkgs.overlays = [
-              (import ./overlays/herdr.nix { inherit herdr; })
-              (import ./overlays/rex.nix { inherit rex; })
-            ]
-            ++ import ./overlays/default.nix;
+            nixpkgs.overlays = overlays;
             # Set Git commit hash for darwin-version.
             system.configurationRevision = self.rev or self.dirtyRev or null;
           }

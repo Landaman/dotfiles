@@ -1,10 +1,11 @@
 # Helper to make multiple pi systems with the same config
-# Inputs: pinned nixpkgs, nixos-hardware, and decrypted secrets
+# Inputs: pinned nixpkgs, nixos-hardware, secrets, and overlays
 # Returns a host builder accepting systemName, optional specialArgs, and extraModules
 {
   nixpkgs,
   nixos-hardware,
   secrets,
+  overlays,
 }:
 (
   {
@@ -23,7 +24,7 @@
       ../apps/utilities/tailscale
       ../apps/services/pi-hole
       {
-        nixpkgs.overlays = [ (import ../overlays/pihole-ftl.nix) ];
+        nixpkgs.overlays = overlays;
         services.tailscale.autoConnect.enable = true;
       }
     ]
