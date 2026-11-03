@@ -49,6 +49,7 @@ in
       };
       options = {
         bigfile.enabled = luaUtils.mkLuaExpression "not vim.g.vscode";
+        styles.dashboard.wo.fillchars = "eob: ";
         dashboard = {
           enabled = luaUtils.mkLuaExpression "not vim.g.vscode";
           sections = [
