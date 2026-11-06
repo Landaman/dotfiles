@@ -9,9 +9,10 @@ let
 in
 {
   imports = [
-    ../modules/user.nix
     ../modules/files.nix
     ../settings
+    ../settings/mac.nix
+    ../settings/home-manager.nix
     ../apps/ai
     ../apps/shell
     ../apps/tools

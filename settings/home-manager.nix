@@ -3,12 +3,19 @@
   lib,
   pkgs,
   catppuccin,
+  homeManager,
+  _class,
   ...
 }:
 let
   username = config.user.username;
 in
 {
+  imports = [
+    ../modules/user.nix
+    homeManager.${if _class == "darwin" then "darwinModules" else "nixosModules"}.home-manager
+  ];
+
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;
@@ -18,9 +25,7 @@ in
     ];
 
     users.${username} = {
-      imports = [
-        ./home.nix
-      ];
+      programs.home-manager.enable = true;
       home = {
         inherit username;
         homeDirectory = config.users.users.${username}.home;

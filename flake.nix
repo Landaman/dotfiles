@@ -84,7 +84,6 @@
         };
         modules = [
           ./hosts/Ians-MacBook-Pro.nix
-          home-manager.darwinModules.home-manager
           {
             home-manager.sharedModules = [ rex.homeManagerModules.default ];
             nixpkgs.overlays = overlays;

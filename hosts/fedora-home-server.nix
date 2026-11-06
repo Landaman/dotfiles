@@ -2,6 +2,8 @@
   imports = [
     ../hardware/asus-gl552vw.nix
     ../settings
+    ../settings/headless.nix
+    ../settings/wifi.nix
     ../apps/utilities/tailscale
   ];
 

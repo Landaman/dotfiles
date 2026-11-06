@@ -10,8 +10,6 @@ let
 in
 {
   networking = {
-    hostName = "${systemName}";
-
     defaultGateway = networkSecrets.defaultGateway;
     nameservers = [ networkSecrets.defaultGateway ];
     interfaces."wlan0".ipv4.addresses = lib.mkIf (systemSecrets ? ipAddress) [
@@ -29,6 +27,4 @@ in
       };
     };
   };
-
-  services.timesyncd.enable = true;
 }

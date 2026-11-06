@@ -21,6 +21,8 @@
     modules = [
       ../hardware/pi/hardware-pi02.nix
       ../settings
+      ../settings/headless.nix
+      ../settings/wifi.nix
       ../apps/utilities/tailscale
       ../apps/services/pi-hole
       {
