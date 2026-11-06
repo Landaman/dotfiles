@@ -26,10 +26,6 @@ in
 
     users.${username} = {
       programs.home-manager.enable = true;
-      home = {
-        inherit username;
-        homeDirectory = config.users.users.${username}.home;
-      };
       targets.darwin = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin {
         copyApps.enable = true;
         linkApps.enable = false;
