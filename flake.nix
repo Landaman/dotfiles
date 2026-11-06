@@ -70,7 +70,6 @@
           nixpkgs-stable
           home-manager
           catppuccin
-          rex
           overlays
           ;
       };

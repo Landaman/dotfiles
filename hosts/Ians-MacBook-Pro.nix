@@ -6,7 +6,6 @@
   nixpkgs-stable,
   home-manager,
   catppuccin,
-  rex,
   overlays,
 }:
 let
@@ -25,7 +24,6 @@ nix-darwin.lib.darwinSystem {
   };
   modules = [
     {
-      home-manager.sharedModules = [ rex.homeManagerModules.default ];
       nixpkgs.overlays = overlays;
       # Set Git commit hash for darwin-version.
       system.configurationRevision = self.rev or self.dirtyRev or null;
