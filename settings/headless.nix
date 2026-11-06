@@ -23,11 +23,6 @@
     };
   };
 
-  nix.settings.trusted-users = [
-    "root"
-    "@wheel"
-  ];
-
   boot.zfs.forceImportRoot = false;
   boot.kernel.sysctl."kernel.panic" = 5;
 }

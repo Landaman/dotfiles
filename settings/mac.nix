@@ -6,14 +6,7 @@
   ];
 
   system.primaryUser = config.user.username;
-  nix.settings.trusted-users = [ config.user.username ];
   security.pam.services.sudo_local.touchIdAuth = true;
-
-  # Allow unfree packages
-  nixpkgs.config.allowUnfree = true;
-
-  # Cleanup the store periodically
-  nix.gc.automatic = true;
 
   # Defaults
   system.defaults = {
