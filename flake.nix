@@ -12,6 +12,7 @@
     herdr.url = "github:herdrdev/herdr";
     rex.url = "https://pkgs.superlogical.com/rex/nix/snapshot.tar.gz";
     nixos-hardware.url = "github:nixos/nixos-hardware";
+    nixos-hardware.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs =
