@@ -27,7 +27,6 @@
       nixos-hardware,
     }:
     let
-      hostname = "Ians-MacBook-Pro";
       secrets = builtins.fromJSON (builtins.readFile ./secrets.json);
       overlays = import ./overlays { inherit herdr rex; };
       mkPiHole = import ./hosts/mk-pi-hole.nix {
@@ -39,18 +38,10 @@
           ;
       };
     in
-    # Doing this out of line like this allows for inference via nixd
     {
       nixosConfigurations = {
-        fedora-home-server = nixpkgs.lib.nixosSystem {
-          specialArgs = {
-            inherit secrets;
-            systemName = "fedora-home-server";
-          };
-          modules = [
-            ./hosts/fedora-home-server.nix
-            { nixpkgs.overlays = overlays; }
-          ];
+        fedora-home-server = import ./hosts/fedora-home-server.nix {
+          inherit nixpkgs secrets overlays;
         };
 
         nine-cross-pi-hole = mkPiHole {
@@ -71,26 +62,17 @@
         };
       };
 
-      darwinConfigurations.${hostname} = nix-darwin.lib.darwinSystem {
-        specialArgs = {
-          inherit
-            hostname
-            nixpkgs-stable
-            catppuccin
-            nixpkgs
-            ;
-          flake = self;
-          homeManager = home-manager;
-        };
-        modules = [
-          ./hosts/Ians-MacBook-Pro.nix
-          {
-            home-manager.sharedModules = [ rex.homeManagerModules.default ];
-            nixpkgs.overlays = overlays;
-            # Set Git commit hash for darwin-version.
-            system.configurationRevision = self.rev or self.dirtyRev or null;
-          }
-        ];
+      darwinConfigurations.Ians-MacBook-Pro = import ./hosts/Ians-MacBook-Pro.nix {
+        inherit
+          self
+          nix-darwin
+          nixpkgs
+          nixpkgs-stable
+          home-manager
+          catppuccin
+          rex
+          overlays
+          ;
       };
     };
 }
