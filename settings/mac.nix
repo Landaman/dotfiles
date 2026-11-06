@@ -1,7 +1,11 @@
 { config, ... }:
 {
-  system.primaryUser = config.user.username;
+  imports = [
+    ../modules/user.nix
+    ./homebrew.nix
+  ];
 
+  system.primaryUser = config.user.username;
   security.pam.services.sudo_local.touchIdAuth = true;
 
   # Defaults

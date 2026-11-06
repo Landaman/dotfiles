@@ -7,7 +7,7 @@
     ./logi-options.nix
     ./mullvad-vpn.nix
     ./proxyman.nix
-    ./tailscale.nix
+    ./tailscale
     ./unarchiver.nix
   ];
 }

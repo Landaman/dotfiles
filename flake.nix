@@ -1,5 +1,5 @@
 {
-  description = "My nix-darwin system Flake";
+  description = "My Darwin and NixOS configurations";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
@@ -11,6 +11,8 @@
     catppuccin.url = "github:catppuccin/nix";
     herdr.url = "github:herdrdev/herdr";
     rex.url = "https://pkgs.superlogical.com/rex/nix/snapshot.tar.gz";
+    nixos-hardware.url = "github:nixos/nixos-hardware";
+    nixos-hardware.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs =
@@ -23,36 +25,54 @@
       catppuccin,
       herdr,
       rex,
+      nixos-hardware,
     }:
     let
-      hostname = "Ians-MacBook-Pro";
+      secrets = builtins.fromJSON (builtins.readFile ./secrets.json);
+      overlays = import ./overlays { inherit herdr rex; };
+      mkPiHole = import ./hosts/mk-pi-hole.nix {
+        inherit
+          nixpkgs
+          nixos-hardware
+          secrets
+          overlays
+          ;
+      };
     in
     {
-      darwinConfigurations.${hostname} = nix-darwin.lib.darwinSystem {
-        specialArgs = {
-          inherit
-            hostname
-            nixpkgs-stable
-            catppuccin
-            nixpkgs
-            ;
-          flake = self;
-          homeManager = home-manager;
+      nixosConfigurations = {
+        fedora-home-server = import ./hosts/fedora-home-server.nix {
+          inherit nixpkgs secrets overlays;
         };
-        modules = [
-          ./hosts/Ians-MacBook-Pro.nix
-          home-manager.darwinModules.home-manager
-          {
-            home-manager.sharedModules = [ rex.homeManagerModules.default ];
-            nixpkgs.overlays = [
-              (import ./overlays/herdr.nix { inherit herdr; })
-              (import ./overlays/rex.nix { inherit rex; })
-            ]
-            ++ import ./overlays/default.nix;
-            # Set Git commit hash for darwin-version.
-            system.configurationRevision = self.rev or self.dirtyRev or null;
-          }
-        ];
+
+        nine-cross-pi-hole = mkPiHole {
+          systemName = "nine-cross-pi-hole";
+        };
+
+        nine-cross-pi-hole-secondary = mkPiHole {
+          systemName = "nine-cross-pi-hole-secondary";
+          extraModules = [ ./apps/services/homebridge.nix ];
+        };
+
+        adria-pi-hole = mkPiHole {
+          systemName = "adria-pi-hole";
+        };
+
+        adria-pi-hole-secondary = mkPiHole {
+          systemName = "adria-pi-hole-secondary";
+        };
+      };
+
+      darwinConfigurations.Ians-MacBook-Pro = import ./hosts/Ians-MacBook-Pro.nix {
+        inherit
+          self
+          nix-darwin
+          nixpkgs
+          nixpkgs-stable
+          home-manager
+          catppuccin
+          overlays
+          ;
       };
     };
 }

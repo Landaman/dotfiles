@@ -1,86 +1,121 @@
+# Build the MacBook system from flake inputs and shared overlays
 {
-  config,
-  hostname,
-  pkgs,
-  ...
+  self,
+  nix-darwin,
+  nixpkgs,
+  nixpkgs-stable,
+  home-manager,
+  catppuccin,
+  overlays,
 }:
 let
-  username = config.user.username;
+  hostname = "Ians-MacBook-Pro";
 in
-{
-  imports = [
-    ../modules/user.nix
-    ../modules/files.nix
-    ../settings
-    ../apps/ai
-    ../apps/shell
-    ../apps/tools
-    ../apps/editors
-    ../apps/lang
-    ../apps/window
-    ../apps/utilities
-    ../apps/desktop
-    ../apps/catppuccin.nix
-  ];
-
-  networking.computerName = "Ian's MacBook Pro";
-  networking.hostName = hostname;
-  user.username = "ianwright";
-  # The platform the configuration will be used on.
-  nixpkgs.hostPlatform = "aarch64-darwin";
-
-  # Used for backwards compatibility, please read the changelog before changing.
-  # $ darwin-rebuild changelog
-  system.stateVersion = 6;
-  home-manager.users.${username} = {
-    home.stateVersion = "26.05";
-    home.file.".codex/AGENTS.md".source = ./personal-agents.md;
-    home.file.".claude/CLAUDE.md".source = ./personal-claude.md;
-    programs.git.settings.user = {
-      name = "Ian Wright";
-      email = "49083526+Landaman@users.noreply.github.com";
-    };
-    programs.jujutsu.settings.user.name = "Ian Wright";
+nix-darwin.lib.darwinSystem {
+  specialArgs = {
+    inherit
+      hostname
+      nixpkgs-stable
+      catppuccin
+      nixpkgs
+      ;
+    flake = self;
+    homeManager = home-manager;
   };
+  modules = [
+    {
+      nixpkgs.overlays = overlays;
+      # Set Git commit hash for darwin-version.
+      system.configurationRevision = self.rev or self.dirtyRev or null;
+    }
+    (
+      {
+        config,
+        hostname,
+        pkgs,
+        ...
+      }:
+      let
+        username = config.user.username;
+      in
+      {
+        imports = [
+          ../modules/files.nix
+          ../settings
+          ../settings/mac.nix
+          ../settings/home-manager.nix
+          ../apps/ai
+          ../apps/shell
+          ../apps/tools
+          ../apps/editors
+          ../apps/lang
+          ../apps/window
+          ../apps/utilities
+          ../apps/desktop
+          ../apps/catppuccin.nix
+        ];
 
-  nix.linux-builder = {
-    enable = true;
-    package = pkgs.darwin.linux-builder-vz;
-    systems = [
-      "aarch64-linux"
-      "x86_64-linux"
-    ];
-    config = {
-      nix.gc.automatic = true;
+        networking.computerName = "Ian's MacBook Pro";
+        networking.hostName = hostname;
+        user.username = "ianwright";
+        # The platform the configuration will be used on.
+        nixpkgs.hostPlatform = "aarch64-darwin";
 
-      virtualisation = {
-        darwin-builder = {
-          diskSize = 24 * 1024;
-          memorySize = 8 * 1024;
+        # Used for backwards compatibility, please read the changelog before changing.
+        # $ darwin-rebuild changelog
+        system.stateVersion = 6;
+        home-manager.users.${username} = {
+          home.stateVersion = "26.05";
+          home.file.".codex/AGENTS.md".source = ./personal-agents.md;
+          home.file.".claude/CLAUDE.md".source = ./personal-claude.md;
+          programs.git.settings.user = {
+            name = "Ian Wright";
+            email = "49083526+Landaman@users.noreply.github.com";
+          };
+          programs.jujutsu.settings.user.name = "Ian Wright";
         };
-      };
-    };
-  };
 
-  # Dock contents
-  system.defaults.dock.persistent-apps = [
-    "/System/Applications/Apps.app"
-    "/Applications/Bitwarden.app"
-    "/System/Cryptexes/App/System/Applications/Safari.app"
-    "/System/Applications/Mail.app"
-    "/System/Applications/Phone.app"
-    "/System/Applications/Messages.app"
-    "${pkgs.discord}/Applications/discord.app"
-    "/Applications/WhatsApp.localized/WhatsApp.app"
-    "/System/Applications/Calendar.app"
-    "/Applications/Goodnotes.app"
-    "/System/Applications/Notes.app"
-    "/System/Applications/Reminders.app"
-    "/System/Applications/Books.app"
-    "/System/Applications/Music.app"
-    "/System/Applications/Podcasts.app"
-    "/System/Applications/Home.app"
-    "/System/Applications/iPhone Mirroring.app"
-    "/System/Applications/System Settings.app"
+        nix.linux-builder = {
+          enable = true;
+          package = pkgs.darwin.linux-builder-vz;
+          systems = [
+            "aarch64-linux"
+            "x86_64-linux"
+          ];
+          config = {
+            nix.gc.automatic = true;
+
+            virtualisation = {
+              darwin-builder = {
+                diskSize = 24 * 1024;
+                memorySize = 8 * 1024;
+              };
+            };
+          };
+        };
+
+        # Dock contents
+        system.defaults.dock.persistent-apps = [
+          "/System/Applications/Apps.app"
+          "/Applications/Bitwarden.app"
+          "/System/Cryptexes/App/System/Applications/Safari.app"
+          "/System/Applications/Mail.app"
+          "/System/Applications/Phone.app"
+          "/System/Applications/Messages.app"
+          "${pkgs.discord}/Applications/discord.app"
+          "/Applications/WhatsApp.localized/WhatsApp.app"
+          "/System/Applications/Calendar.app"
+          "/Applications/Goodnotes.app"
+          "/System/Applications/Notes.app"
+          "/System/Applications/Reminders.app"
+          "/System/Applications/Books.app"
+          "/System/Applications/Music.app"
+          "/System/Applications/Podcasts.app"
+          "/System/Applications/Home.app"
+          "/System/Applications/iPhone Mirroring.app"
+          "/System/Applications/System Settings.app"
+        ];
+      }
+    )
   ];
 }

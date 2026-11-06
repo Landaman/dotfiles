@@ -1,4 +1,7 @@
+{ herdr, rex }:
 [
+  (import ./herdr.nix { inherit herdr; })
+  (import ./rex.nix { inherit rex; })
   (import ./dotrush.nix)
   (import ./clrdbg.nix)
   (import ./herdr-app.nix)
@@ -11,4 +14,5 @@
   (import ./claude-code.nix)
   (import ./codex.nix)
   (import ./t3code.nix)
+  (import ./pihole-ftl.nix)
 ]

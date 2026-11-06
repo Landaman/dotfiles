@@ -3,12 +3,19 @@
   lib,
   pkgs,
   catppuccin,
+  homeManager,
+  _class,
   ...
 }:
 let
   username = config.user.username;
 in
 {
+  imports = [
+    ../modules/user.nix
+    homeManager.${if _class == "darwin" then "darwinModules" else "nixosModules"}.home-manager
+  ];
+
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;
@@ -18,13 +25,7 @@ in
     ];
 
     users.${username} = {
-      imports = [
-        ./home.nix
-      ];
-      home = {
-        inherit username;
-        homeDirectory = config.users.users.${username}.home;
-      };
+      programs.home-manager.enable = true;
       targets.darwin = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin {
         copyApps.enable = true;
         linkApps.enable = false;
