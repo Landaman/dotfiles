@@ -75,25 +75,6 @@ nix-darwin.lib.darwinSystem {
           programs.jujutsu.settings.user.name = "Ian Wright";
         };
 
-        nix.linux-builder = {
-          enable = true;
-          package = pkgs.darwin.linux-builder-vz;
-          systems = [
-            "aarch64-linux"
-            "x86_64-linux"
-          ];
-          config = {
-            nix.gc.automatic = true;
-
-            virtualisation = {
-              darwin-builder = {
-                diskSize = 24 * 1024;
-                memorySize = 8 * 1024;
-              };
-            };
-          };
-        };
-
         # Dock contents
         system.defaults.dock.persistent-apps = [
           "/System/Applications/Apps.app"
