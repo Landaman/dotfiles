@@ -15,26 +15,26 @@ let
   sources = {
     aarch64-linux = {
       runtime = "linux-arm64";
-      hash = "sha256-2Sn+a9Ufwve7IznYSzFSJhMOxX1MsG6D8zcF7HWH6Ds=";
+      hash = "sha256-Ud4yWstexZ2JDz/4j+d+gmUOGIrNFCEYMEsZQTM6n7M=";
     };
     x86_64-linux = {
       runtime = "linux-x64";
-      hash = "sha256-Fgzl/gmNiIwSJZ3TxHAyexCI0sRig8hYeiSoP0aeeWM=";
+      hash = "sha256-dn4H+HqcQ5uCZJ7iGb08dBxKOIMs3UcQ25TT8Xokm5E=";
     };
     aarch64-darwin = {
       runtime = "osx-arm64";
-      hash = "sha256-XtBqO4is3ZR01/knXPb+ozwe23Qh8v98T39MM0aFRfY=";
+      hash = "sha256-05/Tlr3Gohe7VeTL7LTdgC94gHKowj9QKMfVyhK2Tu0=";
     };
     x86_64-darwin = {
       runtime = "osx-x64";
-      hash = "sha256-OweKYN2ZsdH9KQXpZRGfPZkTFQ+rfpkMrdzf/QsBfm0=";
+      hash = "sha256-kuMfZpCUnZxJddVq5kYD0hc4ztKKFhlxaVi+LVkvDg0=";
     };
   };
   source = sources.${stdenvNoCC.hostPlatform.system};
 in
 stdenvNoCC.mkDerivation rec {
   pname = "clrdbg";
-  version = "18.0.0";
+  version = "18.1.0";
   src = fetchurl {
     url = "https://github.com/JaneySprings/clrdbg/releases/download/${version}/clrdbg_${source.runtime}.zip";
     inherit (source) hash;

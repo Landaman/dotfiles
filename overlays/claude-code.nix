@@ -1,6 +1,6 @@
 final: prev:
 let
-  version = "2.1.314";
+  version = "2.1.319";
 in
 {
   claude-code =
@@ -10,15 +10,15 @@ in
         platforms = {
           darwin-arm64 = {
             binary = "claude.zst";
-            checksum = "sha256-oj7lymRafjQvCWBGTJSLrrfEIYiUuiWDbaEsKJraVso=";
+            checksum = "sha256-gqWWmLzsiiB0y3usvRMM9VfBA1I/GkUK0ROrjdh3io4=";
           };
           linux-arm64 = {
             binary = "claude.zst";
-            checksum = "sha256-WtQtCPROAtVpIsqC2I22OI6TVkqPwD/vAuQnmyMgQhQ=";
+            checksum = "sha256-/dimhssNS7pvKlnV8SDel2tdXvl23wKeSLgC3RU4ETA=";
           };
           linux-x64 = {
             binary = "claude.zst";
-            checksum = "sha256-6Mb5Y6VBepPrGajbcPRgnAOdgnQmEglx0u/zTpDHBLM=";
+            checksum = "sha256-mXfZAwN0BBWvdryAhTazRiDQswt/CLCBNgNomHU3LqA=";
           };
         };
       };

@@ -8,10 +8,10 @@
 }:
 stdenvNoCC.mkDerivation rec {
   pname = "dotrush";
-  version = "2026.10";
+  version = "2026.11";
   src = fetchurl {
     url = "https://github.com/JaneySprings/DotRush/releases/download/${version}/DotRush.Bundle.LanguageServer.zip";
-    hash = "sha256:c5ad6defa83f6d48364da4fd4c2c9bd39d00c1256e9bd9729f2a4178111834ae";
+    hash = "sha256-YnCzsENHIeAr4D7BOGPn4gKzK9UTYBvQDgmClX9e31k=";
   };
 
   nativeBuildInputs = [
