@@ -1,7 +1,6 @@
 {
   config,
   pkgs,
-  lib,
   ...
 }:
 let
@@ -9,9 +8,7 @@ let
 in
 {
   config.home-manager.users.${username} = {
-    home.packages = lib.optionals (
-      pkgs.stdenv.hostPlatform.isDarwin && pkgs.stdenv.hostPlatform.isAarch64
-    ) [ pkgs.herdr-app ];
+    home.packages = [ pkgs.herdr-app ];
 
     programs.herdr = {
       enable = true;
