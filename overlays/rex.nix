@@ -4,11 +4,11 @@ let
   package = rex.packages.${final.stdenv.hostPlatform.system}.default;
   app = final.stdenvNoCC.mkDerivation rec {
     pname = "${package.pname}-app";
-    version = "0.1.0-1891";
+    version = "0.1.0-1932";
 
     src = final.fetchurl {
       url = "https://blob.superlogical.com/public/rex-app/snapshot/Rex-${version}.dmg";
-      hash = "sha256-LAKgyvwasy2qFV5ygHIyVRfy8R2Nz0olijuo8oSpz+U=";
+      hash = "sha256-8kPRF3G5NrsenIllwM2G+4Lw3Q2Kij0wCIRpkH/ZESA=";
     };
 
     nativeBuildInputs = [ final.undmg ];
