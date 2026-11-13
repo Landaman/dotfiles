@@ -2,14 +2,16 @@
   config,
   pkgs,
   lib,
+  _class,
   ...
 }:
 {
-  homebrew.casks = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin [ "zoom" ];
-
   home-manager.users.${config.user.username}.home.packages =
     lib.mkIf (!pkgs.stdenv.hostPlatform.isDarwin)
       [
         pkgs.zoom-us
       ];
+}
+// lib.optionalAttrs (_class == "darwin") {
+  homebrew.casks = [ "zoom" ];
 }

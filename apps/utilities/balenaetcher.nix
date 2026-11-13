@@ -1,8 +1,8 @@
 {
-  pkgs,
   lib,
+  _class,
   ...
 }:
-{
-  homebrew.casks = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin [ "balenaetcher" ];
+lib.optionalAttrs (_class == "darwin") {
+  homebrew.casks = [ "balenaetcher" ];
 }

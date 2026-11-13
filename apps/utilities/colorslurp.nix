@@ -1,14 +1,14 @@
 {
-  pkgs,
   lib,
+  _class,
   ...
 }:
-{
-  homebrew.masApps = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin {
+lib.optionalAttrs (_class == "darwin") {
+  homebrew.masApps = {
     colorslurp = 1287239339;
   };
 
-  system.defaults = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin {
+  system.defaults = {
     CustomUserPreferences = {
       # Disable KB shortcuts for ColorSlurp
       "com.IdeaPunch.ColorSlurp" = {

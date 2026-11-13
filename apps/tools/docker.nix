@@ -2,6 +2,7 @@
   config,
   pkgs,
   lib,
+  _class,
   ...
 }:
 let
@@ -65,6 +66,7 @@ in
           ];
         };
   };
-
-  homebrew.casks = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin [ "docker-desktop" ];
+}
+// lib.optionalAttrs (_class == "darwin") {
+  homebrew.casks = [ "docker-desktop" ];
 }

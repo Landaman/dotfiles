@@ -1,11 +1,11 @@
 {
   config,
   pkgs,
+  lib,
+  _class,
   ...
 }:
 {
-  homebrew.casks = [ "tailscale-app" ];
-
   home-manager.users.${config.user.username} = {
     programs.zsh.plugins = [
       {
@@ -14,4 +14,7 @@
       }
     ];
   };
+}
+// lib.optionalAttrs (_class == "darwin") {
+  homebrew.casks = [ "tailscale-app" ];
 }

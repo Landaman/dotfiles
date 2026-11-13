@@ -2,19 +2,21 @@
   config,
   pkgs,
   lib,
+  _class,
   ...
 }:
 let
   username = config.user.username;
 in
 {
-  window.floatingApps = [ "com.bitwarden.desktop" ];
-
   home-manager.users.${username}.home.packages = with pkgs; [
     bitwarden-cli
   ];
+}
+// lib.optionalAttrs (_class == "darwin") {
+  window.floatingApps = [ "com.bitwarden.desktop" ];
 
-  homebrew.masApps = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin {
+  homebrew.masApps = {
     bitwarden = 1352778147;
   };
 }

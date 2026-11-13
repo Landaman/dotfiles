@@ -1,4 +1,4 @@
-{ pkgs, lib, ... }:
-{
-  homebrew.casks = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin [ "logi-options+" ];
+{ lib, _class, ... }:
+lib.optionalAttrs (_class == "darwin") {
+  homebrew.casks = [ "logi-options+" ];
 }

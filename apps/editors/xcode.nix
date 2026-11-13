@@ -1,6 +1,6 @@
-{ pkgs, lib, ... }:
-{
-  homebrew.masApps = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin {
+{ lib, _class, ... }:
+lib.optionalAttrs (_class == "darwin") {
+  homebrew.masApps = {
     xcode = 497799835;
   };
 }

@@ -1,10 +1,10 @@
 {
-  pkgs,
   lib,
+  _class,
   ...
 }:
-{
-  homebrew.masApps = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin {
+lib.optionalAttrs (_class == "darwin") {
+  homebrew.masApps = {
     goodnotes = 1444383602;
   };
 }

@@ -2,6 +2,7 @@
   config,
   pkgs,
   lib,
+  _class,
   ...
 }:
 {
@@ -31,12 +32,6 @@
     };
   };
 
-  # Setup homebrew and install necessary dependencies
-  homebrew.enable = true;
-  homebrew.enableZshIntegration = true;
-  # Uninstall all Casks/Brews not specified here on activation
-  homebrew.onActivation.cleanup = lib.mkDefault "zap"; # Zap removes associated files for casks (just in brew directory, not ~/.config etc.)
-
   # Defaults
   system.defaults = {
     dock.mru-spaces = false; # Do not rearrange spaces by MRU, this is super annoying
@@ -47,4 +42,11 @@
       "position-immutable" = 1; # Disable dock position changes
     };
   };
+}
+// lib.optionalAttrs (_class == "darwin") {
+  # Setup homebrew and install necessary dependencies
+  homebrew.enable = true;
+  homebrew.enableZshIntegration = true;
+  # Uninstall all Casks/Brews not specified here on activation
+  homebrew.onActivation.cleanup = lib.mkDefault "zap"; # Zap removes associated files for casks (just in brew directory, not ~/.config etc.)
 }

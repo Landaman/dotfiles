@@ -3,6 +3,7 @@
   config,
   lib,
   homeManager,
+  _class,
   ...
 }:
 let
@@ -28,6 +29,7 @@ in
 
     packages = [ pkgs.claude-code ];
   };
-
-  homebrew.casks = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin [ "claude" ];
+}
+// lib.optionalAttrs (_class == "darwin") {
+  homebrew.casks = [ "claude" ];
 }
