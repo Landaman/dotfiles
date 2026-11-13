@@ -76,7 +76,10 @@ in
       }
       // lib.optionalAttrs neovim.enable {
         "extensions.experimental.affinity"."asvetliakov.vscode-neovim" = 1;
-        "vscode-neovim.neovimExecutablePaths.darwin" = "${neovim.finalPackage}/bin/nvim";
+        "vscode-neovim.neovimExecutablePaths.${
+          if pkgs.stdenv.hostPlatform.isDarwin then "darwin" else "linux"
+        }" =
+          "${neovim.finalPackage}/bin/nvim";
       };
     };
   };
