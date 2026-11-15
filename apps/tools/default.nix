@@ -3,6 +3,7 @@
     ./bat.nix
     ./bitwarden.nix
     ./bruno.nix
+    ./btop.nix
     ./delta.nix
     ./docker.nix
     ./fastmod.nix
