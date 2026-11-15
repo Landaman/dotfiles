@@ -42,7 +42,14 @@
     {
       nixosConfigurations = {
         fedora-home-server = import ./hosts/fedora-home-server.nix {
-          inherit nixpkgs secrets overlays;
+          inherit
+            nixpkgs
+            secrets
+            overlays
+            home-manager
+            catppuccin
+            ;
+          flake = self;
         };
 
         nine-cross-pi-hole = mkPiHole {
