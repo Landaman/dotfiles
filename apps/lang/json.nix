@@ -13,6 +13,8 @@ in
   ];
 
   home-manager.users.${username} = {
+    home.packages = [ pkgs.jq ];
+
     programs.neovim = {
       mason.packages = [ "json-lsp" ];
       extraPackages = with pkgs; [
