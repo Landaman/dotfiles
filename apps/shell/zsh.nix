@@ -30,7 +30,7 @@ in
     };
   };
 
-  config.users.users.${config.user.username}.shell = pkgs.zsh; # Set zsh as default
+  config.users.users.${config.user.username}.shell = lib.mkDefault pkgs.zsh; # Set zsh as default
 
   config.programs.zsh = {
     enable = true;

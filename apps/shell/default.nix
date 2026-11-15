@@ -1,5 +1,6 @@
 {
   imports = [
+    ./bash.nix
     ./ghostty.nix
     ./rex.nix
     ./herdr.nix
