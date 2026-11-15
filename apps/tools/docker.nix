@@ -43,6 +43,7 @@ in
 
     home.packages = lib.mkIf (!pkgs.stdenv.hostPlatform.isDarwin) [
       pkgs.docker
+      pkgs.docker-compose
     ];
     programs.vscode.profiles.default =
       lib.mkIf config.home-manager.users.${username}.programs.vscode.enable
@@ -69,4 +70,10 @@ in
 }
 // lib.optionalAttrs (_class == "darwin") {
   homebrew.casks = [ "docker-desktop" ];
+}
+// lib.optionalAttrs (_class == "nixos") {
+  virtualisation.docker.rootless = {
+    enable = true;
+    setSocketVariable = true;
+  };
 }
