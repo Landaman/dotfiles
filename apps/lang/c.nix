@@ -8,6 +8,13 @@ let
   username = config.user.username;
 in
 {
+  environment.systemPackages = with pkgs; [
+    stdenv.cc
+    gnumake
+    cmake
+    pkg-config
+  ];
+
   home-manager.users.${username} = {
     programs.neovim = {
       mason.packages = [ "clangd" ];
