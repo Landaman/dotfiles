@@ -15,7 +15,10 @@ in
     "__pycache__/"
   ];
 
-  environment.systemPackages = with pkgs; [ python313 ];
+  environment.systemPackages = with pkgs; [
+    python313
+    uv
+  ];
 
   home-manager.users.${username} = {
     programs.neovim = {
