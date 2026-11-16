@@ -124,11 +124,11 @@ in
               mktplcRef = {
                 publisher = "nromanov";
                 name = "dotrush";
-                version = "26.10.277";
+                version = "26.11.307";
               };
               vsix = pkgs.fetchurl {
-                url = "https://github.com/JaneySprings/DotRush/releases/download/2026.10/DotRush.v26.10.277.vsix";
-                hash = "sha256-ajlgbKKfKo8A8HzD4pkgD1cpteum0E0awV5YSp79guo=";
+                url = "https://github.com/JaneySprings/DotRush/releases/download/2026.11/DotRush.v26.11.307.vsix";
+                hash = "sha256-2q7VP/DY3ivS5/7uqEWkv+QHkIAJaWV7jb1qMRN44dM=";
               };
               # Otherwise DotRush downloads its debugger into the immutable extension directory
               postInstall = ''

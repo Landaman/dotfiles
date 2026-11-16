@@ -66,8 +66,8 @@ in
               mktplcRef = {
                 publisher = "ms-vscode";
                 name = "cpp-devtools";
-                version = "0.5.13";
-                hash = "sha256-g8ZXdEgKB6okJEVXvFQMGz5oDMsOh5mWzl50B/etVjw=";
+                version = "0.8.0";
+                hash = "sha256-Mz/AE+mNXct6A3jP2cad391cVL2tsJ9x9ukJsswArJg=";
               };
             })
           ];

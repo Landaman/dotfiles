@@ -1,6 +1,6 @@
 final: prev:
 let
-  version = "0.1.8";
+  version = "0.1.10";
   appName = "T3 Code (Beta)";
   electron = final.electron_44;
 
@@ -12,7 +12,7 @@ let
         owner = "pingdotgg";
         repo = "t3code";
         tag = "v${version}";
-        hash = "sha256-QPZpT/1zm5sLIDw3AOzUCIrmOFPwUU8jP/q1A8GzLow=";
+        hash = "sha256-zhScbDGW+bD2T7++YRUPY/y83SGE2080LxcGw3Txrso=";
       };
 
       pnpmDeps = final.fetchPnpmDeps {
@@ -24,7 +24,7 @@ let
           ;
         pnpm = final.pnpm_11;
         fetcherVersion = 4;
-        hash = "sha256-vowtkFA/HWVK0cUIdCp7m9v4+q94Ce1deLZPy9kFW94=";
+        hash = "sha256-BFPdwtpZRCeoHJANsrLee91pzSVbasfJRa+Ax7Gr60o=";
       };
 
       postInstall =
@@ -64,7 +64,7 @@ let
             };
           }}
           EOF
-          cp "$out/Applications/T3 Code (Alpha).app/Contents/Resources/t3code.icns" stage/icon.icns
+          cp "$out/Applications/${appName}.app/Contents/Resources/t3code.icns" stage/icon.icns
           cp -R ${electron.dist} electron-dist
           chmod -R u+w electron-dist
           export CSC_IDENTITY_AUTO_DISCOVERY=false

@@ -1,21 +1,21 @@
 final: prev:
 let
-  linuxVersion = "26.1103.60933";
+  linuxVersion = "26.1111.71704";
   sources = {
     aarch64-darwin = rec {
-      version = "26.1103.60933";
+      version = "26.1111.71704";
       url = "https://persistent.oaistatic.com/codex-app-prod/ChatGPT-darwin-arm64-${version}.zip";
-      hash = "sha256-HWced4Tg43n3KT68/qyCbCopdSTqgGzVXplAaNAZ44g=";
+      hash = "sha256-DHkNirWEJVOf4dhEBmrLi4BBWqGaXEbYlAmBURLoE00=";
     };
     aarch64-linux = {
       version = linuxVersion;
       url = "https://persistent.oaistatic.com/codex-app-prod/linux/deb/pool/main/c/chatgpt/chatgpt_${linuxVersion}_arm64.deb";
-      hash = "sha256-bbGahFWR1QnpuDywqOC0oi3uJ0SNIRwdH6ik+5LtzF0=";
+      hash = "sha256-8FUN7h+ZEn01etdgrvc5xVfUm9Z3KNLxBdAKekeA90A=";
     };
     x86_64-linux = {
       version = linuxVersion;
       url = "https://persistent.oaistatic.com/codex-app-prod/linux/deb/pool/main/c/chatgpt/chatgpt_${linuxVersion}_amd64.deb";
-      hash = "sha256-B0bpuldRgvXb4yYXuCpkXrk61XyliOWpNYaVprZa7nE=";
+      hash = "sha256-Ae73x3yDX34a+5K6HCkXikwZ1sZlc73TuGUg4qv4BqQ=";
     };
   };
   source = sources.${final.stdenv.hostPlatform.system} or null;

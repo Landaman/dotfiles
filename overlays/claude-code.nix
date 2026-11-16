@@ -1,6 +1,6 @@
 final: prev:
 let
-  version = "2.1.322";
+  version = "2.1.328";
 in
 {
   claude-code =
@@ -9,16 +9,16 @@ in
         inherit version;
         platforms = {
           darwin-arm64 = {
-            binary = "claude.zst";
-            checksum = "sha256-pULFFKB9DKCUCN8rhgi+bFJDifIyMn0Zayb1tBBWuBM=";
+            binary = "claude";
+            checksum = "sha256-6FVHGQ74zZgwM7phsXGUBFpv6gADXaNJ7+q+2GutrMk=";
           };
           linux-arm64 = {
-            binary = "claude.zst";
-            checksum = "sha256-LGvh6fyh3LiU5H4RZy9EMvTPioefXlMCia0wgCEAxdc=";
+            binary = "claude";
+            checksum = "sha256-MH+LraJ7N9t1U/rHXoYATj2/9akx/8YRtU/nEM4etSE=";
           };
           linux-x64 = {
-            binary = "claude.zst";
-            checksum = "sha256-m7dVi9mSykV+ZFi/FoZXL3oxVrgzHdhEM5Hb/lkMHu0=";
+            binary = "claude";
+            checksum = "sha256-qYLTgDC5fnUISK3Sy7LfbZpw1VRKIsqbIWo0m6JYZeg=";
           };
         };
       };
@@ -26,12 +26,15 @@ in
       (old: {
         # Keep public roots alongside the locally trusted certificates returned on macOS
         installPhase =
-          if prev.stdenv.hostPlatform.isDarwin then
-            builtins.replaceStrings
-              [ "--set-default CLAUDE_CODE_CERT_STORE system" ]
-              [ "--set-default CLAUDE_CODE_CERT_STORE bundled,system" ]
-              old.installPhase
-          else
-            old.installPhase;
+          builtins.replaceStrings [ "unzstd -q $src -o $out/bin/claude" ] [ "cp $src $out/bin/claude" ]
+            (
+              if prev.stdenv.hostPlatform.isDarwin then
+                builtins.replaceStrings
+                  [ "--set-default CLAUDE_CODE_CERT_STORE system" ]
+                  [ "--set-default CLAUDE_CODE_CERT_STORE bundled,system" ]
+                  old.installPhase
+              else
+                old.installPhase
+            );
       });
 }

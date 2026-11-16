@@ -4,11 +4,11 @@ let
   package = rex.packages.${final.stdenv.hostPlatform.system}.default;
   app = final.stdenvNoCC.mkDerivation rec {
     pname = "${package.pname}-app";
-    version = "0.1.0-1932";
+    version = "0.1.0-2044";
 
     src = final.fetchurl {
       url = "https://blob.superlogical.com/public/rex-app/snapshot/Rex-${version}.dmg";
-      hash = "sha256-8kPRF3G5NrsenIllwM2G+4Lw3Q2Kij0wCIRpkH/ZESA=";
+      hash = "sha256-XutI6BeRqiqYFu67CMgRpAru9mTjDK6iw1URziTg9i4=";
     };
 
     nativeBuildInputs = [ final.undmg ];
@@ -16,7 +16,7 @@ let
     installPhase = ''
       runHook preInstall
       mkdir -p "$out/Applications"
-      cp -R "Rex Beta.app" "$out/Applications/"
+      cp -R "Rex.app" "$out/Applications/"
       runHook postInstall
     '';
     dontFixup = true;
@@ -35,7 +35,7 @@ in
     postBuild = ''
       ${final.lib.optionalString final.stdenv.hostPlatform.isDarwin ''
         mkdir -p "$out/bin" "$out/share"
-        ln -s "$out/Applications/Rex Beta.app/Contents/Helpers/Rex Server.rex/Contents/MacOS/rex" "$out/bin/rex"
+        ln -s "$out/Applications/Rex.app/Contents/Helpers/Rex Server.rex/Contents/MacOS/rex" "$out/bin/rex"
         ln -s ${package}/share/terminfo "$out/share/terminfo"
         ln -s ${package}/share/rex "$out/share/rex"
       ''}

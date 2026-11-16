@@ -39,7 +39,16 @@ in
       ];
 
       rustaceanvim = {
-        plugin = pkgs.vimPlugins.rustaceanvim;
+        # Allow rust-analyzer more time to initialize during the upstream integration checks
+        plugin = pkgs.neovimUtils.buildNeovimPlugin {
+          checkInputs = [ pkgs.vimPlugins.neotest ];
+          luaAttr = pkgs.neovim-unwrapped.lua.pkgs.rustaceanvim.overrideAttrs (old: {
+            postPatch = (old.postPatch or "") + ''
+              substituteInPlace spec/integration/lsp_spec.lua \
+                --replace-fail "local timeout_ms = 10000" "local timeout_ms = 60000"
+            '';
+          });
+        };
         filetype = [ "rust" ];
         # Rustacean relies on ftplugin files, but packadd only updates runtimepath.
         # The FileType event already fired before lze loads the plugin, so source them here.

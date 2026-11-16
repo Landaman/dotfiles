@@ -15,17 +15,17 @@
 let
   inherit (stdenv.hostPlatform) system;
 
-  version = "0.1.14";
+  version = "0.1.16";
   appHashes = {
-    x86_64-linux = "sha256-R1o4P49DnjGRqGY1tcEobOTf0tn83x58vf3Wxxdvj/M=";
-    aarch64-linux = "sha256-MKQxzpXBc1bv6K/tUMTq+IiNg+9FrNmqkRCU1RcH0Ac=";
-    aarch64-darwin = "sha256-Jso6s5x2wBCWch6E2TQsugvLGzN+L1x5VurIoHuZKJU=";
+    x86_64-linux = "sha256-KC0mMhlrI4IGz+Zr+2HA+vKZyhyRhDvQdlIbvjZXEhY=";
+    aarch64-linux = "sha256-7+708XWbDokA8gXCwisUKHoRL4dEBlObTqGzviS3NjE=";
+    aarch64-darwin = "sha256-TubzFLDTi3xzfqvdxfWFe2+ZUkPm1eHr1yXGhHNWqSg=";
   };
-  coreVersion = "0.1.19";
+  coreVersion = "0.1.21";
   coreHashes = {
-    x86_64-linux = "sha256-Stz7Qj1S8kxcxKHizS/K0fYtKLt3h2rEcsKQgqPqpCQ=";
-    aarch64-linux = "sha256-+Vw0/XF37ViAfXT+TueLs9xz6zfyHGlJYGQACiGryxA=";
-    aarch64-darwin = "sha256-UzjZAK2tttJzucjpcCckfbMXnM/+3hCheTNY8W4I1oM=";
+    x86_64-linux = "sha256-eEJHVcEKQN3jigvbVcIKwZcG6a4F7Wj8Ks8fz/DZQcE=";
+    aarch64-linux = "sha256-6ESiv6tIoiYJdnnQdryDBC/lf8zvU4fvgC5bJOeLUpo=";
+    aarch64-darwin = "sha256-GrON2ScPY6j3lNbWDocC6w0chacr2oXXNeXupD8F/+0=";
   };
 
   linux = stdenv.hostPlatform.isLinux;

@@ -14,12 +14,12 @@ in
     enabled = luaUtils.mkLuaExpression "not vim.g.vscode";
     plugin = pkgs.vimUtils.buildVimPlugin {
       pname = "scrolleof";
-      version = "1.2.10";
+      version = "1.3.1";
       src = pkgs.fetchFromGitHub {
         owner = "Aasim-A";
         repo = "scrollEOF.nvim";
-        rev = "e462b9a07b8166c3e8011f1dcbc6bf68b67cd8d7";
-        hash = "sha256-y7yOCRSGTtQcFyWVkGe3xQqstHZMQKayxtqkOVlZ4PM=";
+        rev = "5f2d85ec3f5fb94dd8a4491264eba3594c60861d";
+        hash = "sha256-1+RRX5ilETXk5UPFaIFJJus3QPFsJNnVKF0Z2YDfcG0=";
       };
       meta = {
         homepage = "https://github.com/Aasim-A/scrollEOF.nvim";
