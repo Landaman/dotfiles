@@ -82,6 +82,15 @@ below indicates you should stop, you should make the changes necessary
 and continue rebuilding until the build either succeeds or you run into
 a stop condition.
 
+### Packages with Significant Build Time
+
+Some packages have very significant build time (i.e., have a Rust compilation
+step or similar). These packages do not need to be built in full. You should
+get to a point where you are as confident as can be that everything that needs
+doing is done (hashes, config updates, etc), but you do not need to wait for the
+built for those packages or the system packages to finish. Continue with other
+packages, and tell the user at the end.
+
 ### Upstream Changes
 
 If something in an upstream dependency changes such that some configuration or
