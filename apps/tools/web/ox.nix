@@ -23,8 +23,19 @@ in
 
   home-manager.users.${username} = {
     programs.neovim = {
-      mason.packages = [ "oxfmt" ];
-      extraPackages = [ pkgs.oxfmt ];
+      mason.packages = [
+        "oxfmt"
+        "oxlint"
+      ];
+      extraPackages = [
+        pkgs.oxfmt
+        pkgs.oxlint
+      ];
+      lzePlugins.nvim-lspconfig.options = [
+        {
+          config.oxlint = { };
+        }
+      ];
     };
 
     programs.vscode.profiles.default =
@@ -33,7 +44,10 @@ in
           extensions = [ pkgs.vscode-extensions.oxc.oxc-vscode ];
 
           # Oxfmt projects select Oxc in workspace settings
-          userSettings."oxc.path.oxfmt" = "${pkgs.oxfmt}/bin/oxfmt";
+          userSettings = {
+            "oxc.path.oxfmt" = "${pkgs.oxfmt}/bin/oxfmt";
+            "oxc.path.oxlint" = "${pkgs.oxlint}/bin/oxlint";
+          };
         };
   };
 }

@@ -33,15 +33,11 @@ in
   home-manager.users.${username} = {
     programs.neovim = {
       mason.packages = [
-        "oxlint"
-        "eslint-lsp"
         "js-debug-adapter"
         "vtsls"
       ];
       extraPackages = with pkgs; [
-        oxlint
         prisma-language-server
-        vscode-langservers-extracted
         vscode-js-debug
         vtsls
       ];
@@ -61,15 +57,6 @@ in
         nvim-lspconfig.options = [
           {
             config = {
-              eslint = {
-                settings.nodePath = luaUtils.mkLuaExpression ''
-                  (function()
-                    local yarn_directory = vim.fs.find(".yarn/sdks", { upward = true, type = "directory" })[1]
-                    return yarn_directory and vim.fn.isdirectory(yarn_directory) == 1 and yarn_directory or nil
-                  end)()
-                '';
-              };
-              oxlint = { };
               vtsls = {
                 settings = {
                   vtsls = {
@@ -137,15 +124,12 @@ in
       lib.mkIf config.home-manager.users.${username}.programs.vscode.enable
         {
           extensions = with pkgs.vscode-extensions; [
-            dbaeumer.vscode-eslint
             prisma.prisma
             vitest.explorer
             yoavbls.pretty-ts-errors
           ];
 
           userSettings = {
-            "oxc.path.oxlint" = "${pkgs.oxlint}/bin/oxlint";
-            "eslint.workingDirectories" = [ { mode = "auto"; } ];
             "typescript.enablePromptUseWorkspaceTsdk" = true;
             "typescript.updateImportsOnFileMove.enabled" = "always";
             "typescript.inlayHints.enumMemberValues.enabled" = true;

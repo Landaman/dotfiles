@@ -18,9 +18,10 @@
     ./qemu.nix
     ./ripgrep.nix
     ./utm.nix
-    ./web-formatters/biome.nix
-    ./web-formatters/oxfmt.nix
-    ./web-formatters/prettierd.nix
+    ./web/biome.nix
+    ./web/eslint.nix
+    ./web/ox.nix
+    ./web/prettierd.nix
     ./webp.nix
     ./wireshark.nix
     ./wuzz.nix
