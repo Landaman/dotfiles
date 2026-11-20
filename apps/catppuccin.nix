@@ -21,6 +21,7 @@ in
 
       ghostty.enable = true;
       bat.enable = true;
+      btop.enable = true;
       delta.enable = true;
       tmux = {
         enable = true;
