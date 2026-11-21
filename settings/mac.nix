@@ -2,9 +2,13 @@
   config,
   pkgs,
   lib,
+  homeManager,
   _class,
   ...
 }:
+let
+  containerDefaults = import ../lib/mac-container-defaults.nix { inherit lib pkgs; };
+in
 {
   imports = [
     ../modules/user.nix
@@ -37,6 +41,16 @@
     targets.darwin.currentHostDefaults = {
       NSGlobalDomain."com.apple.mouse.tapBehavior" = 1; # Tap to click
     };
+
+    home.activation.setBuiltInAppDefaults = homeManager.lib.hm.dag.entryAfter [ "writeBoundary" ] (
+      containerDefaults "com.apple.Safari" {
+        IncludeDevelopMenu = true;
+        WebKitDeveloperExtrasEnabledPreferenceKey = true;
+      }
+      + containerDefaults "com.apple.mail" {
+        ShowBccHeader = 1;
+      }
+    );
   };
 
   system.defaults = {
