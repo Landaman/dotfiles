@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  _class,
   ...
 }:
 let
@@ -83,4 +84,8 @@ in
       };
     };
   };
+}
+// lib.optionalAttrs (_class == "darwin") {
+  # Let held movement keys repeat in VS Code
+  system.defaults.CustomUserPreferences."com.microsoft.VSCode".ApplePressAndHoldEnabled = false;
 }

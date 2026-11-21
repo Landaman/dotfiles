@@ -14,4 +14,7 @@
 }
 // lib.optionalAttrs (_class == "darwin") {
   homebrew.casks = [ "proxyman" ];
+
+  system.defaults.CustomUserPreferences."com.proxyman.NSProxy".ThemeKitTheme =
+    "com.luckymarmot.ThemeKit.DarkTheme";
 }
