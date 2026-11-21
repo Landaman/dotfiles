@@ -17,6 +17,7 @@
 }
 // lib.optionalAttrs (_class == "darwin") {
   homebrew.casks = [ "tailscale-app" ];
+  menuBar.hiddenApps = [ "io.tailscale.ipn.macsys" ];
 
   system.defaults.CustomUserPreferences."io.tailscale.ipn.macsys".HideDockIcon = true;
 }

@@ -12,6 +12,7 @@ in
 {
   imports = [
     ../modules/user.nix
+    ./mac-menu-bar.nix
   ];
 
   system.primaryUser = config.user.username;

@@ -32,4 +32,5 @@ in
 }
 // lib.optionalAttrs (_class == "darwin") {
   homebrew.casks = [ "claude" ];
+  menuBar.hiddenApps = [ "com.anthropic.claudefordesktop" ];
 }

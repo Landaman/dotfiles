@@ -70,6 +70,7 @@ in
 }
 // lib.optionalAttrs (_class == "darwin") {
   homebrew.casks = [ "docker-desktop" ];
+  menuBar.hiddenApps = [ "com.docker.docker" ];
 }
 // lib.optionalAttrs (_class == "nixos") {
   virtualisation.docker.rootless = {

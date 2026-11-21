@@ -17,6 +17,7 @@ in
 }
 // lib.optionalAttrs (_class == "darwin") {
   window.floatingApps = [ "com.bitwarden.desktop" ];
+  menuBar.hiddenApps = [ "com.bitwarden.desktop" ];
 
   homebrew.masApps = {
     bitwarden = 1352778147;

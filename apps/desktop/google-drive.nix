@@ -14,4 +14,5 @@
 }
 // lib.optionalAttrs (_class == "darwin") {
   homebrew.casks = [ "google-drive" ];
+  menuBar.hiddenApps = [ "com.google.drivefs" ];
 }
