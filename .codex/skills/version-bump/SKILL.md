@@ -75,7 +75,10 @@ you should delete the overlay and explain this to the user.
 
 ## Post-Update
 
-After any change, you should build but not activate the system flake.
+After any change, you should build but not activate the system flake. This
+does not apply if you have hit the exemption below on packages with significant
+build times. In that case, you should restore those and do a system build without
+those packages.
 
 If you run into any errors, follow the guidance below. Unless the guidance
 below indicates you should stop, you should make the changes necessary
