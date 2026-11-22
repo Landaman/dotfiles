@@ -1,19 +1,19 @@
 final: prev:
 let
-  version = "0.170.0";
+  version = "0.171.0";
   src = final.fetchFromGitHub {
     owner = "openai";
     repo = "codex";
     tag = "rust-v${version}";
-    hash = "sha256-iJkH0tknBE/+bAWWKDiG9rLfuj0KDcSHDa91Offd7R8=";
+    hash = "sha256-Q0fxlAU4oJZOHJtsVVaJJ28XuupzpCYGO4IKn9TAwl0=";
   };
 in
 {
   codex = prev.codex.overrideAttrs (finalAttrs: {
     inherit version;
     inherit src;
-    buildCommit = "29eb79e9866b3262a777fdf8195c1b9e63684c91";
+    buildCommit = "ccf9be8cc458bd6b8336fe84d68d8893f2691a5e";
 
-    cargoHash = "sha256-dovquz74E13RYwAGuXRcyhvVAeSDXiqserw9inujf+c=";
+    cargoHash = "sha256-57GGsc4vgmQnnOXOPf2QaqrW8+02cpc/zotb8Y+rRio=";
   });
 }

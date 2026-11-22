@@ -1,6 +1,6 @@
 final: prev:
 let
-  version = "0.1.10";
+  version = "0.1.11";
   appName = "T3 Code (Beta)";
   electron = final.electron_44;
 
@@ -12,7 +12,7 @@ let
         owner = "pingdotgg";
         repo = "t3code";
         tag = "v${version}";
-        hash = "sha256-zhScbDGW+bD2T7++YRUPY/y83SGE2080LxcGw3Txrso=";
+        hash = "sha256-oI8gyTWFgtTmVK+0cVQaEcfO8EzxUUOW5s8JFG/z/U8=";
       };
 
       pnpmDeps = final.fetchPnpmDeps {
@@ -22,9 +22,9 @@ let
           src
           pnpmWorkspaces
           ;
-        pnpm = final.pnpm_11;
-        fetcherVersion = 4;
-        hash = "sha256-BFPdwtpZRCeoHJANsrLee91pzSVbasfJRa+Ax7Gr60o=";
+        pnpm = final.pnpm_12;
+        fetcherVersion = 5;
+        hash = "sha256-s/vm8Ox4o/AYpNC/amYP1KFWwh7SY5bCmVBuIJn9f/c=";
       };
 
       postInstall =
