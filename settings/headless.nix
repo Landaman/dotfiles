@@ -12,6 +12,7 @@
 
   services.openssh.enable = true;
   services.timesyncd.enable = true;
+  security.sudo.wheelNeedsPassword = false;
 
   users = {
     mutableUsers = false;
