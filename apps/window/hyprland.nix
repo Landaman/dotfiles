@@ -25,7 +25,7 @@ in
     };
   };
 
-  security.pam.services.hyprlock = { };
+  security.pam.services.hyprlock = { }; # Generate a PAM service for hyprlock to use for authentication
 
   home-manager.users.${config.user.username} = {
     home.packages = with pkgs; [
@@ -62,5 +62,20 @@ in
     };
 
     services.hyprpolkitagent.enable = true;
+
+    services.hypridle = {
+      enable = true;
+      settings.general.lock_cmd = "${lib.getExe' pkgs.systemd "systemctl"} --user start hyprlock.service";
+    };
+
+    systemd.user.services.hyprlock = {
+      Unit = {
+        Description = "Lock the Hyprland session";
+        After = [ "wayland-session-waitenv.service" ];
+        PartOf = [ "graphical-session.target" ];
+      };
+      Service.ExecStart = lib.getExe pkgs.hyprlock;
+      Install.WantedBy = [ "graphical-session.target" ];
+    };
   };
 }
