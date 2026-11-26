@@ -128,13 +128,7 @@ in
               ${lib.concatStringsSep "\n" (
                 lib.mapAttrsToList (port: serviceConfig: ''
                   echo "Setting up serve for port ${port} to target ${serviceConfig.target}"
-                  # Check if already correctly configured
-                  current_target=$(echo "$current_status" | jq -r '.TCP["${port}"].HTTPS // empty' 2>/dev/null || echo ''')
-                  if [[ "$current_target" != "true" ]]; then
-                    tailscale serve --https="${port}" --bg "${serviceConfig.target}"
-                  else
-                    echo "Port ${port} already served correctly"
-                  fi
+                  tailscale serve --https="${port}" --bg "${serviceConfig.target}"
                 '') serveConfig
               )}
             '';
