@@ -36,6 +36,7 @@ nixpkgs.lib.nixosSystem {
           ../settings/home-manager.nix
           ../settings/wifi.nix
           ../apps/ai
+          ../apps/t3code-headless.nix
           ../apps/shell
           ../apps/tools
           ../apps/editors
