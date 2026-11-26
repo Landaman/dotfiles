@@ -7,6 +7,9 @@
   services.homebridge = {
     enable = true;
     openFirewall = true;
+    # Tailscale Serve owns the tailnet listeners on the same port,
+    # so we can only safely bind on localhost
+    uiSettings.host = "127.0.0.1";
   };
 
   # Required so that Homebridge subrouters/service discovery works
