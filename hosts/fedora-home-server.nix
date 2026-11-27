@@ -39,7 +39,7 @@ nixpkgs.lib.nixosSystem {
           ../apps/tools
           ../apps/editors
           ../apps/lang
-          ../apps/window/hyprland.nix
+          ../apps/window/hyprland
           ../apps/desktop/firefox.nix
           ../apps/utilities/tailscale
         ];
