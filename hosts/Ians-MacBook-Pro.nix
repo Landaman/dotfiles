@@ -83,7 +83,6 @@ nix-darwin.lib.darwinSystem {
           "/System/Applications/Mail.app"
           "/System/Applications/Phone.app"
           "/System/Applications/Messages.app"
-          "${pkgs.discord}/Applications/discord.app"
           "/Applications/WhatsApp.localized/WhatsApp.app"
           "/System/Applications/Calendar.app"
           "/Applications/Goodnotes.app"
