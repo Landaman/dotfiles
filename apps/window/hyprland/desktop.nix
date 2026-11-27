@@ -42,6 +42,7 @@ in
       systemd.enable = false;
       extraConfig = ''
         hl.monitor({ output = "", mode = "preferred", position = "auto", scale = "auto" })
+        hl.bind("ALT + space", hl.dsp.exec_cmd("${lib.getExe pkgs.fuzzel}"))
       '';
     };
 
