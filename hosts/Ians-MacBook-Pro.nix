@@ -66,8 +66,8 @@ nix-darwin.lib.darwinSystem {
         system.stateVersion = 6;
         home-manager.users.${username} = {
           home.stateVersion = "26.05";
-          home.file.".codex/AGENTS.md".source = ./personal-agents.md;
-          home.file.".claude/CLAUDE.md".source = ./personal-claude.md;
+          programs.codex.context = builtins.readFile ./personal-agents.md;
+          programs.claude-code.context = builtins.readFile ./personal-claude.md;
           programs.git.settings.user = {
             name = "Ian Wright";
             email = "49083526+Landaman@users.noreply.github.com";
