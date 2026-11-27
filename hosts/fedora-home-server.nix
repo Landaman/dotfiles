@@ -32,21 +32,19 @@ nixpkgs.lib.nixosSystem {
           ../hardware/asus-gl552vw.nix
           ../modules/files.nix
           ../settings
-          ../settings/headless.nix
           ../settings/home-manager.nix
           ../settings/wifi.nix
           ../apps/ai
-          ../apps/t3code-headless.nix
-          ../apps/rex-headless.nix
           ../apps/shell
           ../apps/tools
           ../apps/editors
           ../apps/lang
           ../apps/window/hyprland.nix
-          ./fedora-home-server/headless-hyprland.nix
           ../apps/desktop/firefox.nix
           ../apps/utilities/tailscale
         ];
+
+        headless.enable = true;
 
         system.stateVersion = "26.05";
 

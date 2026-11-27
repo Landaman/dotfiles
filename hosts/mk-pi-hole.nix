@@ -21,11 +21,11 @@
     modules = [
       ../hardware/pi/hardware-pi02.nix
       ../settings
-      ../settings/headless.nix
       ../settings/wifi.nix
       ../apps/utilities/tailscale
       ../apps/services/pi-hole
       {
+        headless.enable = true;
         nixpkgs.overlays = overlays;
         services.tailscale.autoConnect.enable = true;
       }

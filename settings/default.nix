@@ -1,5 +1,10 @@
 { pkgs, ... }:
 {
+  imports = [
+    ../modules/headless.nix
+    ../modules/user.nix
+  ];
+
   # Necessary for using flakes on this system
   nix.settings.experimental-features = [
     "nix-command"
