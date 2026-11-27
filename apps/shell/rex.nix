@@ -25,7 +25,7 @@ lib.mkMerge [
     lib.mkIf config.headless.enable {
       systemd.tmpfiles.rules = [ "d /run/rex-headless 0700 ${config.user.username} - -" ];
 
-      services.tailscale.machineServe."443".target = "unix:${socket}";
+      services.tailscale.machineServe."7297".target = "unix:${socket}";
 
       home-manager.users.${config.user.username}.services.rex = {
         enable = true;
