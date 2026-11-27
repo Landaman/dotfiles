@@ -69,11 +69,11 @@ nixpkgs.lib.nixosSystem {
           programs.jujutsu.settings.user.name = "Ian Wright";
         };
 
-        # Keep the server running with the laptop lid closed
+        # Closing the lid locks the desktop while the server stays awake
         services.logind.settings.Login = {
-          HandleLidSwitch = "ignore";
-          HandleLidSwitchExternalPower = "ignore";
-          HandleLidSwitchDocked = "ignore";
+          HandleLidSwitch = "lock";
+          HandleLidSwitchExternalPower = "lock";
+          HandleLidSwitchDocked = "lock";
         };
         systemd.targets = {
           sleep.enable = false;
