@@ -43,6 +43,7 @@ nixpkgs.lib.nixosSystem {
           ../apps/editors
           ../apps/lang
           ../apps/window/hyprland.nix
+          ./fedora-home-server/headless-hyprland.nix
           ../apps/desktop/firefox.nix
           ../apps/utilities/tailscale
         ];
