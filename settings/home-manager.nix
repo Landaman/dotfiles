@@ -13,6 +13,7 @@ in
 {
   imports = [
     ../modules/user.nix
+    ../modules/agents.nix
     homeManager.${if _class == "darwin" then "darwinModules" else "nixosModules"}.home-manager
   ];
 

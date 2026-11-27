@@ -38,6 +38,7 @@ in
     programs.codex = {
       enable = true;
       package = pkgs.codex;
+      inherit (config.agents) skills;
 
       # Codex LOVES to change its settings
       mutableSettings = true;

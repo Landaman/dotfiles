@@ -13,6 +13,10 @@ let
 in
 {
   home-manager.users.${username}.home = {
+    file = lib.mapAttrs' (
+      name: text: lib.nameValuePair ".claude/skills/${name}/SKILL.md" { inherit text; }
+    ) config.agents.skills;
+
     activation.herdrClaudeIntegration = lib.mkIf herdrInstalled (
       # Setup herdr, which needs .claude to exist (it won't if you're installing)
       homeManager.lib.hm.dag.entryAfter [ "writeBoundary" ] ''
