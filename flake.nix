@@ -87,7 +87,7 @@
 
       deploy = {
         sshUser = secrets.user.name;
-        interactiveSudo = true;
+        interactiveSudo = false;
 
         # Create a system deployment profile for each NixOS host
         nodes = builtins.mapAttrs (_: host: {
