@@ -92,6 +92,7 @@
         # Create a system deployment profile for each NixOS host
         nodes = builtins.mapAttrs (_: host: {
           hostname = host.config.networking.hostName;
+          remoteBuild = host.config.networking.hostName == "fedora-home-server";
           profiles.system = {
             user = "root";
             path = deploy-rs.lib.${host.pkgs.stdenv.hostPlatform.system}.activate.nixos host;
