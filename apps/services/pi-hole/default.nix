@@ -11,7 +11,6 @@ in
   services.pihole-ftl = {
     enable = true;
     openFirewallDNS = true;
-    openFirewallWebserver = true;
     queryLogDeleter.enable = true;
     lists = [
       {
@@ -57,12 +56,8 @@ in
 
   services.pihole-web = {
     enable = true;
-    ports = [
-      {
-        port = 443;
-        ssl = true;
-      }
-    ];
+    hostName = "${config.networking.hostName}.taild05b73.ts.net";
+    ports = [ "127.0.0.1:443s" ];
   };
 
   # This is by far the simplest solution to getting timesync
@@ -162,19 +157,9 @@ in
 
   services.tailscale.tags = lib.mkBefore [ "tag:pi-hole" ];
   services.tailscale.machineServe = {
-    "443" =
-      let
-        portsStr = config.services.pihole-web.ports; # e.g., "80r,443s,8080"
-        portsList = lib.splitString "," portsStr;
-
-        firstNonRedirect = lib.head (lib.filter (p: !lib.hasSuffix "r" p) portsList);
-
-        port = builtins.head (builtins.split "[[:alpha:]]+" firstNonRedirect);
-        tls = lib.hasSuffix "s" firstNonRedirect;
-      in
-      {
-        target = "${if tls then "https+insecure" else "http"}://localhost:${port}";
-        depends = [ "pihole-ftl.service" ];
-      };
+    "443" = {
+      target = "https+insecure://127.0.0.1:443";
+      depends = [ "pihole-ftl.service" ];
+    };
   };
 }
