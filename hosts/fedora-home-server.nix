@@ -42,6 +42,7 @@ nixpkgs.lib.nixosSystem {
           ../apps/window/hyprland
           ../apps/desktop/firefox.nix
           ../apps/utilities/tailscale
+          ../apps/catppuccin.nix
         ];
 
         headless.enable = true;
