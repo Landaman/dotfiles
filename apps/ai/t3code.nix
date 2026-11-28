@@ -20,12 +20,12 @@ lib.mkMerge [
   }
   (lib.optionalAttrs (_class == "nixos") (
     lib.mkIf config.headless.enable {
-      networking.firewall.allowedTCPPorts = [ port ];
+      services.tailscale.machineServe."${toString port}".target = "http://127.0.0.1:${toString port}";
 
       home-manager.users.${username}.systemd.user.services.t3code = {
         Unit.Description = "T3 Code headless server";
         Service = {
-          ExecStart = "${lib.getExe' pkgs.t3code "t3"} serve --lan --port ${toString port}";
+          ExecStart = "${lib.getExe' pkgs.t3code "t3"} serve --host 127.0.0.1 --port ${toString port}";
 
           # Copied from the T3 Code "t3 up" service
           WorkingDirectory = "%h";
